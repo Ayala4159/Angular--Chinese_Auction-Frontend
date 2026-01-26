@@ -1,0 +1,30 @@
+<p-toast />
+
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="card flex flex-col gap-4 p-4">
+    <h2>Login</h2>
+
+    <div class="flex flex-col gap-1">
+        <p-floatlabel variant="in">
+            <input pInputText id="email" formControlName="Email" autocomplete="off" [invalid]="isInvalid('Email')" />
+            <label for="email">Email</label>
+        </p-floatlabel>
+        @if (isInvalid('Email')) {
+        <p-message severity="error" size="small" variant="simple">
+            @if (loginForm.get('Email')?.hasError('required')) { Email is required. }
+            @if (loginForm.get('Email')?.hasError('email')) { Please enter a valid email. }
+        </p-message>
+        }
+    </div>
+
+    <div class="flex flex-col gap-1">
+        <p-floatlabel variant="in">
+            <input pInputText type="password" id="pass" formControlName="Password" [invalid]="isInvalid('Password')" />
+            <label for="pass">Password</label>
+        </p-floatlabel>
+        @if (isInvalid('Password')) {
+        <p-message severity="error" size="small" variant="simple">Password must be at least 8 characters.</p-message>
+        }
+    </div>
+
+    <button pButton type="submit" label="Submit" [disabled]="loginForm.invalid"></button>
+</form>
