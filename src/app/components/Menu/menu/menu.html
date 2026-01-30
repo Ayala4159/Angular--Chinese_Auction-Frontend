@@ -1,0 +1,61 @@
+<nav class="navbar">
+    <div class="nav-container">
+
+        <div class="logo" routerLink="">Creative Tech</div>
+
+        <ul class="nav-links">
+            <li class="has-mega" (mouseenter)="showMenu = true" (mouseleave)="showMenu = false">
+                קטגוריות <span class="arrow">▾</span>
+
+                <div class="mega-menu" *ngIf="showMenu">
+                    <div class="menu-grid">
+                        <div class="menu-card" *ngFor="let item of categories; let i = index"
+                            [style.animation-delay]="i * 0.05 + 's'">
+                            <div class="image-placeholder">
+                                <img *ngIf="item.picture" [src]="IMAGE_BASE_URL+item.picture" [alt]="item.title">
+                            </div>
+                            <h3>{{ item.name }}</h3>
+                        </div>
+                    </div>
+                    <div class="menu-footer">
+                        <a href="#">צפה בכל המוצרים ←</a>
+                    </div>
+                </div>
+            </li>
+            <li>מוצרים שנרכשו</li>
+        </ul>
+
+        <div class="actions-section">
+            <div class="search-bar">
+                <input type="text" placeholder="חיפוש...">
+            </div>
+            <div class="cart-icon">
+                🛒 <span class="cart-count">0</span>
+            </div>
+        </div>
+        <div class="user-section">
+            @if (authService.user$ | async; as currentUser) {
+            <div class="user-wrapper" (click)="showUserDropdown = !showUserDropdown" style="cursor: pointer;">
+                <div class="user-profile">
+                    <span class="user-name">שלום, {{ currentUser.first_name || currentUser.firstName }}</span>
+                    <div class="user-avatar"></div>
+                </div>
+
+
+                <div class="user-dropdown" *ngIf="showUserDropdown">
+                    <button (click)="onLogout()">התנתקות (Logout)</button>
+                    <button>פרופיל חשבון</button>
+                </div>
+            </div>
+            } @else {
+            <div class="card flex justify-center">
+                <p-buttongroup>
+                    <p-button label="Login" routerLink="login" icon="pi pi-user-plus" />
+                    <p-button label="Register" routerLink="register" icon="pi pi-sign-in" />
+                </p-buttongroup>
+            </div>
+            }
+        </div>
+
+    </div>
+</nav>

@@ -10,6 +10,7 @@ import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { InputMaskModule } from 'primeng/inputmask';
 import { AuthenticationService } from '../../../services/authentication-service';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-register',
   standalone: true,
@@ -21,7 +22,7 @@ export class Register implements OnInit {
   messageService = inject(MessageService);
   registerForm!: FormGroup;
   authService = inject(AuthenticationService);
-
+  route=inject(Router)
 
 
   ngOnInit() {
@@ -56,6 +57,7 @@ export class Register implements OnInit {
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'User registered successfully!', life: 3000 });
           console.log('User registered:', response);
           this.registerForm.reset();
+          this.route.navigate(['/login']);
         },
         error: (err) => {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error, life: 3000 });
