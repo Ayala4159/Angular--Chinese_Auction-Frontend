@@ -1,0 +1,31 @@
+@if (isChildVisible) {
+        <div class="animate-fadein">
+            <app-categories-form></app-categories-form>
+            
+            <button pButton label="סגור" (click)="isChildVisible = false" class="p-button-text p-button-danger mt-3"></button>
+        </div>
+    }
+    
+<div class="flex flex-row flex-wrap justify-content-center gap-4 p-5">
+    @for (category of (categories$ | async); track category.id) {
+    <div class="category-item animate-fadein">
+        <p-card [style]="{ width: '20rem', overflow: 'hidden' }"
+            class="shadow-2 hover:shadow-5 transition-duration-300">
+            <ng-template #header>
+                <img alt="Card" [src]="IMAGE_BASE_URL + category.picture"
+                    [style]="{ width: '100%', height: '200px', 'object-fit': 'cover', 'display': 'block' }" />
+            </ng-template>
+
+            <ng-template #title>
+                <div class="text-center font-bold py-2">{{ category.name }}</div>
+                @if (role=='1') {
+                <button pButton type="button" label="" class="p-button-sm p-button-warning"
+                    (click)="onEditCategory(category.id)">🖋️</button>
+                    <button pButton type="button" label="" class="p-button-sm p-button-warning">🗑️</button>
+                }
+            </ng-template>
+        </p-card>
+    </div>
+    }
+
+</div>
