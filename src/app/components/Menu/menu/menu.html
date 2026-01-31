@@ -4,7 +4,7 @@
         <div class="logo" routerLink="">Creative Tech</div>
 
         <ul class="nav-links">
-            <li class="has-mega" (mouseenter)="showMenu = true" (mouseleave)="showMenu = false">
+            <li class="has-mega" routerLink="categories" (mouseenter)="showMenu = true" (mouseleave)="showMenu = false">
                 קטגוריות <span class="arrow">▾</span>
 
                 <div class="mega-menu" *ngIf="showMenu">
@@ -18,7 +18,7 @@
                         </div>
                     </div>
                     <div class="menu-footer">
-                        <a href="#">צפה בכל המוצרים ←</a>
+                        <a routerLink="categories">צפה בכל הקטגוריות ←</a>
                     </div>
                 </div>
             </li>

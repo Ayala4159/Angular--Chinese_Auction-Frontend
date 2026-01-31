@@ -35,12 +35,6 @@ export class Menu implements OnInit {
     this.authService.logout();
   }
   categories: any[] = [];
-  products = [
-    { title: 'UI Blocks', desc: 'Build production-ready UIs fast.', image: '', icon: 'pi pi-th-large' },
-    { title: 'Tailwind PRO', desc: 'Premium components for Tailwind CSS.', image: '', icon: 'pi pi-th-large' },
-    { title: 'Admin Dashboards', desc: 'Complex systems made simple.', image: '', icon: 'pi pi-th-large' },
-    { title: 'Workflows', desc: 'Automate your business easily.', image: '', icon: 'pi pi-th-large' }
-  ];
   onSettings() { console.log('Settings'); }
 
 
