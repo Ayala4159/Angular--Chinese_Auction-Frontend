@@ -1,11 +1,7 @@
-@if (isChildVisible) {
-        <div class="animate-fadein">
-            <app-categories-form></app-categories-form>
-            
-            <button pButton label="סגור" (click)="isChildVisible = false" class="p-button-text p-button-danger mt-3"></button>
-        </div>
-    }
-    
+<p-toast/>
+@if (role=='0') {
+<p-button label="הוספת קטגוריה" icon="pi pi-plus" (onClick)="showChild()"></p-button>
+}
 <div class="flex flex-row flex-wrap justify-content-center gap-4 p-5">
     @for (category of (categories$ | async); track category.id) {
     <div class="category-item animate-fadein">
@@ -18,10 +14,11 @@
 
             <ng-template #title>
                 <div class="text-center font-bold py-2">{{ category.name }}</div>
-                @if (role=='1') {
+                @if (role=='0') {
                 <button pButton type="button" label="" class="p-button-sm p-button-warning"
                     (click)="onEditCategory(category.id)">🖋️</button>
-                    <button pButton type="button" label="" class="p-button-sm p-button-warning">🗑️</button>
+                <button pButton type="button" label="" class="p-button-sm p-button-warning"
+                    (click)="onDeleteCategory(category.id)">🗑️</button>
                 }
             </ng-template>
         </p-card>

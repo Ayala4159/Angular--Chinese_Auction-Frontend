@@ -1,61 +1,90 @@
-<nav class="navbar">
-    <div class="nav-container">
+<nav class="navbar m-2 border-round-3xl surface-section border-bottom-1 border-primary px-3 md:px-6 h-5rem flex align-items-center relative"
+    style="direction: rtl;">
+    <div class="nav-container w-full max-w-custom mx-auto flex align-items-center justify-content-between">
 
-        <div class="logo" routerLink="">Creative Tech</div>
+        <p-button icon="pi pi-bars" [text]="true" [rounded]="true" class="md:hidden ml-2"
+            (click)="sidebarVisible = true" />
 
-        <ul class="nav-links">
-            <li class="has-mega" routerLink="categories" (mouseenter)="showMenu = true" (mouseleave)="showMenu = false">
-                קטגוריות <span class="arrow">▾</span>
+        <div class="logo text-2xl font-black cursor-pointer tracking-tight" routerLink="/">
+            <span class="text-white">CREATIVE</span><span class="text-primary">TECH</span>
+        </div>
 
-                <div class="mega-menu" *ngIf="showMenu">
-                    <div class="menu-grid">
-                        <div class="menu-card" *ngFor="let item of categories; let i = index"
-                            [style.animation-delay]="i * 0.05 + 's'">
-                            <div class="image-placeholder">
-                                <img *ngIf="item.picture" [src]="IMAGE_BASE_URL+item.picture" [alt]="item.title">
+        <ul class="nav-links hidden md:flex list-none gap-2 p-0 m-0 align-items-center mr-4">
+            <li class="has-mega relative py-3 px-4 cursor-pointer font-medium text-gray-300 transition-colors hover:text-primary"
+                (mouseenter)="showMenu = true" (mouseleave)="showMenu = false" routerLink="categories">
+                קטגוריות <span class="arrow transition-transform inline-block mr-1">▾</span>
+
+                <div class="mega-menu absolute top-90 right-0 z-5 surface-card shadow-8 border-round-2xl p-4 w-30rem"
+                    *ngIf="showMenu">
+
+                    <div class="grid flex-row-reverse hover:border-1 border- p-2">
+                        <div class="col-4 p-2" *ngFor="let item of categories | slice:0:3; let i = index">
+                            <div class="menu-card flex flex-column align-items-center gap-2 border-1 border-gray-500 hover:border-orange-500 p-3 border-round-lg transition-all"
+                                [style.animation-delay]="i * 0.1 + 's'">
+
+                                <div
+                                    class="image-placeholder relative w-full h-6rem overflow-hidden border-round-xl shadow-4">
+                                    <img *ngIf="item.picture" [src]="IMAGE_BASE_URL+item.picture" [alt]="item.name"
+                                        class="cat-img w-full h-full object-cover">
+                                </div>
+                                <h3 class="text-sm font-bold m-0 text-white text-center">{{ item.name }}</h3>
                             </div>
-                            <h3>{{ item.name }}</h3>
                         </div>
                     </div>
-                    <div class="menu-footer">
-                        <a routerLink="categories">צפה בכל הקטגוריות ←</a>
+
+                    <div class="menu-footer text-left mt-3 pt-3 border-top-1 border-primary">
+                        <a routerLink="categories"
+                            class="text-primary no-underline font-bold text-sm hover:text-white flex align-items-center justify-content-end">
+                            <span>צפה בכל הקטגוריות</span>
+                            <i class="pi pi-arrow-left mr-2"></i>
+                        </a>
                     </div>
                 </div>
             </li>
-            <li>מוצרים שנרכשו</li>
         </ul>
 
-        <div class="actions-section">
-            <div class="search-bar">
-                <input type="text" placeholder="חיפוש...">
+        <div class="flex align-items-center gap-4 mr-auto">
+            <div class="search-container hidden lg:block">
+                <p-floatlabel variant="in">
+                    <p-iconfield>
+                        <p-inputicon class="pi pi-search" />
+                        <input pInputText id="in_label" autocomplete="off"
+                            class="search-input surface-section text-white border-round-2xl" />
+                    </p-iconfield>
+                    <label for="in_label" class="text-gray-400">חפש מוצר...</label>
+                </p-floatlabel>
             </div>
-            <div class="cart-icon">
-                🛒 <span class="cart-count">0</span>
-            </div>
-        </div>
-        <div class="user-section">
-            @if (authService.user$ | async; as currentUser) {
-            <div class="user-wrapper" (click)="showUserDropdown = !showUserDropdown" style="cursor: pointer;">
-                <div class="user-profile">
-                    <span class="user-name">שלום, {{ currentUser.first_name || currentUser.firstName }}</span>
-                    <div class="user-avatar"></div>
+
+            <div class="user-section border-right-1 border-primary pr-3 relative">
+                @if (authService.user$ | async; as currentUser) {
+                <div class="user-pill flex align-items-center gap-3 cursor-pointer p-2 pr-3 border-round-3xl surface-card border-1 border-transparent hover:border-primary transition-all"
+                    (click)="showUserDropdown = !showUserDropdown">
+                    <span class="hidden sm:inline font-semibold text-sm text-white">שלום, {{ currentUser.first_name
+                        }}</span>
+                    <p-avatar [label]="currentUser.first_name?.[0]" shape="circle"
+                        styleClass="bg-primary text-white font-bold shadow-2"></p-avatar>
                 </div>
 
-
-                <div class="user-dropdown" *ngIf="showUserDropdown">
-                    <button (click)="onLogout()">התנתקות (Logout)</button>
-                    <button>פרופיל חשבון</button>
+                <div class="user-dropdown absolute left-0 mt-2 z-5 surface-card border-round-xl shadow-8 border-1 border-700 w-12rem p-2"
+                    *ngIf="showUserDropdown" (mouseleave)="showUserDropdown = false">
+                    <ul class="list-none p-0 m-0">
+                        <li
+                            class="p-3 hover:bg-green-500 border-round cursor-pointer text-white flex align-items-center gap-2">
+                            <i class="pi pi-user text-green-200"></i> פרופיל
+                        </li>
+                        <li class="p-3 hover:bg-red-900 border-round cursor-pointer text-white flex align-items-center gap-2"
+                            (click)="onLogout($event)">
+                            <i class="pi pi-sign-out text-red-400"></i> התנתקות
+                        </li>
+                    </ul>
                 </div>
+                } @else {
+                <div class="flex gap-2">
+                    <p-button label="כניסה" routerLink="login" [text]="true" size="small" styleClass="text-white" />
+                    <p-button label="הרשמה" routerLink="register" [rounded]="true" size="small" />
+                </div>
+                }
             </div>
-            } @else {
-            <div class="card flex justify-center">
-                <p-buttongroup>
-                    <p-button label="Login" routerLink="login" icon="pi pi-user-plus" />
-                    <p-button label="Register" routerLink="register" icon="pi pi-sign-in" />
-                </p-buttongroup>
-            </div>
-            }
         </div>
-
     </div>
 </nav>

@@ -1,60 +1,55 @@
 import { Component, HostListener, inject, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { MenuItem } from 'primeng/api';
-import { MenuModule } from 'primeng/menu';
+import { CommonModule, SlicePipe } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+
+// PrimeNG 18+ Modules
+import { DrawerModule } from 'primeng/drawer'; // במקום Sidebar
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { BadgeModule } from 'primeng/badge';
 import { AvatarModule } from 'primeng/avatar';
-import { RouterModule } from '@angular/router';
-import { ButtonGroupModule } from 'primeng/buttongroup';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
+import { BadgeModule } from 'primeng/badge';
+import { FloatLabelModule } from 'primeng/floatlabel';
+
+
+// Services
 import { AuthenticationService } from '../../../services/authentication-service';
 import { CategoryService } from '../../../services/category-service';
 
 @Component({
   selector: 'app-menu',
   standalone: true,
-  imports: [CommonModule, MenuModule, ButtonModule, InputTextModule, BadgeModule, AvatarModule, RouterModule, ButtonGroupModule],
+  imports: [
+    CommonModule, FormsModule, RouterModule, SlicePipe,
+    DrawerModule, ButtonModule, InputTextModule, FloatLabelModule,
+    AvatarModule, IconFieldModule, InputIconModule, BadgeModule
+  ],
   templateUrl: './menu.html',
   styleUrls: ['./menu.scss']
 })
 export class Menu implements OnInit {
+  sidebarVisible: boolean = false;
+  searchValue: string = '';
   showMenu = false;
   showUserDropdown = false;
-  userMenuItems: MenuItem[] | undefined;
-  isLoggedIn = false;
+  
   authService = inject(AuthenticationService);
   categoryService = inject(CategoryService);
-  readonly IMAGE_BASE_URL = 'https://localhost:7282/images/';  
-
-  onLogout(event?: MouseEvent) {
-    if (event) {
-      this.showUserDropdown = false;
-    }
-    this.isLoggedIn = false;
-    this.authService.logout();
-  }
+  
+  readonly IMAGE_BASE_URL = 'https://localhost:7282/images/categories/'; 
   categories: any[] = [];
-  onSettings() { console.log('Settings'); }
-
-
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent) {
-    this.showMenu = false;
-  }
 
   ngOnInit() {
-  this.categoryService.getCategories().subscribe({
-    next: (data) => {
-      this.categories = data; 
-      console.log('Categories loaded:', data);
-    },
-    error: (err) => console.error('Error loading categories:', err)
-  });
+    this.categoryService.getCategories().subscribe({
+      next: (data) => this.categories = data,
+      error: (err) => console.error('Error:', err)
+    });
+  }
 
-  this.userMenuItems = [
-    { label: 'הגדרות חשבון', icon: 'pi pi-user-edit' },
-    { label: 'התנתקות (Logout)', icon: 'pi pi-sign-out' }
-  ];
+  onLogout(event?: MouseEvent) {
+    this.showUserDropdown = false;
+    this.authService.logout();
   }
 }

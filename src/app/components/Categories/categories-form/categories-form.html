@@ -1,0 +1,52 @@
+<div class="card p-4" [formGroup]="categoryForm">
+    <h3 class="mt-0 mb-4 text-primary">
+        {{ config.data ? 'עריכת קטגוריה: ' + config.data.name : 'הוספת קטגוריה חדשה' }}
+    </h3>
+
+    <div class="flex flex-column gap-2 mb-4">
+        <label for="name" class="font-bold">שם הקטגוריה</label>
+        <input pInputText id="name" formControlName="name" placeholder="הכנס שם..." class="w-full" />
+        @if (categoryForm.get('name')?.invalid && categoryForm.get('name')?.touched) {
+            <small class="p-error">חובה להזין שם לקטגוריה</small>
+        }
+    </div>
+
+    <div class="flex flex-column gap-3 mb-4">
+        <label class="font-bold">תמונת קטגוריה</label>
+        <p-fileUpload 
+            #f 
+            mode="basic" 
+            [auto]="true" 
+            chooseLabel="בחר תמונה" 
+            accept="image/*"
+            (onSelect)="onFileSelect($event)" 
+            class="w-fit" />
+
+        @if(previewImage) {
+            <div class="relative mt-2 border-round overflow-hidden shadow-2" style="width: 150px; height: 150px;">
+                <p-image 
+                    [src]="previewImage" 
+                    alt="Category Preview" 
+                    [preview]="true" 
+                    width="150"
+                    height="150"
+                    imageClass="object-cover border-round" />
+                
+                <button 
+                    pButton 
+                    (click)="f.clear(); previewImage = null"
+                    icon="pi pi-trash"
+                    class="p-button-rounded p-button-danger p-button-sm absolute top-0 right-0 m-1"
+                    style="width: 2rem; height: 2rem">
+                </button>
+            </div>
+        }
+    </div>
+
+    <div class="flex justify-content-end gap-2 mt-5">
+        <p-button label="ביטול" icon="pi pi-times" [text]="true" severity="secondary" (click)="cancel()" />
+        <p-button label="שמור" icon="pi pi-check" (click)="save()" [disabled]="categoryForm.invalid" />
+    </div>
+</div>
+
+<p-toast position="bottom-left" />
