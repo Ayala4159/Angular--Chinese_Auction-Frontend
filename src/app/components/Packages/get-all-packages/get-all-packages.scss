@@ -1,0 +1,62 @@
+:host {
+  --bg-card: #ffffff;
+  --text-main: #2c3e50;
+  --text-dim: #7f8c8d;
+  --border-color: rgba(0, 0, 0, 0.08);
+  --orange-brand: #f97316;
+
+  @media (prefers-color-scheme: dark) {
+    --bg-card: #1e1e1e;
+    --text-main: #ecf0f1;
+    --text-dim: #95a5a6;
+    --border-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.minimal-ticket {
+  background: var(--bg-card);
+  color: var(--text-main);
+  border: 1.5px solid var(--border-color);
+  border-radius: 24px;
+  width: 18.5rem;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+
+  &.selected {
+    border-color: var(--orange-brand);
+    box-shadow: 0 0 0 1px var(--orange-brand), 0 12px 24px -10px rgba(249, 115, 22, 0.2);
+    
+    .price-text { color: var(--orange-brand); transform: scale(1.05); }
+  }
+}
+
+/* עיצוב ה-Checkmark */
+.check-badge {
+  display: flex;
+  align-items: center;
+  opacity: 0;
+  transform: scale(0.5);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  
+  &.visible {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.description-text { color: var(--text-dim); }
+.border-top-1.border-alpha { border-top: 1px solid var(--border-color) !important; }
+
+.qty-btn {
+  color: var(--text-main) !important;
+  &:hover { background: rgba(249, 115, 22, 0.1) !important; }
+}
+
+.animate-fadein {
+  animation: fadeIn 0.6s ease-out both;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}

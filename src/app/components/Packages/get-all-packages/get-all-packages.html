@@ -1,0 +1,49 @@
+<p-toast />
+
+<div class="flex flex-wrap justify-content-center gap-5 p-5">
+  @for (package of (packages$ | async); track package.id; let i = $index) {
+    <div class="package-container animate-fadein" [style.animation-delay.ms]="i * 70">
+      
+      <div class="minimal-ticket" [class.selected]="(package.quantity || 0) > 0">
+        <div class="flex flex-column h-full p-4">
+          
+          <div class="flex justify-content-between align-items-start mb-3">
+            <div class="flex flex-column">
+              <h3 class="text-xl font-semibold m-0">{{ package.name }}</h3>
+              <div class="check-badge mt-1" [class.visible]="(package.quantity || 0) > 0">
+                <i class="pi pi-check-circle text-orange-500 text-sm"></i>
+                <span class="text-xs text-orange-500 mr-1 font-medium">נבחר</span>
+              </div>
+            </div>
+            <span class="price-text font-bold text-xl transition-all">{{ package.price | currency:'ILS':'symbol':'1.0-0' }}</span>
+          </div>
+
+          <p class="description-text text-sm line-height-3 mb-5">{{ package.description }}</p>
+
+          <div class="mt-auto">
+            <div class="flex align-items-center justify-content-between pt-3 border-top-1 border-alpha">
+              <span class="text-xs uppercase tracking-wider opacity-60">{{ package.countTickets }} כרטיסים</span>
+              
+              <div class="stepper flex align-items-center gap-2">
+                <button pButton icon="pi pi-minus" class="p-button-rounded p-button-text p-button-sm qty-btn"
+                        (click)="package.quantity = (package.quantity || 0) > 0 ? package.quantity - 1 : 0"></button>
+                
+                <span class="qty-display font-bold">{{ package.quantity || 0 }}</span>
+                
+                <button pButton icon="pi pi-plus" class="p-button-rounded p-button-text p-button-sm qty-btn"
+                        (click)="package.quantity = (package.quantity || 0) + 1"></button>
+              </div>
+            </div>
+
+            @if (role === '0') {
+              <div class="flex justify-content-end gap-2 mt-3 opacity-50 hover:opacity-100 transition-all">
+                <p-button icon="pi pi-pencil" [text]="true" severity="secondary" size="small" (onClick)="onEditPackage(package.id)"></p-button>
+                <p-button icon="pi pi-trash" [text]="true" severity="danger" size="small" (onClick)="onDeletePackage(package.id)"></p-button>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>
