@@ -1,0 +1,72 @@
+<div class="card p-4" [formGroup]="donorForm">
+    <h3 class="mt-0 mb-4 text-primary">
+        {{ config.data ? 'עריכת תורם: ' + config.data.first_name : 'הוספת תורם חדש' }}
+    </h3>
+    <div class="flex flex-column gap-2 mb-4">
+        <label for="first_name" class="font-bold">שם פרטי</label>
+        <input pInputText id="first_name" formControlName="first_name" placeholder="הכנס שם..." class="w-full" />
+        @if (donorForm.get('first_name')?.invalid && donorForm.get('first_name')?.touched) {
+        <small class="p-error">חובה להזין שם פרטי לתורם</small>
+        }
+    </div>
+    <div class="flex flex-column gap-2 mb-4">
+        <label for="last_name" class="font-bold">שם משפחה</label>
+        <input pInputText id="last_name" formControlName="last_name" placeholder="הכנס שם משפחה..." class="w-full" />
+        @if (donorForm.get('last_name')?.invalid && donorForm.get('last_name')?.touched) {
+        <small class="p-error">חובה להזין שם משפחה לתורם</small>
+        }
+    </div>
+    <div class="flex flex-column gap-2 mb-4">
+        <label for="email" class="font-bold">אימייל</label>
+        <input pInputText id="email" formControlName="email" placeholder="הכנס אימייל..." class="w-full" />
+        @if (donorForm.get('email')?.invalid && donorForm.get('email')?.touched) {
+        <small class="p-error">חובה להזין אימייל תקין</small>
+        }
+    </div>
+    <div class="flex flex-column gap-2 mb-4">
+        <label for="password" class="font-bold">סיסמה</label>
+        <input pInputText id="password" type="password" formControlName="password" placeholder="הכנס סיסמה..."
+            class="w-full" />
+        @if (donorForm.get('password')?.invalid && donorForm.get('password')?.touched) {
+        <small class="p-error">חובה להזין סיסמה (לפחות 8 תווים)</small>
+        }
+    </div>
+    <div class="flex align-items-center gap-2 mb-4">
+        <p-checkbox formControlName="is_published" [binary]="true" inputId="is_published"></p-checkbox>
+        <label for="is_published">פרסם את שם התורם</label>
+    </div>
+    @if(donorForm.get('is_published')?.value) {
+    <div class="flex flex-column gap-2 mb-4">
+        <label for="company_name" class="font-bold">שם חברה</label>
+        <input pInputText id="company_name" formControlName="company_name" placeholder="הכנס שם חברה..."
+            class="w-full" />
+    </div>
+    <p-floatlabel variant="in">
+        <textarea pTextarea id="company_description" formControlName="company_description" rows="5" cols="30"
+            style="resize: none" class="h-full"></textarea>
+        <label for="company_description">תיאור חברה</label>
+    </p-floatlabel>
+    <div class="flex flex-column gap-3 mb-4">
+        <label class="font-bold">לוגו</label>
+        <p-fileUpload #f mode="basic" [auto]="true" chooseLabel="בחר תמונה" accept="image/*"
+            (onSelect)="onFileSelect($event)" class="w-fit" />
+        @if(previewImage) {
+        <div class="relative mt-2 border-round overflow-hidden shadow-2" style="width: 150px; height: 150px;">
+            <p-image [src]="previewImage" alt="donor Preview" [preview]="true" width="150" height="150"
+                imageClass="object-cover border-round" />
+
+            <button pButton icon="pi pi-trash"
+                class="p-button-rounded p-button-danger p-button-sm absolute top-0 right-0 m-1"
+                style="width: 2rem; height: 2rem" (click)="f.clear(); previewImage=null">
+            </button>
+        </div>
+        }
+    </div>
+    }
+    <div class="flex justify-content-end gap-2 mt-5">
+        <p-button label="ביטול" icon="pi pi-times" [text]="true" severity="secondary" (click)="cancel()" />
+        <p-button label="שמור" icon="pi pi-check" (click)="save()" [disabled]="donorForm.invalid" />
+    </div>
+
+</div>
+<p-toast position="bottom-left" />

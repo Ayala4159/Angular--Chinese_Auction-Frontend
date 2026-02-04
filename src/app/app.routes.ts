@@ -4,11 +4,12 @@ import { Login } from './components/User/login/login';
 import { Home } from './components/home/home';
 import { CategoriesForm } from './components/Categories/categories-form/categories-form';
 import { GetAllCategories } from './components/Categories/get-all-categories/get-all-categories';
+import { GetAllDonors } from './components/Donors/get-all-donors/get-all-donors';
 export const routes: Routes = [
     {path: 'register', component: Register},
     {path:'login',component:Login},
     {path:'',component:Home},
     {path:'categories-form', component: CategoriesForm},
-    {path:'categories', component: GetAllCategories}
-
+    {path:'categories', component: GetAllCategories},
+    {path:'donors',component:GetAllDonors}
 ];
