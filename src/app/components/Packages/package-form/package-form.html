@@ -1,1 +1,59 @@
-<p>package-form works!</p>
+
+
+
+
+<div class="card p-4" [formGroup]="packageForm">
+    <h3 class="mt-0 mb-4 text-primary">
+        {{ config.data ? 'עריכת חבילה: ' + config.data.name : 'הוספת חבילה חדשה' }}
+    </h3>
+
+
+    <div class="flex flex-column gap-2 mb-3">
+        <label for="name" class="font-bold">שם החבילה</label>
+        <input pInputText id="name" formControlName="name" placeholder="הכנס שם..." class="w-full" />
+        @if (packageForm.get('name')?.invalid && packageForm.get('name')?.touched) {
+            <small class="p-error">חובה להזין שם (עד 30 תווים)</small>
+        }
+    </div>
+
+
+    <div class="flex flex-column gap-2 mb-3">
+        <label for="description" class="font-bold">תיאור</label>
+        <textarea pInputTextarea id="description" formControlName="description" rows="3" placeholder="הכנס תיאור קצר..." class="w-full"></textarea>
+        @if (packageForm.get('description')?.invalid && packageForm.get('description')?.touched) {
+            <small class="p-error">חובה להזין תיאור (עד 1000 תווים)</small>
+        }
+    </div>
+
+
+    <div class="grid">
+        <div class="col-6 flex flex-column gap-2 mb-3">
+            <label for="numOfCards" class="font-bold">כמות כרטיסים</label>
+            <p-inputNumber id="numOfCards" formControlName="numOfCards" [showButtons]="true" placeholder="0" styleClass="w-full" inputStyleClass="w-full" />
+            @if (packageForm.get('numOfCards')?.invalid && packageForm.get('numOfCards')?.touched) {
+                <small class="p-error">נא להזין כמות</small>
+            }
+        </div>
+
+
+        <div class="col-6 flex flex-column gap-2 mb-3">
+            <label for="price" class="font-bold">מחיר</label>
+            <p-inputNumber id="price" formControlName="price" mode="currency" currency="ILS" locale="he-IL" placeholder="₪0.00" styleClass="w-full" inputStyleClass="w-full" />
+            @if (packageForm.get('price')?.invalid && packageForm.get('price')?.touched) {
+                <small class="p-error">חובה להזין מחיר</small>
+            }
+        </div>
+    </div>
+
+
+    <div class="flex justify-content-end gap-2 mt-5">
+        <p-button label="ביטול" icon="pi pi-times" [text]="true" severity="secondary" (click)="cancel()" />
+        <p-button label="שמור" icon="pi pi-check" (click)="save()" [disabled]="packageForm.invalid" />
+    </div>
+</div>
+
+
+<p-toast position="bottom-left" />
+
+
+

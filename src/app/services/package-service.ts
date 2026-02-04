@@ -13,11 +13,10 @@ export class PackageService {
   getPackageById(id: number) {
     return this.http.get<any>(`${this.baseUrl}/${id}`);
   }
-  addPackage(PackageData: any) {
+  addPackage(CreatePackage: any) {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` })
-
-    return this.http.post<any>(`${this.baseUrl}`, PackageData, { headers });
+    return this.http.post<any>(`${this.baseUrl}`, CreatePackage, { headers });
   }
   updatePackage(id: number, PackageData: any) {
     const token = localStorage.getItem('token');
@@ -29,4 +28,5 @@ export class PackageService {
     const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` })
     return this.http.delete<any>(`${this.baseUrl}/${id}`, { headers, responseType: 'text' as 'json' });
   }
+  
 }
