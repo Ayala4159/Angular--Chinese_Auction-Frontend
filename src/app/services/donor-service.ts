@@ -8,10 +8,14 @@ export class DonorService {
   baseUrl: string = 'https://localhost:7282/api/Donor';
   constructor(private http: HttpClient) { }
   getDonors() {
-    return this.http.get<any>(`${this.baseUrl}`);
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` })
+    return this.http.get<any>(`${this.baseUrl}`, { headers });
   }
   getDonorById(id: number) {
-    return this.http.get<any>(`${this.baseUrl}/${id}`);
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` })
+    return this.http.get<any>(`${this.baseUrl}/${id}`, { headers });
   }
   addDonor(donorData: any, imageFile: File) {
     const token = localStorage.getItem('token');

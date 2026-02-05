@@ -1,3 +1,67 @@
-@if (role=='0') {
-<p-button label="הוספת תורם חדש" icon="pi pi-user-plus" (onClick)="showChild()"></p-button>
-}
+<p-toast />
+<p-confirmDialog />
+
+<div class="card">
+    <p-toolbar class="mb-4">
+        <ng-template #start>
+            <p-button label="הוספת תורם חדש" icon="pi pi-user-plus" class="p-button-success" (onClick)="showChild()" />
+        </ng-template>
+    </p-toolbar>
+
+    <p-table [value]="donors" [rows]="10" [paginator]="true" [rowHover]="true">
+        <ng-template #header>
+            <tr>
+                <th>דוא"ל</th>
+                <th pSortableColumn="First_Name">שם פרטי<p-sortIcon field="First_Name" /></th>
+                <th pSortableColumn="Last_Name">שם משפחה<p-sortIcon field="Last_Name" /></th>
+                <th pSortableColumn="Phone">מספר טלפון<p-sortIcon field="Phone" /></th>
+                <th>סטטוס</th>
+                <th>שם חברה</th>
+                <th>תאור חברה</th>
+                <th>לוגו</th>
+                <th>פעולות</th>
+            </tr>
+        </ng-template>
+
+        <ng-template #body let-d>
+            <tr>
+                <td>{{ d.email }}</td>
+                <td>{{ d.first_name }}</td>
+                <td>{{ d.last_name }}</td>
+                <td>{{ d.phone }}</td>
+                <td>
+                    <p-tag [severity]="d.Is_publish ? 'success' : 'warn'" [value]="d.is_publish ? 'מפורסם' : 'טיוטה'" />
+                </td>
+                <td>{{ d.company_name }}</td>
+                <td>{{ d.company_description }}</td>
+                <td>
+                    <img [src]="IMAGE_BASE_URL + d.company_picture" style="width: 50px" class="shadow-2 rounded" />
+                </td>
+                <td>
+                    <p-button icon="pi pi-pencil" [rounded]="true" [outlined]="true" class="mr-2"
+                        (onClick)="editDonor(d)" />
+                    <p-button icon="pi pi-trash" [rounded]="true" [outlined]="true" severity="danger"
+                        (onClick)="deleteDonor(d)" />
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+
+<p-dialog [(visible)]="donorDialog" [style]="{width: '450px'}" header="עריכת תורם" [modal]="true" class="p-fluid">
+    <ng-template #content>
+        <div class="field mb-4">
+            <label for="name">שם פרטי</label>
+            <input type="text" pInputText id="name" [(ngModel)]="donor.First_Name" />
+        </div>
+        <div class="field mb-4">
+            <label for="cname">שם חברה</label>
+            <input type="text" pInputText id="cname" [(ngModel)]="donor.Company_Name" />
+        </div>
+    </ng-template>
+
+    <ng-template #footer>
+        <p-button label="ביטול" icon="pi pi-times" text (onClick)="donorDialog = false" />
+        <p-button label="עדכן" icon="pi pi-check" (onClick)="saveDonor()" />
+    </ng-template>
+</p-dialog>
