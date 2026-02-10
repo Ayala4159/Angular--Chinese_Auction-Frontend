@@ -1,0 +1,100 @@
+<div class="card p-4" [formGroup]="giftForm">
+    <h3 class="mt-0 mb-4 text-primary">
+        {{ config.data ? 'עריכת מתנה: ' + config.data.name : 'הוספת מתנה חדשה' }}
+    </h3>
+
+    <div class="grid">
+        <div class="flex flex-column gap-2 mb-4 col-12 md:col-6">
+            <p-floatlabel variant="in">
+                <input pInputText id="name" formControlName="name" class="w-full" />
+                <label for="name">שם המתנה</label>
+            </p-floatlabel>
+            @if (giftForm.get('name')?.invalid && giftForm.get('name')?.touched) {
+            <small class="p-error">חובה להזין שם (עד 30 תווים)</small>
+            }
+        </div>
+
+        <div class="flex flex-column gap-2 mb-4 col-12 md:col-6">
+            <p-floatlabel variant="in">
+                <p-inputNumber id="value" formControlName="value" mode="currency" currency="ILS" locale="he-IL"
+                    class="w-full" />
+                <label for="value">ערך (בשקלים)</label>
+            </p-floatlabel>
+        </div>
+
+        <div class="flex flex-column gap-2 mb-4 col-12">
+            <p-floatlabel variant="in">
+                <input pInputText id="description" formControlName="description" class="w-full" />
+                <label for="description">תיאור קצר</label>
+            </p-floatlabel>
+        </div>
+
+        
+        <div class="flex flex-column gap-2 mb-4 col-12">
+            <p-iftalabel variant="in">
+                <textarea pTextarea id="details" formControlName="details" rows="5" cols="30" style="resize: none"
+                class="h-full surface-ground"></textarea>
+                <label for="details">פרטים נוספים</label>
+            </p-iftalabel>
+        </div>
+
+        <div class="flex flex-column gap-2 mb-4 col-12 md:col-6">
+            <p-floatlabel variant="in">
+                <p-select [options]="categories" formControlName="categoryId" optionLabel="name" [filter]="true"
+                    filterBy="name" [showClear]="true" class="w-full" optionValue="id" id="category">
+                    <ng-template #selectedItem let-selectedOption>
+                        <div class="flex items-center gap-2">
+                            <img src="{{ BASE_IMG_URL_c }}/{{ selectedOption.picture }}" class="w-4 h-4" />
+                            <div>{{ selectedOption.name }}</div>
+                        </div>
+                    </ng-template>
+                    <ng-template let-category #item>
+                        <div class="flex items-center gap-2">
+                            <img src="{{ BASE_IMG_URL_c }}/{{ category.picture }}" class="w-4 h-4" />
+                            <div>{{ category.name }}</div>
+                        </div>
+                    </ng-template>
+                </p-select>
+                <label for="category">בחר קטגוריה</label>
+            </p-floatlabel>
+        </div>
+
+        <div class="flex flex-column gap-2 mb-4 col-12 md:col-6">
+            <p-floatlabel variant="in">
+                <p-select class="w-full" [options]="donors" formControlName="donorId" optionLabel="first_name"
+                    optionValue="id" appendTo="body" id="donor">
+                </p-select>
+                <label for="donor">בחר תורם</label>
+            </p-floatlabel>
+        </div>
+
+        <div class="flex flex-column gap-3 mb-4 col-12">
+            <label class="font-bold">תמונת המתנה</label>
+            <p-fileUpload #f mode="basic" [auto]="true" chooseLabel="בחר תמונה" accept="image/*"
+                (onSelect)="onFileSelect($event)" class="w-fit" />
+            @if(previewImage) {
+            <div class="relative mt-2 border-round overflow-hidden shadow-2" style="width: 120px; height: 120px;">
+                <img [src]="previewImage" class="w-full h-full object-cover" />
+                <button pButton (click)="f.clear(); previewImage = null" icon="pi pi-trash"
+                    class="p-button-rounded p-button-danger p-button-sm absolute top-0 right-0 m-1"></button>
+            </div>
+            }
+        </div>
+
+        <div class="flex gap-4 mb-4 col-12">
+            <div class="flex align-items-center gap-2">
+                <p-checkbox formControlName="is_lottery" [binary]="true" inputId="is_lottery"></p-checkbox>
+                <label for="is_lottery">זמין להגרלה</label>
+            </div>
+            <div class="flex align-items-center gap-2">
+                <p-checkbox formControlName="is_approved" [binary]="true" inputId="is_approved"></p-checkbox>
+                <label for="is_approved">מאושר לפרסום</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex justify-content-end gap-2 mt-5">
+        <p-button label="ביטול" icon="pi pi-times" [text]="true" severity="secondary" (click)="cancel()" />
+        <p-button label="שמור" icon="pi pi-check" (click)="save()" [disabled]="giftForm.invalid" />
+    </div>
+</div>

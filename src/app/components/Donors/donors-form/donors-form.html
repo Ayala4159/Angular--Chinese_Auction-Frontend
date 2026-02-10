@@ -32,10 +32,10 @@
         }
     </div>
     <div class="flex align-items-center gap-2 mb-4">
-        <p-checkbox formControlName="is_published" [binary]="true" inputId="is_published"></p-checkbox>
+        <p-checkbox formControlName="is_publish" [binary]="true" inputId="is_publish"></p-checkbox>
         <label for="is_published">פרסם את שם התורם</label>
     </div>
-    @if(donorForm.get('is_published')?.value) {
+    @if (donorForm.controls['is_publish'].value) {
     <div class="flex flex-column gap-2 mb-4">
         <label for="company_name" class="font-bold">שם חברה</label>
         <input pInputText id="company_name" formControlName="company_name" placeholder="הכנס שם חברה..."

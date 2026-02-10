@@ -23,14 +23,15 @@ export class DonorService {
     const formData = new FormData();
     formData.append('Email', donorData.email);
     formData.append('Password', donorData.password);
-    formData.append('First_Name', donorData.First_Name);
-    formData.append('Last_Name', donorData.Last_Name);
-    formData.append('Phone', donorData.phone);
-    formData.append('Company_Name', donorData.Company_Name);
-    formData.append('Company_Description', donorData.Company_Description);
-    formData.append('Company_Picture', 'enpty');
-    formData.append('Is_publish', donorData.Is_publish);
-    formData.append('imageFile', imageFile);
+    formData.append('First_name', donorData.first_name);
+    formData.append('Last_name', donorData.last_name);  
+    formData.append('Phone', donorData.phone || '');
+    formData.append('Company_name', donorData.company_name || '');
+    formData.append('Company_description', donorData.company_description || '');
+    formData.append('Is_publish', String(donorData.is_published));
+    if (imageFile) {
+      formData.append('imageFile', imageFile);
+    }
     return this.http.post<any>(`${this.baseUrl}`, formData, { headers });
   }
   updateDonor(id: number, donorData: any, imageFile?: File) {
@@ -39,16 +40,15 @@ export class DonorService {
     const formData = new FormData();
     formData.append('Email', donorData.email);
     formData.append('Password', donorData.password);
-    formData.append('First_name', donorData.First_Name);
-    formData.append('Last_name', donorData.Last_Name);
-    formData.append('Phone', donorData.phone);
-    formData.append('Company_name', donorData.Company_Name);
-    formData.append('Company_description', donorData.Company_Description);
-    formData.append('Company_picture', 'enpty');
-    formData.append('Is_publish', donorData.Is_publish);
+    formData.append('First_name', donorData.first_name); 
+    formData.append('Last_name', donorData.last_name);
+    formData.append('Phone', donorData.phone || '');
+    formData.append('Company_name', donorData.company_name || '');
+    formData.append('Company_description', donorData.company_description || '');
+    formData.append('Is_publish', String(donorData.is_published)); 
     if (imageFile) {
       formData.append('imageFile', imageFile);
-    } 
+    }
     return this.http.put<any>(`${this.baseUrl}/${id}`, formData, { headers });
   }
   deleteDonor(id: number) {

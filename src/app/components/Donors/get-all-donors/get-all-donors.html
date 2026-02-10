@@ -8,9 +8,11 @@
         </ng-template>
     </p-toolbar>
 
-    <p-table [value]="donors" [rows]="10" [paginator]="true" [rowHover]="true">
+    <p-table [value]="donors" [dataKey]="'id'" [rows]="10" [paginator]="true" [rowHover]="true"
+        [expandedRowKeys]="expandedRows" (onRowExpand)="onRowExpand($event)" (onRowCollapse)="onRowCollapse($event)">
         <ng-template #header>
             <tr>
+                <th style="width: 5rem"></th>
                 <th>דוא"ל</th>
                 <th pSortableColumn="First_Name">שם פרטי<p-sortIcon field="First_Name" /></th>
                 <th pSortableColumn="Last_Name">שם משפחה<p-sortIcon field="Last_Name" /></th>
@@ -25,6 +27,10 @@
 
         <ng-template #body let-d>
             <tr>
+                <td>
+                    <p-button type="button" pRipple [pRowToggler]="d" [text]="true" severity="secondary"
+                        [rounded]="true" [icon]="expandedRows[d.id] ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
+                </td>
                 <td>{{ d.email }}</td>
                 <td>{{ d.first_name }}</td>
                 <td>{{ d.last_name }}</td>
@@ -34,9 +40,16 @@
                 </td>
                 <td>{{ d.company_name }}</td>
                 <td>{{ d.company_description }}</td>
+                @if(d.company_picture && d.company_picture !== '' && d.company_picture !== 'null') {
                 <td>
                     <img [src]="IMAGE_BASE_URL + d.company_picture" style="width: 50px" class="shadow-2 rounded" />
                 </td>
+                }
+                @else {
+                <td>
+                    <p-tag severity="info" value="אין לוגו" />
+                </td>
+                }
                 <td>
                     <p-button icon="pi pi-pencil" [rounded]="true" [outlined]="true" class="mr-2"
                         (onClick)="editDonor(d)" />
@@ -45,23 +58,84 @@
                 </td>
             </tr>
         </ng-template>
+        <ng-template #expandedrow let-donor>
+            <tr>
+                <td colspan="10">
+                    <div class="p-0">
+                        <h5>Donations for {{ donor.first_name }} {{ donor.last_name }}
+                            <p-button label="הוספת מתנה חדשה" icon="pi pi-user-plus" class="p-button-success m-2 text-sm"
+                                (onClick)="addGift(donor)" /></h5>
+                        <p-table [value]="donor.donations" dataKey="id">
+                            <ng-template #header>
+            <tr>
+             <th pSortableColumn="id">
+                <div class="flex items-center gap-2">
+                    Id
+                    <p-sortIcon field="price" />
+                </div>
+                </th>
+                <th pSortableColumn="customer">
+                    <div class="flex items-center gap-2">
+                        Name
+                        <p-sortIcon field="customer" />
+                    </div>
+                </th>
+                <th pSortableColumn="date">
+                    <div class="flex items-center gap-2">
+                        Description
+                        <p-sortIcon field="date" />
+                    </div>
+                </th>
+                <th pSortableColumn="amount">
+                    <div class="flex items-center gap-2">
+                        Details
+                        <p-sortIcon field="amount" />
+                    </div>
+                </th>
+                <th pSortableColumn="status">
+                    <div class="flex items-center gap-2">
+                        Picture
+                        <p-sortIcon field="status" />
+                    </div>
+                </th>
+                <th pSortableColumn="status">
+                    <div class="flex items-center gap-2">
+                        Num of bids
+                        <p-sortIcon field="status" />
+                    </div>
+                </th>
+                <th style="width: 4rem">
+                    <div class="flex items-center gap-2">
+                        Value
+                    </div>
+                </th>
+                <th style="width: 4rem">
+                    <div class="flex items-center gap-2">
+                        Edit
+                    </div>
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template #body let-donation>
+            <tr>
+                <td>{{ donation.id }}</td>
+                <td>{{ donation.name }}</td>
+                <td>{{ donation.description }}</td>
+                <td>{{ donation.details }}</td>
+                <td>
+                    <img [src]="IMAGE_BASE_URL_GIFT + donation.picture" style="width: 50px" class="shadow-2 rounded" />
+                </td>
+                <td>{{ donation.purchase_quentity }}</td>
+                <td>{{ donation.value }}</td>
+                <td>
+                    <p-button icon="pi pi-pencil" (onClick)="editGift(donation)" [rounded]="true" [outlined]="true" class="mr-2" />
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template #emptymessage>
+            <tr>
+                <td colspan="10">There are no donations for this donor yet.</td>
+            </tr>
+        </ng-template>
     </p-table>
 </div>
-
-<p-dialog [(visible)]="donorDialog" [style]="{width: '450px'}" header="עריכת תורם" [modal]="true" class="p-fluid">
-    <ng-template #content>
-        <div class="field mb-4">
-            <label for="name">שם פרטי</label>
-            <input type="text" pInputText id="name" [(ngModel)]="donor.First_Name" />
-        </div>
-        <div class="field mb-4">
-            <label for="cname">שם חברה</label>
-            <input type="text" pInputText id="cname" [(ngModel)]="donor.Company_Name" />
-        </div>
-    </ng-template>
-
-    <ng-template #footer>
-        <p-button label="ביטול" icon="pi pi-times" text (onClick)="donorDialog = false" />
-        <p-button label="עדכן" icon="pi pi-check" (onClick)="saveDonor()" />
-    </ng-template>
-</p-dialog>

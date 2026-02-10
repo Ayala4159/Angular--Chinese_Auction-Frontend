@@ -57,7 +57,7 @@ export class DonorsForm implements OnInit {
       first_name: new FormControl('', [Validators.required, Validators.minLength(2)]),
       last_name: new FormControl('', [Validators.required, Validators.minLength(2)]),
       password: new FormControl('', [Validators.required, Validators.minLength(6)]),
-      is_published: new FormControl(false),
+      is_publish: new FormControl(false),
       company_name: new FormControl('', [Validators.minLength(2)]),
       company_description: new FormControl('', [ Validators.minLength(10)]),
       company_picture: new FormControl(null)
@@ -77,7 +77,7 @@ export class DonorsForm implements OnInit {
     if (fileUpload) {
       fileUpload.clear();
     }
-    this.donorForm.get('company_picture')?.setValue(null); // שינוי כאן
+    this.donorForm.get('company_picture')?.setValue(null);
     this.previewImage = null;
   }
   save() {
