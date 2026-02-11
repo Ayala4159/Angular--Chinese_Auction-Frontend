@@ -1,6 +1,6 @@
 import { Component, HostListener, inject, OnInit } from '@angular/core';
 import { CommonModule, SlicePipe } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
 // PrimeNG 18+ Modules
@@ -34,13 +34,18 @@ export class Menu implements OnInit {
   searchValue: string = '';
   showMenu = false;
   showUserDropdown = false;
-  
+
   authService = inject(AuthenticationService);
   categoryService = inject(CategoryService);
-  
-  readonly IMAGE_BASE_URL = 'https://localhost:7282/images/categories/'; 
+
+  readonly IMAGE_BASE_URL = 'https://localhost:7282/images/categories/';
   categories: any[] = [];
 
+  router = inject(Router);
+
+  navigateToGifts(categoryId: number) {
+    this.router.navigate(['/gifts', categoryId]);
+  }
   ngOnInit() {
     this.categoryService.getCategories().subscribe({
       next: (data) => this.categories = data,

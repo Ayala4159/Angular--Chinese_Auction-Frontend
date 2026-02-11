@@ -4,7 +4,7 @@
 }
 <div class="flex flex-row flex-wrap justify-content-center gap-4 p-5">
     @for (category of (categories$ | async); track category.id) {
-    <div class="category-item animate-fadein">
+    <div (click)="navigateToGifts(category.id)" class="category-item animate-fadein">
         <p-card [style]="{ width: '20rem', overflow: 'hidden' }"
             class="shadow-2 hover:shadow-5 transition-duration-300">
             <ng-template #header>

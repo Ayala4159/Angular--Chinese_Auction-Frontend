@@ -9,12 +9,12 @@ import { DialogService, DynamicDialogModule, DynamicDialogRef } from 'primeng/dy
 import { ToastModule } from 'primeng/toast';
 import { CommonModule } from '@angular/common';
 import { map } from 'rxjs';
-
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-get-all-packages',
   standalone: true,
-  imports: [ButtonModule, CardModule, AsyncPipe, DynamicDialogModule, ToastModule, CommonModule],
+  imports: [ButtonModule, CardModule, AsyncPipe, DynamicDialogModule, ToastModule, CommonModule, RouterModule],
   providers: [DialogService, MessageService],
   templateUrl: './get-all-packages.html',
   styleUrl: './get-all-packages.scss',

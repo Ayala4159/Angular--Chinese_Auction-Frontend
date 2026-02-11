@@ -7,6 +7,7 @@ import { CategoriesForm } from '../categories-form/categories-form';
 import { DialogService, DynamicDialogModule, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-get-all-categories',
   standalone: true,
@@ -25,7 +26,11 @@ export class GetAllCategories {
   user: string = localStorage.getItem('user') || '';
   role: string = this.user ? JSON.parse(this.user).role : '';
   isChildVisible: boolean = false;
+  router = inject(Router);
 
+  navigateToGifts(categoryId: number) {
+    this.router.navigate(['/gifts', categoryId]);
+  }
   showChild() {
     this.ref = this.dialogService.open(CategoriesForm, {
       header: 'הוספת קטגוריה חדשה',
@@ -75,6 +80,7 @@ export class GetAllCategories {
       this.messageService.add({ severity: 'error', summary: 'שגיאה', detail: error.error, life: 3000 });
     });
   }
+
 }
 
 

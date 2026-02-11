@@ -1,0 +1,43 @@
+/* עיצוב הכרטיס הכללי */
+.custom-card {
+    transition: transform 0.3s ease, shadow 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.custom-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12) !important;
+}
+
+/* אפקט לתמונה */
+.product-image {
+    height: 250px;
+    object-fit: cover;
+}
+
+.custom-card:hover .product-image {
+    transform: scale(1.05);
+}
+
+/* תגית המחיר - מראה יוקרתי */
+.price-tag {
+    background: rgba(15, 23, 42, 0.8); /* כמעט שחור עם שקיפות */
+    backdrop-filter: blur(8px);
+    font-size: 0.9rem;
+}
+
+/* עיצוב כפתור ההוספה לסל */
+::ng-deep .cart-btn {
+    background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%) !important;
+    border: none !important;
+    transition: filter 0.2s;
+}
+
+::ng-deep .cart-btn:hover {
+    filter: brightness(1.1);
+}
+
+/* כפתור פרטים עדין */
+::ng-deep .detail-btn {
+    background-color: var(--surface-100) !important;
+}

@@ -11,15 +11,15 @@
 
         <ul class="nav-links hidden md:flex list-none gap-2 p-0 m-0 align-items-center mr-4">
             <li class="has-mega relative py-3 px-4 cursor-pointer font-medium text-gray-300 transition-colors hover:text-primary"
-                (mouseenter)="showMenu = true" (mouseleave)="showMenu = false" routerLink="categories">
-                קטגוריות <span class="arrow transition-transform inline-block mr-1">▾</span>
+                (mouseenter)="showMenu = true" (mouseleave)="showMenu = false">
+                קטגוריות <span  routerLink="categories" class="arrow transition-transform inline-block mr-1">▾</span>
 
                 <div class="mega-menu absolute top-90 right-0 z-5 surface-card shadow-8 border-round-2xl p-4 w-30rem"
                     *ngIf="showMenu">
 
                     <div class="grid flex-row-reverse hover:border-1 border- p-2">
                         <div class="col-4 p-2" *ngFor="let item of categories | slice:0:3; let i = index">
-                            <div class="menu-card flex flex-column align-items-center gap-2 border-1 border-gray-500 hover:border-orange-500 p-3 border-round-lg transition-all"
+                            <div (click)="navigateToGifts(item.id)" class="menu-card flex flex-column align-items-center gap-2 border-1 border-gray-500 hover:border-orange-500 p-3 border-round-lg transition-all"
                                 [style.animation-delay]="i * 0.1 + 's'">
 
                                 <div

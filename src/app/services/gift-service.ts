@@ -21,6 +21,9 @@ export class GiftService {
   getGiftById(id: number) {
     return this.http.get<any>(`${this.baseUrl}/${id}`);
   }
+  getGiftsByCategory(categoryId: number) {
+    return this.http.get<any>(`${this.baseUrl}/category/${categoryId}`);
+  }
   addGift(giftData: any, imageFile: File) {
 
     const token = localStorage.getItem('token');

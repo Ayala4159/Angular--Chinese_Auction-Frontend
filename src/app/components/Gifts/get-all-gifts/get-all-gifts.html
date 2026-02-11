@@ -1,1 +1,47 @@
-<p>get-all-gifts works!</p>
+
+ <p-button label="הוספת מתנה חדשה" icon="pi pi-user-plus" class="p-button-success m-2 text-sm"(onClick)="addGift()" />
+<div class="grid p-4 justify-content-center">
+    <div *ngFor="let gift of gifts" class="col-12 sm:col-6 lg:col-4 xl:col-3 p-3">
+       
+        <div class="custom-card relative p-0 border-round-2xl overflow-hidden surface-card shadow-4">
+           
+            <div class="relative overflow-hidden">
+                <img [src]="IMAGE_BASE_URL + gift.picture" [alt]="gift.name" class="gift-image w-full block transition-duration-300">
+                <div class="absolute top-0 right-0 m-3">
+                    <span class="price-tag text-black font-bold py-2 px-3 border-round-pill shadow-2">
+                       שווי המתנה {{ gift.value | currency: 'ILS' }}
+                    </span>
+                </div>
+            </div>
+
+
+
+
+            <div class="p-4">
+                <div class="flex flex-column gap-2 mb-4">
+                    <h2 class="text-2xl font-bold text-900 m-0">{{ gift.name }}</h2>
+                    <h4 class="text-600 line-height-3 m-0 text-sm h-3rem overflow-hidden">
+                        {{ gift.description }}
+                    </h4>
+                    <p>{{gift.details}}</p>
+                </div>
+
+
+
+
+                <div class="flex align-items-center gap-2">
+                    <button pButton pRipple icon="pi pi-shopping-cart" label="הוספת כרטיס לחבילה"
+                            class="p-button-rounded flex-grow-1 font-bold cart-btn" (click)="addToCart(gift)">
+                    </button>
+                    <button pButton pRipple icon="pi pi-info-circle"
+                            class="p-button-rounded p-button-text p-button-secondary detail-btn" (click)="showDetails(gift)">
+                    </button>
+                </div>
+            </div>
+           
+        </div>
+       
+    </div>
+</div>
+
+
