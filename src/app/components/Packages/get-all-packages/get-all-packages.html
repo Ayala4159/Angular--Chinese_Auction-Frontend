@@ -42,8 +42,8 @@
 
             @if (role === '0') {
               <div class="flex justify-content-end gap-2 mt-3 opacity-50 hover:opacity-100 transition-all">
-                <p-button icon="pi pi-pencil" [text]="true" severity="secondary" size="small" (onClick)="onEditPackage(package.id)"></p-button>
-                <p-button icon="pi pi-trash" [text]="true" severity="danger" size="small" (onClick)="onDeletePackage(package.id)"></p-button>
+                <p-button icon="pi pi-pencil" [text]="true" severity="secondary" size="small" ></p-button>
+                <p-button icon="pi pi-trash" [text]="true" severity="danger" size="small"></p-button>
               </div>
             }
           </div>
@@ -56,3 +56,21 @@
 
 <p-button class="bg-orange-500 hover:bg-orange-600" label="לבחירת כרטיסים" icon="pi pi-gift" routerLink="/gifts"></p-button>
 
+<p-toast />
+<p-confirmdialog #cd>
+    <ng-template pTemplate="headless" let-message let-onAccept="onAccept" let-onReject="onReject">
+        @if (message) {
+        <div class="flex flex-column align-items-center p-8 surface-overlay border-round shadow-2 text-center">
+            <div class="border-circle bg-primary text-white inline-flex justify-content-center align-items-center h-6rem w-6rem -mt-8 shadow-4">
+                <i class="pi pi-question text-5xl"></i>
+            </div>
+            <span class="font-bold text-2xl block mb-2 mt-6">{{ message.header }}</span>
+            <p class="mb-4 text-600 px-4">{{ message.message }}</p>
+            <div class="flex align-items-center justify-content-center gap-3 mt-4">
+                <p-button [label]="message.acceptLabel" (onClick)="onAccept()" styleClass="w-15rem"></p-button>
+                <p-button [label]="message.rejectLabel"  [outlined]="true" (onClick)="onReject()" styleClass="w-15rem"></p-button>
+            </div>
+        </div>
+        }
+    </ng-template>
+</p-confirmdialog>

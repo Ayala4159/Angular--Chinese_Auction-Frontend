@@ -97,7 +97,8 @@ export class GetAllDonors implements OnInit {
       data: donor
     });
     this.ref?.onClose.subscribe((result) => {
-      if (result) {
+      if (result) { 
+               
         this.donorService.updateDonor(donor.id, result, result.company_picture).subscribe({
           next: (newDonor) => {
             const index = this.donors.findIndex(d => d.id === donor.id);

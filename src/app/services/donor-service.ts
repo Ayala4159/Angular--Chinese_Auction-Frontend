@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { from } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -45,7 +46,7 @@ export class DonorService {
     formData.append('Phone', donorData.phone || '');
     formData.append('Company_name', donorData.company_name || '');
     formData.append('Company_description', donorData.company_description || '');
-    formData.append('Is_publish', String(donorData.is_published)); 
+    formData.append('Is_publish', String(donorData.is_publish)); 
     if (imageFile) {
       formData.append('imageFile', imageFile);
     }

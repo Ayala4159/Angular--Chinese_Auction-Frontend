@@ -1,0 +1,230 @@
+<div class="card p-4 md:p-6 surface-ground min-h-screen">
+    <div class="flex justify-content-between align-items-center mb-6 px-4">
+        <p-tag [value]="allCards.length + ' פריטים בסל'" severity="info"
+            styleClass="border-round-pill px-3 shadow-1"></p-tag>
+        <h1 class="m-0 text-4xl font-black text-900">הסל שלי</h1>
+    </div>
+
+    <p-dataView #dv [value]="allCards" [rows]="10" [paginator]="true">
+        <ng-template #list let-items>
+            <div class="flex flex-column gap-5 align-items-center">
+
+                <div *ngFor="let item of items; let i = index"
+                    class="gift-card relative flex flex-column md:flex-row align-items-stretch surface-card border-round-2xl shadow-2 hover:shadow-6 transition-all transition-duration-400 w-full max-w-5xl overflow-hidden border-1 surface-border"
+                    [style.animation-delay]="i * 0.1 + 's'">
+
+                    <div class="image-container relative flex-shrink-0">
+                        <img [src]="BASE_URL + item.picture" [alt]="item.name"
+                            class="absolute w-full h-full object-cover">
+
+                        <div class="absolute top-0 right-0 m-3 bg-primary text-white border-circle flex flex-column align-items-center justify-content-center shadow-4 border-2 border-white"
+                            style="width: 55px; height: 55px; z-index: 10;">
+                            <span class="text-xl font-black line-height-1">{{ item.quantity }}</span>
+                            <span style="font-size: 0.6rem;" class="font-bold uppercase">כרטיסים</span>
+                        </div>
+                        <div>
+                            <p-button (onClick)="addToBasket(item.id)" [icon]="'pi pi-plus'" [rounded]="true"
+                                [raised]="true" [text]="true" severity="secondary" [rounded]="true" [text]="true">
+                            </p-button>
+                            <p-button (onClick)="removeFromBasket(item.id)" [icon]="'pi pi-minus'" [rounded]="true"
+                                [raised]="true" [text]="true" severity="secondary" [rounded]="true" [text]="true">
+                            </p-button>
+                        </div>
+                        <div class="absolute bottom-0 w-full p-3 bg-gradient-bottom text-white font-bold text-sm">
+                            שווי המתנה: {{ item.value | currency: 'ILS' }}
+                        </div>
+                    </div>
+
+                    <div class="flex-1 p-5 flex flex-column text-right">
+                        <div class="flex justify-content-between align-items-start mb-2">
+                            <p-button (onClick)="toggleFavorite(item.id)"
+                                [icon]="isFavorite(item.id) ? 'pi pi-heart-fill' : 'pi pi-heart'"
+                                [severity]="isFavorite(item.id) ? 'danger' : 'secondary'" [rounded]="true" [text]="true"
+                                styleClass="fav-btn">
+                            </p-button>
+
+                            <div class="flex flex-column gap-1">
+                                <span class="text-primary font-bold text-sm uppercase tracking-wider"
+                                    *ngIf="item.category">
+                                    {{ item.category.name }}
+                                </span>
+                                <h2 class="m-0 text-3xl font-black text-900 leading-tight">{{ item.name }}</h2>
+                            </div>
+                        </div>
+
+                        <p class="text-600 line-height-4 mt-2 mb-4 text-lg font-light">{{ item.description }}</p>
+                        <p class="text-500 line-height-3 m-0 text-sm italic">{{ item.details }}</p>
+
+                        <div
+                            class="mt-auto flex align-items-center justify-content-end gap-3 border-top-1 surface-border pt-4">
+                            <div class="text-right">
+                                <span class="block text-400 text-xs font-bold uppercase">נתרם באהבה ע"י</span>
+                                <span class="text-700 font-bold">
+                                    {{ item.donor.is_publish&&item.donor.company_name ? ' נדיב: ' +
+                                    item.donor.company_name : 'החפץ בעילום שמו'
+                                    }}
+                                </span>
+                            </div>
+                            <div class="surface-100 border-circle p-2 flex align-items-center justify-content-center"
+                                style="width: 40px; height: 40px;">
+                                @if (item.donor.is_publish) {
+                                <img [src]="DONOR_BASE_URL + item.donor.company_picture" [alt]="item.donor.company_name"
+                                    class="w-3rem h-3rem object-cover border-circle shadow-1">
+                                } @else {
+                                <i class="pi pi-user text-primary text-xl"></i>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </ng-template>
+    </p-dataView>
+</div>
+
+<div class="card p-4 md:p-6 surface-ground min-h-screen text-right" dir="rtl">
+    <div class="grid mt-4">
+        @if (allCards.length > 0) {
+        <div class="col-12 lg:col-9">
+            <p-dataView #dv [value]="allCards" [rows]="10" [paginator]="true">
+                <ng-template pTemplate=#list let-items>
+                    <div class="flex flex-column gap-5 align-items-center">
+                        <div *ngFor="let item of items; let i = index" pAnimateOnScroll enterClass="fadeinright"
+                            class="relative flex flex-column md:flex-row align-items-stretch surface-card border-round-2xl shadow-2 hover:shadow-6 transition-all transition-duration-400 w-full max-w-5xl overflow-hidden border-1 surface-border">
+                            <div class="relative flex-shrink-0 shadow-3" style="width: 250px; min-height: 200px;">
+                                <img [src]="BASE_URL + item.picture" [alt]="item.name"
+                                    class="absolute w-full h-full object-cover transition-transform transition-duration-700 hover:scale-110">
+
+                                <div class="absolute top-0 left-0 m-3 bg-primary text-white border-circle flex flex-column align-items-center justify-content-center shadow-4 border-2 border-white"
+                                    style="width: 55px; height: 55px; z-index: 10;">
+                                    <span class="text-xl font-black line-height-1">{{ item.user_count || 1 }}</span>
+                                    <span style="font-size: 0.6rem;" class="font-bold uppercase">כרטיסים</span>
+                                </div>
+                                <div>
+                                    <p-button (onClick)="addToBasket(item)" [icon]="'pi pi-plus'" [severity]="'primary'"
+                                        [rounded]="true" [text]="true" styleClass="fav-btn">
+                                    </p-button>
+                                    <p-button (onClick)="removeFromBasket(item.id)" [icon]="'pi pi-minus'"
+                                        [severity]="'primary'" [rounded]="true" [text]="true" styleClass="fav-btn"
+                                        class="sursace-100">
+                                    </p-button>
+                                </div>
+                                <div class="absolute bottom-0 w-full p-3 bg-black-alpha-60 text-white font-bold text-lg text-center"
+                                    style="backdrop-filter: blur(4px);">
+                                    שווי: {{ item.value | currency: 'ILS' }}
+                                </div>
+                            </div>
+                            <div class="flex-1 p-5 flex flex-column">
+                                <div class="flex justify-content-between align-items-start mb-2">
+                                    <div class="flex flex-column gap-1 text-right">
+                                        <div class="flex gap-2 align-items-center">
+                                            <span class="text-primary font-bold text-sm uppercase tracking-wider">
+                                                {{ item.category?.name || 'ללא קטגוריה' }}
+                                            </span>
+                                            <p-tag *ngIf="item.isLottery" value="הגרלה פעילה" severity="success"
+                                                icon="pi pi-ticket" styleClass="shadow-1"></p-tag>
+                                        </div>
+                                        <h2 class="m-0 text-3xl font-black text-900 leading-tight">{{ item.name }}</h2>
+                                    </div>
+
+                                    <p class="text-600 line-height-4 mt-2 mb-4 text-lg font-light text-right">{{
+                                        item.description }}</p>
+                                    <p class="text-500 line-height-3 m-0 text-sm italic text-right">{{ item.details }}
+                                    </p>
+                                    <div
+                                        class="mt-auto flex align-items-center justify-content-start gap-3 border-top-1 surface-border pt-4">
+                                        <div class="flex align-items-center gap-3">
+                                            <div class="surface-100 border-circle flex align-items-center justify-content-center shadow-1 overflow-hidden"
+                                                style="width: 45px; height: 45px;">
+                                                <img *ngIf="item.donor?.is_publish && item.donor?.company_picture"
+                                                    [src]="DONOR_BASE_URL + item.donor?.company_picture"
+                                                    [alt]="item.donor?.company_name" class="w-full h-full object-cover">
+                                                <i *ngIf="!(item.donor?.is_publish && item.donor?.company_picture)"
+                                                    class="pi pi-user text-primary text-xl"></i>
+                                            </div>
+                                            <div class="flex flex-column text-right">
+                                                <span class="block text-400 text-xs font-bold uppercase">נתרם באהבה
+                                                    ע"י</span>
+                                                <span *ngIf="item.donor?.is_publish"
+                                                    class="text-700 font-bold line-height-1 mb-1">
+                                                    {{ item.donor?.company_name }} {{ item.donor?.company_description }}
+                                                </span>
+                                                <span *ngIf="!item.donor?.is_publish"
+                                                    class="text-700 font-bold italic">החפץ
+                                                    בעילום שמו</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+            </p-dataView>
+        </div>
+
+
+        <div class="col-12 lg:col-3">
+            <div class="surface-card p-4 shadow-4 border-round-2xl border-1 surface-border sticky"
+                style="top: 2rem; z-index: 10;">
+                <h2 class="text-900 font-bold text-xl mb-4 border-bottom-1 surface-border pb-3">סיכום הזמנה</h2>
+                <div class="flex flex-column gap-3">
+                    <div *ngFor="let pack of uniquePackages" class="flex flex-column mb-2  pb-2">
+                        <span class="text-700 font-bold text-sm">{{ pack.name }}</span>
+                        <div class="flex justify-content-between mt-1">
+                            <span class="text-600 text-xs">כמות: {{ pack.package_count }}</span>
+                            <span class="text-900 font-bold text-sm">{{ (pack.price * pack.package_count) |
+                                currency:'ILS' }}</span>
+                        </div>
+                    </div>
+                    <div class="flex justify-content-between align-items-center mt-2">
+                        <span class="text-900 text-sm font-bold">סה"כ לתשלום:</span>
+                        <span class="text-primary text-xl font-black">{{ totalPrice() | currency: 'ILS' }}</span>
+                    </div>
+                    <p-button label="המשך" icon="pi pi-credit-card"
+                        styleClass="w-full p-button-raised p-button-success mt-4 py-2 font-bold">
+                    </p-button>
+                </div>
+            </div>
+        </div>
+        }
+        @else {
+        <div class="col-12">
+            <div class="flex flex-column align-items-center justify-content-center p-8 mt-8">
+                <i class="pi pi-shopping-cart text-6xl text-primary mb-4 opacity-50"></i>
+                <h2 class="text-2xl font-bold text-900 m-0">הסל שלך ריק...</h2>
+                <p class="text-600 mt-2 mb-4">הוסף מתנות לסל שלך כדי להשתתף בהגרלה!</p>
+                <p-button label="חזרה לכל המתנות" icon="pi pi-arrow-right" routerLink="/gifts"></p-button>
+            </div>
+        </div>
+        }
+    </div>
+</div>
+<p-toast />
+<p-confirmpopup />
+
+
+
+
+<p-toast />
+<p-confirmdialog #cd>
+    <ng-template pTemplate="headless" let-message let-onAccept="onAccept" let-onReject="onReject">
+        @if (message) {
+        <div class="flex flex-column align-items-center p-8 surface-overlay border-round shadow-2 text-center">
+            <div
+                class="border-circle bg-primary text-white inline-flex justify-content-center align-items-center h-6rem w-6rem -mt-8 shadow-4">
+                <i class="pi pi-question text-5xl"></i>
+            </div>
+            <span class="font-bold text-2xl block mb-2 mt-6">{{ message.header }}</span>
+            <p class="mb-4 text-600 px-4">{{ message.message }}</p>
+            <div class="flex align-items-center justify-content-center gap-3 mt-4">
+                <p-button [label]="message.acceptLabel" (onClick)="onAccept()" routerLink="/"
+                    styleClass="w-15rem"></p-button>
+                <p-button [label]="message.rejectLabel" [outlined]="true" (onClick)="onReject()"
+                    styleClass="w-15rem"></p-button>
+            </div>
+        </div>
+        }
+    </ng-template>
+</p-confirmdialog>

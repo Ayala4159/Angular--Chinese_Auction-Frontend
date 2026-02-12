@@ -10,17 +10,20 @@ import { ToastModule } from 'primeng/toast';
 import { CommonModule } from '@angular/common';
 import { map } from 'rxjs';
 import { RouterModule } from '@angular/router';
+import { ConfirmationService } from 'primeng/api';
+import { ConfirmDialog } from 'primeng/confirmdialog';
 
 @Component({
   selector: 'app-get-all-packages',
   standalone: true,
-  imports: [ButtonModule, CardModule, AsyncPipe, DynamicDialogModule, ToastModule, CommonModule, RouterModule],
-  providers: [DialogService, MessageService],
+  imports: [ButtonModule, CardModule, AsyncPipe, DynamicDialogModule, ToastModule, CommonModule, RouterModule, ConfirmDialog],
+  providers: [DialogService, MessageService, ConfirmationService],
   templateUrl: './get-all-packages.html',
   styleUrl: './get-all-packages.scss',
 })
 export class GetAllPackages {
   messageService = inject(MessageService);
+  confirmationService = inject(ConfirmationService);
   dialogService = inject(DialogService);
   packageService = inject(PackageService);
   packages$: any = this.packageService.getPackages().pipe(
@@ -34,8 +37,9 @@ export class GetAllPackages {
   ref: DynamicDialogRef<any> | null = null;
   user: string = localStorage.getItem('user') || '';
   role: string = this.user ? JSON.parse(this.user).role : '';
-  userPackages: any[] = JSON.parse(localStorage.getItem('userPackages') || '[]');
+  userPackages: any[] = JSON.parse(localStorage.getItem(JSON.parse(this.user).id) || '[]');
   isChildVisible: boolean = false;
+
   showChild() {
     this.ref = this.dialogService.open(PackageForm, {
       header: 'הוספת חבילה חדשה',
@@ -43,8 +47,6 @@ export class GetAllPackages {
       contentStyle: { overflow: 'auto' },
       baseZIndex: 10000
     });
-
-
     this.ref?.onClose.subscribe((result) => {
       if (result) {
         this.packageService.addPackage(result).subscribe({
@@ -70,70 +72,34 @@ export class GetAllPackages {
     });
   }
 
-  ngOnInit() {
-  }
-
-
-  calculateTotal() {
-    let total = 0;
-    this.packages$.subscribe((packages: any[]) => {
-      packages.forEach(pkg => {
-        if (pkg.quantity && pkg.quantity > 0) {
-          total += pkg.price * pkg.quantity;
-        }
-      });
-    });
-    return total;
-  }
-  hasSelections() {
-    let hasSelections = false;
-    this.packages$.subscribe((packages: any[]) => {
-      packages.forEach(pkg => {
-        if (pkg.quantity && pkg.quantity > 0) {
-          hasSelections = true;
-        }
-      });
-    });
-    return hasSelections;
-  }
   addPackage(packageData: any) {
     packageData.quantity = (packageData.quantity || 0) + 1
     this.userPackages.push({ id: packageData.id.toString(), emptyQuantity: packageData.numOfCards, cards: [] });
-    localStorage.setItem('userPackages', JSON.stringify(this.userPackages));
+    const u = JSON.parse(this.user).id;
+    localStorage.setItem(u, JSON.stringify(this.userPackages));
   }
   removePackage(packageData: any) {
-    let flag = false;
-    packageData.quantity = (packageData.quantity || 0) > 0 ? packageData.quantity - 1 : 0
-    this.userPackages = this.userPackages.filter((pkg: any) => {
-      if (pkg.id === packageData.id.toString() && !flag) {
-        flag = true;
-      }
-      else {
-        return pkg;
-      }
-    });
-    localStorage.setItem('userPackages', JSON.stringify(this.userPackages));
+    let flage = false;
+    this.confirmationService.confirm({
+      message: 'מחיקת חבילה תגרוך למחיקה של כל המתנות שהוספת לחבילה זו. האם אתה בטוח שברצונך למחוק את החבילה?',
+      header: 'מחיקת חבילה',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: "כן, למחוק",
+      rejectLabel: "אה לא! אני רוצה להשאיר את החבילה",
+      acceptButtonStyleClass: 'p-button-success',
+      rejectButtonStyleClass: 'p-button-text',
+      accept: () => {
+          this.userPackages=this.userPackages.reverse().filter((pkg: any) => {
+            if(pkg.id === packageData.id.toString() && !flage){
+              flage = true;
+              return false;
+            }
+            return true;
+          }).reverse();
+          localStorage.setItem(JSON.parse(this.user).id, JSON.stringify(this.userPackages));
+          this.messageService.add({ severity: 'info', summary: 'החבילה נמחקה' });
+          packageData.quantity = (packageData.quantity || 0) > 0 ? packageData.quantity - 1 : 0
+        }
+      });
   }
-
-  onEditPackage(id: any) { }
-  onDeletePackage(id: any) { }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

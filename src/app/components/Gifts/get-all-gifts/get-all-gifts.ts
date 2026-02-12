@@ -4,17 +4,18 @@ import { GiftService } from '../../../services/gift-service';
 import { ChangeDetectorRef } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { GiftsForm } from '../gifts-form/gifts-form';
 import { DialogService, DynamicDialogModule, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
-
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { MessageService, ConfirmationService } from 'primeng/api';
+import { TagModule } from 'primeng/tag';
 @Component({
   selector: 'app-get-all-gifts',
   standalone: true,
-  imports: [CommonModule, ButtonModule, RippleModule, DynamicDialogModule, ToastModule],
-  providers: [GiftService, DialogService, MessageService],
+  imports: [CommonModule, ButtonModule, RippleModule, DynamicDialogModule, ToastModule, ConfirmDialogModule, RouterLink, TagModule],
+  providers: [GiftService, DialogService, MessageService, ConfirmationService],
   templateUrl: './get-all-gifts.html',
   styleUrl: './get-all-gifts.scss',
 })
@@ -23,10 +24,12 @@ export class GetAllGifts implements OnInit {
 
   giftService = inject(GiftService);
   cdr = inject(ChangeDetectorRef);
+  router = inject(Router);
   route = inject(ActivatedRoute);
   dialogService = inject(DialogService);
   messageService = inject(MessageService);
   ref: DynamicDialogRef<any> | null = null;
+  private confirmationService = inject(ConfirmationService);
 
   products: any[] = [];
   gifts: any[] = [];
@@ -43,7 +46,7 @@ export class GetAllGifts implements OnInit {
       }
     });
     console.log(this.gifts);
-    
+
   }
 
   loadGiftsByCategory(id: number) {
@@ -62,36 +65,98 @@ export class GetAllGifts implements OnInit {
   }
 
   addToCart(product: any) {
-    console.log('נוסף לסל:', product.name);
+    const user = localStorage.getItem('user');
+    if (!user) {
+      this.confirmationService.confirm({
+        message: '?אופס, נראה שאתה לא מחובר. רוצה להתחבר עכשיו',
+        header: 'לא מחובר',
+        icon: 'pi pi-exclamation-triangle',
+        acceptLabel: "כן, אני רוצה להתחבר",
+        rejectLabel: "לא, אני רוצה להמשיך להסתכל",
+        accept: () => {
+          this.router.navigate(['/login'])
+        },
+        reject: () => {
+          this.router.navigate(['/gifts']);
+        },
+
+      });
+      return;
+    }
+    let packages = JSON.parse(localStorage.getItem(JSON.parse(user).id) || '[]');
+    if (packages.length === 0) {
+      this.confirmationService.confirm({
+        message: '?אופס, לא בחרת עדיין חבילה. רוצה להוסיף חבילה חדשה',
+        header: 'לא נמצאו חבילות',
+        icon: 'pi pi-exclamation-triangle',
+        acceptLabel: "אה! אני רוצה להוסיף חבילה",
+        rejectLabel: "...לא:-) אני רוצה להמשיך להסתכל",
+        acceptButtonStyleClass: 'p-button-success',
+        rejectButtonStyleClass: 'p-button-text',
+        accept: () => {
+          this.router.navigate(['/']);
+        },
+        reject: () => {
+          this.router.navigate(['/gifts']);
+        }
+
+      });
+      return;
+    }
+
+    const existingPackage = packages.find((p: any) => p.emptyQuantity > 0)
+    if (existingPackage) {
+      existingPackage.cards.push(product);
+      existingPackage.emptyQuantity--;
+    } else {
+      this.confirmationService.confirm({
+        message: '?אופס, נגמרו לך הכרטיסים הריקים בחבילות שבחרת. רוצה להוסיף חבילה חדשה',
+        header: 'הכרטיסים בחבילות אזלו',
+        icon: 'pi pi-exclamation-triangle',
+        acceptLabel: "אה! אני רוצה להוסיף חבילה",
+        rejectLabel: "...לא:-) להמשיך להסתכל",
+        acceptButtonStyleClass: 'p-button-success',
+        rejectButtonStyleClass: 'p-button-text',
+        accept: () => {
+          this.router.navigate(['/']);
+        },
+        reject: () => {
+          this.router.navigate(['/gifts']);
+        }
+      });
+      return;
+    }
+    localStorage.setItem(JSON.parse(user).id, JSON.stringify(packages));
+    this.messageService.add({ severity: 'success', summary: 'הודעה', detail: 'המתנה נוספה לחבילה בהצלחה' });
   }
 
   showDetails(product: any) {
     console.log('מעבר לפרטי המוצר:', product.id);
   }
   addGift() {
-      this.ref = this.dialogService.open(GiftsForm, {
-        header: 'הוספת מתנה חדשה',
-        width: '40%',
-        contentStyle: { overflow: 'auto' },
-        baseZIndex: 10000,
-      });
-      this.ref?.onClose.subscribe((result) => {
-        if (result) {
-          this.giftService.addGift(result, result.picture).subscribe({
-            next: (newGift) => {
-              this.gifts.push(newGift);
-              this.gifts = [...this.gifts];
-              this.cdr.detectChanges();
-              this.messageService.add({ severity: 'success', summary: 'עודכן', detail: 'המתנה נוספה בהצלחה' });
-            }
-            , error: (err) => {
-              this.messageService.add({ severity: 'error', summary: 'שגיאה', detail: 'הוספת המתנה נכשלה' });
-            }
-          });
-        }
-      });
-  
-    }
+    this.ref = this.dialogService.open(GiftsForm, {
+      header: 'הוספת מתנה חדשה',
+      width: '40%',
+      contentStyle: { overflow: 'auto' },
+      baseZIndex: 10000,
+    });
+    this.ref?.onClose.subscribe((result) => {
+      if (result) {
+        this.giftService.addGift(result, result.picture).subscribe({
+          next: (newGift) => {
+            this.gifts.push(newGift);
+            this.gifts = [...this.gifts];
+            this.cdr.detectChanges();
+            this.messageService.add({ severity: 'success', summary: 'עודכן', detail: 'המתנה נוספה בהצלחה' });
+          }
+          , error: (err) => {
+            this.messageService.add({ severity: 'error', summary: 'שגיאה', detail: 'הוספת המתנה נכשלה' });
+          }
+        });
+      }
+    });
+
+  }
 }
 
 

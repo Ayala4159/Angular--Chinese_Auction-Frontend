@@ -1,0 +1,11 @@
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: [
+    "./src/**/*.{html,ts}",
+    "./node_modules/primeng/**/*.{mjs,js,ts}" // זה השורה שגורמת ל-PrimeNG לעבוד עם Tailwind
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+}

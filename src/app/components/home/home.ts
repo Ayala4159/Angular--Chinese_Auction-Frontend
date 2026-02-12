@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { GetAllPackages } from '../../components/Packages/get-all-packages/get-all-packages';
+import { GetAllPackages } from '../Packages/get-all-packages/get-all-packages';
 @Component({
   selector: 'app-home',
   imports: [GetAllPackages],
