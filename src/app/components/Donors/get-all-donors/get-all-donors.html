@@ -1,4 +1,4 @@
-<p-toast />
+﻿<p-toast />
 <p-confirmDialog />
 
 <div class="card">
@@ -62,7 +62,7 @@
             <tr>
                 <td colspan="10">
                     <div class="p-0">
-                        <h5>Donations for {{ donor.first_name }} {{ donor.last_name }}
+                        <h5>Donations for {{ donor.First_name }} {{ donor.Last_name }}
                             <p-button label="הוספת מתנה חדשה" icon="pi pi-user-plus" class="p-button-success m-2 text-sm"
                                 (onClick)="addGift(donor)" /></h5>
                         <p-table [value]="donor.donations" dataKey="id">
@@ -118,15 +118,15 @@
         </ng-template>
         <ng-template #body let-donation>
             <tr>
-                <td>{{ donation.id }}</td>
-                <td>{{ donation.name }}</td>
-                <td>{{ donation.description }}</td>
-                <td>{{ donation.details }}</td>
+                <td>{{ donation.Id }}</td>
+                <td>{{ donation.Name }}</td>
+                <td>{{ donation.Description }}</td>
+                <td>{{ donation.Details }}</td>
                 <td>
-                    <img [src]="IMAGE_BASE_URL_GIFT + donation.picture" style="width: 50px" class="shadow-2 rounded" />
+                    <img [src]="IMAGE_BASE_URL_GIFT + donation.Picture" style="width: 50px" class="shadow-2 rounded" />
                 </td>
                 <td>{{ donation.purchase_quentity }}</td>
-                <td>{{ donation.value }}</td>
+                <td>{{ donation.Value }}</td>
                 <td>
                     <p-button icon="pi pi-pencil" (onClick)="editGift(donation)" [rounded]="true" [outlined]="true" class="mr-2" />
                 </td>

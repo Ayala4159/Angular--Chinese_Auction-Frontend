@@ -1,4 +1,4 @@
-<div class="card p-4 md:p-6 surface-ground min-h-screen">
+﻿<div class="card p-4 md:p-6 surface-ground min-h-screen">
     <div class="flex justify-content-between align-items-center mb-6 px-4">
         <p-tag [value]="allCards.length + ' פריטים בסל'" severity="info"
             styleClass="border-round-pill px-3 shadow-1"></p-tag>
@@ -44,10 +44,6 @@
                             </p-button>
 
                             <div class="flex flex-column gap-1">
-                                <span class="text-primary font-bold text-sm uppercase tracking-wider"
-                                    *ngIf="item.category">
-                                    {{ item.category.name }}
-                                </span>
                                 <h2 class="m-0 text-3xl font-black text-900 leading-tight">{{ item.name }}</h2>
                             </div>
                         </div>
@@ -55,26 +51,7 @@
                         <p class="text-600 line-height-4 mt-2 mb-4 text-lg font-light">{{ item.description }}</p>
                         <p class="text-500 line-height-3 m-0 text-sm italic">{{ item.details }}</p>
 
-                        <div
-                            class="mt-auto flex align-items-center justify-content-end gap-3 border-top-1 surface-border pt-4">
-                            <div class="text-right">
-                                <span class="block text-400 text-xs font-bold uppercase">נתרם באהבה ע"י</span>
-                                <span class="text-700 font-bold">
-                                    {{ item.donor.is_publish&&item.donor.company_name ? ' נדיב: ' +
-                                    item.donor.company_name : 'החפץ בעילום שמו'
-                                    }}
-                                </span>
-                            </div>
-                            <div class="surface-100 border-circle p-2 flex align-items-center justify-content-center"
-                                style="width: 40px; height: 40px;">
-                                @if (item.donor.is_publish) {
-                                <img [src]="DONOR_BASE_URL + item.donor.company_picture" [alt]="item.donor.company_name"
-                                    class="w-3rem h-3rem object-cover border-circle shadow-1">
-                                } @else {
-                                <i class="pi pi-user text-primary text-xl"></i>
-                                }
-                            </div>
-                        </div>
+                        <!-- Donor information can be added in future when relationship data is available -->
                     </div>
 
                 </div>
@@ -98,11 +75,11 @@
 
                                 <div class="absolute top-0 left-0 m-3 bg-primary text-white border-circle flex flex-column align-items-center justify-content-center shadow-4 border-2 border-white"
                                     style="width: 55px; height: 55px; z-index: 10;">
-                                    <span class="text-xl font-black line-height-1">{{ item.user_count || 1 }}</span>
+                                    <span class="text-xl font-black line-height-1">{{ item.quantity || 1 }}</span>
                                     <span style="font-size: 0.6rem;" class="font-bold uppercase">כרטיסים</span>
                                 </div>
                                 <div>
-                                    <p-button (onClick)="addToBasket(item)" [icon]="'pi pi-plus'" [severity]="'primary'"
+                                    <p-button (onClick)="addToBasket(item.id)" [icon]="'pi pi-plus'" [severity]="'primary'"
                                         [rounded]="true" [text]="true" styleClass="fav-btn">
                                     </p-button>
                                     <p-button (onClick)="removeFromBasket(item.id)" [icon]="'pi pi-minus'"
@@ -119,10 +96,7 @@
                                 <div class="flex justify-content-between align-items-start mb-2">
                                     <div class="flex flex-column gap-1 text-right">
                                         <div class="flex gap-2 align-items-center">
-                                            <span class="text-primary font-bold text-sm uppercase tracking-wider">
-                                                {{ item.category?.name || 'ללא קטגוריה' }}
-                                            </span>
-                                            <p-tag *ngIf="item.isLottery" value="הגרלה פעילה" severity="success"
+                                            <p-tag *ngIf="item.is_lottery" value="הגרלה פעילה" severity="success"
                                                 icon="pi pi-ticket" styleClass="shadow-1"></p-tag>
                                         </div>
                                         <h2 class="m-0 text-3xl font-black text-900 leading-tight">{{ item.name }}</h2>
@@ -132,30 +106,6 @@
                                         item.description }}</p>
                                     <p class="text-500 line-height-3 m-0 text-sm italic text-right">{{ item.details }}
                                     </p>
-                                    <div
-                                        class="mt-auto flex align-items-center justify-content-start gap-3 border-top-1 surface-border pt-4">
-                                        <div class="flex align-items-center gap-3">
-                                            <div class="surface-100 border-circle flex align-items-center justify-content-center shadow-1 overflow-hidden"
-                                                style="width: 45px; height: 45px;">
-                                                <img *ngIf="item.donor?.is_publish && item.donor?.company_picture"
-                                                    [src]="DONOR_BASE_URL + item.donor?.company_picture"
-                                                    [alt]="item.donor?.company_name" class="w-full h-full object-cover">
-                                                <i *ngIf="!(item.donor?.is_publish && item.donor?.company_picture)"
-                                                    class="pi pi-user text-primary text-xl"></i>
-                                            </div>
-                                            <div class="flex flex-column text-right">
-                                                <span class="block text-400 text-xs font-bold uppercase">נתרם באהבה
-                                                    ע"י</span>
-                                                <span *ngIf="item.donor?.is_publish"
-                                                    class="text-700 font-bold line-height-1 mb-1">
-                                                    {{ item.donor?.company_name }} {{ item.donor?.company_description }}
-                                                </span>
-                                                <span *ngIf="!item.donor?.is_publish"
-                                                    class="text-700 font-bold italic">החפץ
-                                                    בעילום שמו</span>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -202,11 +152,6 @@
     </div>
 </div>
 <p-toast />
-<p-confirmpopup />
-
-
-
-
 <p-toast />
 <p-confirmdialog #cd>
     <ng-template pTemplate="headless" let-message let-onAccept="onAccept" let-onReject="onReject">

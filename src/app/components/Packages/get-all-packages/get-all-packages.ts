@@ -12,6 +12,7 @@ import { map } from 'rxjs';
 import { RouterModule } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
 import { ConfirmDialog } from 'primeng/confirmdialog';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-get-all-packages',
@@ -26,6 +27,10 @@ export class GetAllPackages {
   confirmationService = inject(ConfirmationService);
   dialogService = inject(DialogService);
   packageService = inject(PackageService);
+  private cookieService = inject(CookieService);
+  user: string = '';
+  role: string = '';
+  userPackages: any[] = [];
   packages$: any = this.packageService.getPackages().pipe(
     map((packages: any[]) => {
       return packages.map(pkg => {
@@ -35,10 +40,13 @@ export class GetAllPackages {
     })
   );
   ref: DynamicDialogRef<any> | null = null;
-  user: string = localStorage.getItem('user') || '';
-  role: string = this.user ? JSON.parse(this.user).role : '';
-  userPackages: any[] = JSON.parse(localStorage.getItem(JSON.parse(this.user).id) || '[]');
   isChildVisible: boolean = false;
+
+  ngOnInit() {
+    this.user = this.cookieService.get('user') || '';
+    this.role = this.user ? JSON.parse(this.user).role : '';
+    this.userPackages = JSON.parse(this.cookieService.get(JSON.parse(this.user).id) || '[]');
+  }
 
   showChild() {
     this.ref = this.dialogService.open(PackageForm, {
@@ -76,7 +84,7 @@ export class GetAllPackages {
     packageData.quantity = (packageData.quantity || 0) + 1
     this.userPackages.push({ id: packageData.id.toString(), emptyQuantity: packageData.numOfCards, cards: [] });
     const u = JSON.parse(this.user).id;
-    localStorage.setItem(u, JSON.stringify(this.userPackages));
+    this.cookieService.set(u, JSON.stringify(this.userPackages));
   }
   removePackage(packageData: any) {
     let flage = false;
@@ -89,17 +97,17 @@ export class GetAllPackages {
       acceptButtonStyleClass: 'p-button-success',
       rejectButtonStyleClass: 'p-button-text',
       accept: () => {
-          this.userPackages=this.userPackages.reverse().filter((pkg: any) => {
-            if(pkg.id === packageData.id.toString() && !flage){
-              flage = true;
-              return false;
-            }
-            return true;
-          }).reverse();
-          localStorage.setItem(JSON.parse(this.user).id, JSON.stringify(this.userPackages));
-          this.messageService.add({ severity: 'info', summary: 'החבילה נמחקה' });
-          packageData.quantity = (packageData.quantity || 0) > 0 ? packageData.quantity - 1 : 0
-        }
-      });
+        this.userPackages = this.userPackages.reverse().filter((pkg: any) => {
+          if (pkg.id === packageData.id.toString() && !flage) {
+            flage = true;
+            return false;
+          }
+          return true;
+        }).reverse();
+        this.cookieService.set(JSON.parse(this.user).id, JSON.stringify(this.userPackages));
+        this.messageService.add({ severity: 'info', summary: 'החבילה נמחקה' });
+        packageData.quantity = (packageData.quantity || 0) > 0 ? packageData.quantity - 1 : 0;
+      }
+    });
   }
 }

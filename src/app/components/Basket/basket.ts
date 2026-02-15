@@ -7,6 +7,8 @@ import { DonorService } from '../../services/donor-service';
 import { CategoryService } from '../../services/category-service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
+import { GetGift } from '../../models/gift.model';
 import { ConfirmDialog } from 'primeng/confirmdialog';
 import { Toast } from 'primeng/toast';
 import { ToastModule } from 'primeng/toast';
@@ -34,7 +36,6 @@ import { forkJoin } from 'rxjs';
     ToastModule],
   providers: [ConfirmationService,
     MessageService,
-    Router,
     DonorService,
     CategoryService,
     PackageService],
@@ -44,13 +45,13 @@ import { forkJoin } from 'rxjs';
 
 
 export class Basket {
-  allCards: any[] = [];
+  allCards: GetGift[] = [];
   uniquePackages: any[] = [];
   favoriteGifts: number[] = [];
 
-
-  user: string = localStorage.getItem('user') || '';
-  packages: any[] = JSON.parse(localStorage.getItem(JSON.parse(this.user)?.id) || '[]');
+  private cookieService = inject(CookieService);
+  user: string = '';
+  packages: any[] = [];
 
   private confirmationService = inject(ConfirmationService);
   private messageService = inject(MessageService);
@@ -63,14 +64,18 @@ export class Basket {
   DONOR_BASE_URL = 'https://localhost:7282/images/companies/';
 
   ngOnInit() {
+    this.user = this.cookieService.get('user') || '';
+    this.packages = JSON.parse(this.cookieService.get(JSON.parse(this.user)?.id) || '[]');
+    console.log(this.packages);
+    
     this.loadGifts()
   }
 
   loadGifts() {
     console.log("1");
     const quantityMap: { [id: string]: number } = {};
-    this.packages.flatMap(pkg => pkg.cards).forEach((card: any) => {
-      const id = card.id.toString();
+    this.packages.flatMap(pkg => pkg.cards).forEach((cardId: any) => {
+      const id = cardId.toString();
       quantityMap[id] = (quantityMap[id] || 0) + 1;
     });
     const uniqueIds = Object.keys(quantityMap);
@@ -89,7 +94,7 @@ export class Basket {
             .filter(g => g !== null)
             .map(gift => ({
               ...gift,
-              quantity: quantityMap[gift.id?.toString()]
+              quantity: quantityMap[gift.Id?.toString()]
             }));
           this.cdr.detectChanges();
           console.log(this.allCards);
@@ -125,15 +130,15 @@ export class Basket {
     let user = JSON.parse(this.user);
     const userId = user.id;
     const packageWithCard = [...this.packages].reverse().find((pack: any) =>
-      pack.cards.some((card: any) => Number(card.id) === Number(id))
+      pack.cards.some((cardId: any) => Number(cardId) === Number(id))
     );
     console.log('packUser2', this.packages);
     if (packageWithCard) {
-      const cardIndex = packageWithCard.cards.findIndex((card: any) => Number(card.id) === Number(id));
+      const cardIndex = packageWithCard.cards.findIndex((cardId: any) => Number(cardId) === Number(id));
       if (cardIndex !== -1) {
         packageWithCard.cards.splice(cardIndex, 1);
         packageWithCard.emptyQuantity += 1;
-        localStorage.setItem(userId, JSON.stringify(this.packages));
+        this.cookieService.set(userId, JSON.stringify(this.packages));
         this.loadGifts();
         this.messageService.add({ severity: 'warn', summary: 'הצלחה', detail: 'המתנה הוסרה מהחבילה שלך' });
       }
@@ -142,7 +147,7 @@ export class Basket {
 
 
   addToBasket(id: number) {
-    const product = this.allCards.find(g => g.id === id);
+        const product = this.allCards.find(g => g.id === id);
     if (!this.user) {
       this.confirmationService.confirm({
         header: 'נדרשת התחברות',
@@ -182,12 +187,11 @@ export class Basket {
     }
 
     const existingPackage = this.packages.find((pack: any) => pack.emptyQuantity > 0);
-    if (existingPackage) {
-      const { user_count, ...cleanProduct } = product;
-      existingPackage.cards.push(cleanProduct);
+    if (existingPackage && product) {
+      existingPackage.cards.push(product.id);
       existingPackage.emptyQuantity -= 1;
       this.messageService.add({ severity: 'success', summary: 'הצלחה', detail: 'המתנה נוספה לחבילה שלך' });
-      localStorage.setItem(userId, JSON.stringify(this.packages));
+      this.cookieService.set(userId, JSON.stringify(this.packages));
       this.loadGifts();
     }
     else {

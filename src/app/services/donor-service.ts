@@ -1,25 +1,26 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { from } from 'rxjs';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DonorService {
   baseUrl: string = 'https://localhost:7282/api/Donor';
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private cookieService: CookieService) { }
   getDonors() {
-    const token = localStorage.getItem('token');
+    const token = this.cookieService.get('token');
     const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` })
     return this.http.get<any>(`${this.baseUrl}`, { headers });
   }
   getDonorById(id: number) {
-    const token = localStorage.getItem('token');
+    const token = this.cookieService.get('token');
     const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` })
     return this.http.get<any>(`${this.baseUrl}/${id}`, { headers });
   }
   addDonor(donorData: any, imageFile: File) {
-    const token = localStorage.getItem('token');
+    const token = this.cookieService.get('token');
     const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` })
     const formData = new FormData();
     formData.append('Email', donorData.email);
@@ -36,7 +37,7 @@ export class DonorService {
     return this.http.post<any>(`${this.baseUrl}`, formData, { headers });
   }
   updateDonor(id: number, donorData: any, imageFile?: File) {
-    const token = localStorage.getItem('token');
+    const token = this.cookieService.get('token');
     const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` })
     const formData = new FormData();
     formData.append('Email', donorData.email);
@@ -53,7 +54,7 @@ export class DonorService {
     return this.http.put<any>(`${this.baseUrl}/${id}`, formData, { headers });
   }
   deleteDonor(id: number) {
-    const token = localStorage.getItem('token');
+    const token = this.cookieService.get('token');
     const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` })
     return this.http.delete<any>(`${this.baseUrl}/${id}`, { headers, responseType: 'text' as 'json' });
   }

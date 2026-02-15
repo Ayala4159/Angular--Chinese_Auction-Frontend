@@ -1,4 +1,4 @@
-<nav class="navbar m-2 border-round-3xl surface-section border-bottom-1 border-primary px-3 md:px-6 h-5rem flex align-items-center relative"
+﻿<nav class="navbar m-2 border-round-3xl surface-section border-bottom-1 border-primary px-3 md:px-6 h-5rem flex align-items-center relative"
     style="direction: rtl;">
     <div class="nav-container w-full max-w-custom mx-auto flex align-items-center justify-content-between">
 
@@ -19,7 +19,7 @@
 
                     <div class="grid flex-row-reverse hover:border-1 border- p-2">
                         <div class="col-4 p-2" *ngFor="let item of categories | slice:0:3; let i = index">
-                            <div (click)="navigateToGifts(item.id)"
+                            <div (click)="navigateToGifts(item.Id)"
                                 class="menu-card flex flex-column align-items-center gap-2 border-1 border-gray-500 hover:border-orange-500 p-3 border-round-lg transition-all"
                                 [style.animation-delay]="i * 0.1 + 's'">
 

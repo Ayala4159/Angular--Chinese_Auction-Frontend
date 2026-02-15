@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GiftService } from '../../../services/gift-service';
+import { GetGift } from '../../../models/gift.model';
 import { ChangeDetectorRef } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
@@ -11,6 +12,7 @@ import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { TagModule } from 'primeng/tag';
+import { CookieService } from 'ngx-cookie-service';
 @Component({
   selector: 'app-get-all-gifts',
   standalone: true,
@@ -28,11 +30,12 @@ export class GetAllGifts implements OnInit {
   route = inject(ActivatedRoute);
   dialogService = inject(DialogService);
   messageService = inject(MessageService);
+  private cookieService = inject(CookieService);
   ref: DynamicDialogRef<any> | null = null;
   private confirmationService = inject(ConfirmationService);
 
   products: any[] = [];
-  gifts: any[] = [];
+  gifts: GetGift[] = [];
 
   readonly IMAGE_BASE_URL = 'https://localhost:7282/images/gifts/';
 
@@ -64,8 +67,8 @@ export class GetAllGifts implements OnInit {
     });
   }
 
-  addToCart(product: any) {
-    const user = localStorage.getItem('user');
+  addToCart(product: GetGift) {
+    const user = this.cookieService.get('user');
     if (!user) {
       this.confirmationService.confirm({
         message: '?אופס, נראה שאתה לא מחובר. רוצה להתחבר עכשיו',
@@ -83,7 +86,7 @@ export class GetAllGifts implements OnInit {
       });
       return;
     }
-    let packages = JSON.parse(localStorage.getItem(JSON.parse(user).id) || '[]');
+    let packages = JSON.parse(this.cookieService.get(JSON.parse(user).id) || '[]');
     if (packages.length === 0) {
       this.confirmationService.confirm({
         message: '?אופס, לא בחרת עדיין חבילה. רוצה להוסיף חבילה חדשה',
@@ -106,7 +109,7 @@ export class GetAllGifts implements OnInit {
 
     const existingPackage = packages.find((p: any) => p.emptyQuantity > 0)
     if (existingPackage) {
-      existingPackage.cards.push(product);
+      existingPackage.cards.push(product.id);
       existingPackage.emptyQuantity--;
     } else {
       this.confirmationService.confirm({
@@ -126,7 +129,7 @@ export class GetAllGifts implements OnInit {
       });
       return;
     }
-    localStorage.setItem(JSON.parse(user).id, JSON.stringify(packages));
+    this.cookieService.set(JSON.parse(user).id, JSON.stringify(packages));
     this.messageService.add({ severity: 'success', summary: 'הודעה', detail: 'המתנה נוספה לחבילה בהצלחה' });
   }
 

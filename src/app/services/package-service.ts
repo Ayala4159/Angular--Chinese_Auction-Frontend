@@ -1,30 +1,32 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { GetPackage, CreatePackage } from '../models/package.model';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PackageService {
   baseUrl: string = 'https://localhost:7282/api/Package';
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private cookieService: CookieService) { }
   getPackages() {
-    return this.http.get<any>(`${this.baseUrl}`);
+    return this.http.get<GetPackage[]>(`${this.baseUrl}`);
   }
   getPackageById(id: number) {
-    return this.http.get<any>(`${this.baseUrl}/${id}`);
+    return this.http.get<GetPackage>(`${this.baseUrl}/${id}`);
   }
-  addPackage(CreatePackage: any) {
-    const token = localStorage.getItem('token');
+  addPackage(packageData: CreatePackage) {
+    const token = this.cookieService.get('token');
     const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` })
-    return this.http.post<any>(`${this.baseUrl}`, CreatePackage, { headers });
+    return this.http.post<GetPackage>(`${this.baseUrl}`, packageData, { headers });
   }
-  updatePackage(id: number, PackageData: any) {
-    const token = localStorage.getItem('token');
+  updatePackage(id: number, packageData: CreatePackage) {
+    const token = this.cookieService.get('token');
     const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` })
-    return this.http.put<any>(`${this.baseUrl}/${id}`, PackageData, { headers });
+    return this.http.put<GetPackage>(`${this.baseUrl}/${id}`, packageData, { headers });
   }
   deletePackage(id: number) {
-    const token = localStorage.getItem('token');
+    const token = this.cookieService.get('token');
     const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` })
     return this.http.delete<any>(`${this.baseUrl}/${id}`, { headers, responseType: 'text' as 'json' });
   }
