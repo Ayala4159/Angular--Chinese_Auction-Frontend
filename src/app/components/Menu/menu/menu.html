@@ -46,10 +46,15 @@
             class=" text-white no-underline font-bold text-md hover:underline hover:text-primary flex align-items-center">חבילות</a>
         <a routerLink="gifts"
             class="text-white no-underline font-bold text-md hover:underline hover:text-primary flex align-items-center mx-4">כרטיסים</a>
+        @if(role() === 0) {
         <a routerLink="donors"
             class="text-white no-underline font-bold text-md hover:underline hover:text-primary flex align-items-center mx-4">לתרומות</a>
+        }
         <a routerLink="basket"
             class="text-white no-underline font-bold text-md hover:underline hover:text-primary flex align-items-center mx-4">סל</a>
+        @if(role() === 0) {
+        <p-button label="הגרלה" (click)="lottery()" [rounded]="true" size="small" />
+        }
         <div class="flex align-items-center gap-4 mr-auto">
             <div class="search-container hidden lg:block">
                 <p-floatlabel variant="in">
@@ -63,7 +68,7 @@
             </div>
 
             <div class="user-section border-right-1 border-primary pr-3 relative">
-                @if (authService.user$ | async; as currentUser) {
+                @if (user(); as currentUser) {
                 <div class="user-pill flex align-items-center gap-3 cursor-pointer p-2 pr-3 border-round-3xl surface-card border-1 border-transparent hover:border-primary transition-all"
                     (click)="showUserDropdown = !showUserDropdown">
                     <span class="hidden sm:inline font-semibold text-sm text-white">שלום, {{ currentUser.first_name
@@ -71,7 +76,6 @@
                     <p-avatar [label]="currentUser.first_name?.[0]" shape="circle"
                         styleClass="bg-primary text-white font-bold shadow-2"></p-avatar>
                 </div>
-
                 <div class="user-dropdown absolute left-0 mt-2 z-5 surface-card border-round-xl shadow-8 border-1 border-700 w-12rem p-2"
                     *ngIf="showUserDropdown" (mouseleave)="showUserDropdown = false">
                     <ul class="list-none p-0 m-0">
@@ -85,6 +89,7 @@
                         </li>
                     </ul>
                 </div>
+
                 } @else {
                 <div class="flex gap-2">
                     <p-button label="כניסה" routerLink="login" [text]="true" size="small" styleClass="text-white" />
@@ -95,3 +100,22 @@
         </div>
     </div>
 </nav>
+<p-confirmdialog #cd>
+    <ng-template pTemplate="headless" let-message let-onAccept="onAccept" let-onReject="onReject">
+        @if (message) {
+        <div class="flex flex-column align-items-center p-8 surface-overlay border-round shadow-2 text-center">
+            <div
+                class="border-circle bg-primary text-white inline-flex justify-content-center align-items-center h-6rem w-6rem -mt-8 shadow-4">
+                <i class="pi pi-question text-5xl"></i>
+            </div>
+            <span class="font-bold text-2xl block mb-2 mt-6">{{ message.header }}</span>
+            <p class="mb-4 text-600 px-4">{{ message.message }}</p>
+            <div class="flex align-items-center justify-content-center gap-3 mt-4">
+                <p-button [label]="message.acceptLabel" (onClick)="onAccept()" styleClass="w-15rem"></p-button>
+                <p-button [label]="message.rejectLabel" [outlined]="true" (onClick)="onReject()"
+                    styleClass="w-15rem"></p-button>
+            </div>
+        </div>
+        }
+    </ng-template>
+</p-confirmdialog>

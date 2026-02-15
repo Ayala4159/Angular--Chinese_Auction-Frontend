@@ -82,7 +82,7 @@ export class GetAllPackages {
 
   addPackage(packageData: any) {
     packageData.quantity = (packageData.quantity || 0) + 1
-    this.userPackages.push({ id: packageData.id.toString(), emptyQuantity: packageData.numOfCards, cards: [] });
+    this.userPackages.push({ id: packageData.id.toString(), name: packageData.name, price: packageData.price, emptyQuantity: packageData.numOfCards, cards: [] });
     const u = JSON.parse(this.user).id;
     this.cookieService.set(u, JSON.stringify(this.userPackages));
   }

@@ -23,21 +23,15 @@ export class PurchaseService {
     return this.http.get<GetPurchase>(`${this.baseUrl}/${id}`, { headers });
   }
 
-  addPurchase(purchaseData: CreatePurchase) {
+  addPurchase(purchaseData: CreatePurchase[]) {
     const token = this.cookieService.get('token');
     const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` });
     return this.http.post<GetPurchase>(`${this.baseUrl}`, purchaseData, { headers });
   }
 
-  updatePurchase(id: number, purchaseData: UpdatePurchase) {
+  runLottery(giftId: number) {
     const token = this.cookieService.get('token');
-    const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` })
-    return this.http.put<GetPurchase>(`${this.baseUrl}/${id}`, purchaseData, { headers });
-  }
-
-  deletePurchase(id: number) {
-    const token = this.cookieService.get('token');
-    const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` })
-    return this.http.delete<any>(`${this.baseUrl}/${id}`, { headers, responseType: 'text' as 'json' });
+    const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` });
+    return this.http.post(`${this.baseUrl}/lottery/${giftId}`,null, { headers});
   }
 }

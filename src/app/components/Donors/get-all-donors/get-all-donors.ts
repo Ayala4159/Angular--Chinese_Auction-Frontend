@@ -56,8 +56,6 @@ export class GetAllDonors implements OnInit {
       next: (data) => {
         this.donors = data;
         this.cdr.detectChanges();
-        console.log(this.donors);
-
       },
       error: (err) => console.error(err)
     });
@@ -181,7 +179,6 @@ export class GetAllDonors implements OnInit {
       data: gift
     });
     this.ref?.onClose.subscribe((result) => {
-      console.log(result);
       if (result) {
         this.giftService.updateGift(gift.id, result, result.picture).subscribe({
           next: (updatedGift) => {

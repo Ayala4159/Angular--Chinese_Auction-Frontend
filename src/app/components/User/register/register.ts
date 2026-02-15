@@ -55,7 +55,6 @@ export class Register implements OnInit {
       this.authService.register(Email, Password, First_name, Last_name, Phone).subscribe({
         next: (response) => {
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'User registered successfully!', life: 3000 });
-          console.log('User registered:', response);
           this.registerForm.reset();
           this.route.navigate(['/login']);
         },

@@ -1,30 +1,94 @@
 <p-toast />
 
-<form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="card gap-4 p-4">
-    <h2>Login</h2>
-
-    <div class="flex flex-col gap-1 m-2">
-        <p-floatlabel variant="in">
-            <input pInputText id="email" formControlName="Email" autocomplete="off" [invalid]="isInvalid('Email')" />
-            <label for="email">Email</label>
-        </p-floatlabel>
-        @if (isInvalid('Email')) {
-        <p-message severity="error" size="small" variant="simple">
-            @if (loginForm.get('Email')?.hasError('required')) { Email is required. }
-            @if (loginForm.get('Email')?.hasError('email')) { Please enter a valid email. }
-        </p-message>
-        }
+<div class="login-container">
+    <!-- Loading Overlay -->
+    <div class="login-loading-overlay" *ngIf="isLoading">
+        <p-progressSpinner 
+            [style]="{ width: '50px', height: '50px' }" 
+            strokeWidth="4" 
+            fill="transparent" 
+            animationDuration="1s"
+        ></p-progressSpinner>
     </div>
 
-    <div class="flex flex-col gap-1 m-2">
-        <p-floatlabel variant="in">
-            <input pInputText type="password" id="pass" formControlName="Password" [invalid]="isInvalid('Password')" />
-            <label for="pass">Password</label>
-        </p-floatlabel>
-        @if (isInvalid('Password')) {
-        <p-message severity="error" size="small" variant="simple">Password must be at least 8 characters.</p-message>
-        }
-    </div>
+    <div class="login-card">
+        <h2 class="login-title">Login</h2>
 
-    <button pButton type="submit" label="Submit" [disabled]="loginForm.invalid"></button>
-</form>
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form" [ngClass]="{ 'loading': isLoading }">
+            <!-- Email Field -->
+            <div class="form-group">
+                <p-floatlabel variant="in">
+                    <input 
+                        pInputText 
+                        id="email" 
+                        formControlName="Email" 
+                        autocomplete="off" 
+                        [invalid]="isInvalid('Email')"
+                        [disabled]="isLoading"
+                        class="login-input"
+                    />
+                    <label for="email" class="login-label">Email</label>
+                </p-floatlabel>
+                @if (isInvalid('Email')) {
+                <p-message severity="error" size="small" variant="simple" class="error-message">
+                    @if (loginForm.get('Email')?.hasError('required')) { Email is required. }
+                    @if (loginForm.get('Email')?.hasError('email')) { Please enter a valid email. }
+                </p-message>
+                }
+            </div>
+
+            <!-- Password Field -->
+            <div class="form-group">
+                <p-floatlabel variant="in">
+                    <input 
+                        pInputText 
+                        type="password" 
+                        id="pass" 
+                        formControlName="Password" 
+                        [invalid]="isInvalid('Password')"
+                        [disabled]="isLoading"
+                        class="login-input"
+                    />
+                    <label for="pass" class="login-label">Password</label>
+                </p-floatlabel>
+                @if (isInvalid('Password')) {
+                <p-message severity="error" size="small" variant="simple" class="error-message">
+                    Password must be at least 8 characters.
+                </p-message>
+                }
+            </div>
+
+            <!-- Remember Me & Forgot Password -->
+            <div class="form-options">
+                <div class="flex align-items-center">
+                    <p-checkbox 
+                        [(ngModel)]="rememberMe" 
+                        [ngModelOptions]="{standalone: true}"
+                        [binary]="true"
+                        inputId="rememberMe"
+                        [disabled]="isLoading"
+                        class="remember-checkbox"
+                    ></p-checkbox>
+                    <label for="rememberMe" class="remember-label">Remember me</label>
+                </div>
+                <a href="#" class="forgot-password-link">Forgot Password?</a>
+            </div>
+
+            <!-- Login Button -->
+            <button 
+                pButton 
+                type="submit" 
+                [label]="isLoading ? 'Logging in...' : 'Login'" 
+                [disabled]="loginForm.invalid || isLoading"
+                [loading]="isLoading"
+                class="login-button"
+            ></button>
+        </form>
+
+        <!-- Register Link -->
+        <div class="register-section">
+            <span class="register-text">Don't have an account?</span>
+            <a href="/register" class="register-link">Register</a>
+        </div>
+    </div>
+</div>

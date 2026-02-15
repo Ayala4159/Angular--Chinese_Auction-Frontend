@@ -48,8 +48,6 @@ export class GetAllGifts implements OnInit {
         this.loadGifts();
       }
     });
-    console.log(this.gifts);
-
   }
 
   loadGiftsByCategory(id: number) {
@@ -63,7 +61,6 @@ export class GetAllGifts implements OnInit {
     this.giftService.getGift().subscribe(data => {
       this.gifts = data;
       this.cdr.detectChanges()
-      console.log(this.gifts);
     });
   }
 
@@ -133,9 +130,7 @@ export class GetAllGifts implements OnInit {
     this.messageService.add({ severity: 'success', summary: 'הודעה', detail: 'המתנה נוספה לחבילה בהצלחה' });
   }
 
-  showDetails(product: any) {
-    console.log('מעבר לפרטי המוצר:', product.id);
-  }
+  showDetails(product: any) {}
   addGift() {
     this.ref = this.dialogService.open(GiftsForm, {
       header: 'הוספת מתנה חדשה',

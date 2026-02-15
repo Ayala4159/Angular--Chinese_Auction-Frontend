@@ -1,8 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { from } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
-
+import { CreateDonor,ManagerGetDonor,UserGetDonor } from '../models/donor.model';
 @Injectable({
   providedIn: 'root',
 })
@@ -12,12 +11,12 @@ export class DonorService {
   getDonors() {
     const token = this.cookieService.get('token');
     const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` })
-    return this.http.get<any>(`${this.baseUrl}`, { headers });
+    return this.http.get<ManagerGetDonor[]>(`${this.baseUrl}`, { headers });
   }
   getDonorById(id: number) {
     const token = this.cookieService.get('token');
     const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` })
-    return this.http.get<any>(`${this.baseUrl}/${id}`, { headers });
+    return this.http.get<UserGetDonor>(`${this.baseUrl}/${id}`, { headers });
   }
   addDonor(donorData: any, imageFile: File) {
     const token = this.cookieService.get('token');
@@ -34,7 +33,7 @@ export class DonorService {
     if (imageFile) {
       formData.append('imageFile', imageFile);
     }
-    return this.http.post<any>(`${this.baseUrl}`, formData, { headers });
+    return this.http.post<CreateDonor>(`${this.baseUrl}`, formData, { headers });
   }
   updateDonor(id: number, donorData: any, imageFile?: File) {
     const token = this.cookieService.get('token');
@@ -51,7 +50,7 @@ export class DonorService {
     if (imageFile) {
       formData.append('imageFile', imageFile);
     }
-    return this.http.put<any>(`${this.baseUrl}/${id}`, formData, { headers });
+    return this.http.put<CreateDonor>(`${this.baseUrl}/${id}`, formData, { headers });
   }
   deleteDonor(id: number) {
     const token = this.cookieService.get('token');

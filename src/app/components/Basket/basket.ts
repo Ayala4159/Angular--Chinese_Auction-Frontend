@@ -19,6 +19,8 @@ import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { GiftService } from '../../services/gift-service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { forkJoin } from 'rxjs';
+import { PurchaseService } from '../../services/purchase-service';
+import { Card } from 'primeng/card';
 
 
 @Component({
@@ -49,16 +51,19 @@ export class Basket {
   uniquePackages: any[] = [];
   favoriteGifts: number[] = [];
 
-  private cookieService = inject(CookieService);
+  numOfCards: number = 0;
+  emptyCards: number = 0;
   user: string = '';
   packages: any[] = [];
 
+  private cookieService = inject(CookieService);
   private confirmationService = inject(ConfirmationService);
   private messageService = inject(MessageService);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
   private giftService = inject(GiftService);
   private destroyRef = inject(DestroyRef);
+  private purchasesService = inject(PurchaseService);
 
   BASE_URL = 'https://localhost:7282/images/gifts/';
   DONOR_BASE_URL = 'https://localhost:7282/images/companies/';
@@ -66,26 +71,27 @@ export class Basket {
   ngOnInit() {
     this.user = this.cookieService.get('user') || '';
     this.packages = JSON.parse(this.cookieService.get(JSON.parse(this.user)?.id) || '[]');
-    console.log(this.packages);
-    
     this.loadGifts()
   }
 
   loadGifts() {
-    console.log("1");
+    this.emptyCards = 0;
+    this.numOfCards = 0;
+    for (let pack of this.packages) {
+      this.emptyCards =this.emptyCards+ pack.emptyQuantity+ (pack.cards ? pack.cards.length : 0);
+    }
     const quantityMap: { [id: string]: number } = {};
     this.packages.flatMap(pkg => pkg.cards).forEach((cardId: any) => {
       const id = cardId.toString();
       quantityMap[id] = (quantityMap[id] || 0) + 1;
-    });
+      this.numOfCards += 1;
+    });    
     const uniqueIds = Object.keys(quantityMap);
     if (uniqueIds.length === 0) {
       this.allCards = [];
       return;
     }
-    console.log(uniqueIds)
     const requests = uniqueIds.map(id => this.giftService.getGiftById(Number(id)));
-    console.log(requests);
     forkJoin(requests)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
@@ -94,14 +100,13 @@ export class Basket {
             .filter(g => g !== null)
             .map(gift => ({
               ...gift,
-              quantity: quantityMap[gift.Id?.toString()]
+              quantity: quantityMap[gift.id?.toString()]
             }));
           this.cdr.detectChanges();
-          console.log(this.allCards);
         },
         error: (err) => console.error('Global ForkJoin Error:', err)
       });
-      this.uniquePackages = this.packages.reduce((acc: any[], current: any) => {
+    this.uniquePackages = this.packages.reduce((acc: any[], current: any) => {
       const existing = acc.find(p => p.id === current.id);
       if (existing) {
         existing.package_count += 1;
@@ -132,7 +137,6 @@ export class Basket {
     const packageWithCard = [...this.packages].reverse().find((pack: any) =>
       pack.cards.some((cardId: any) => Number(cardId) === Number(id))
     );
-    console.log('packUser2', this.packages);
     if (packageWithCard) {
       const cardIndex = packageWithCard.cards.findIndex((cardId: any) => Number(cardId) === Number(id));
       if (cardIndex !== -1) {
@@ -147,7 +151,7 @@ export class Basket {
 
 
   addToBasket(id: number) {
-        const product = this.allCards.find(g => g.id === id);
+    const product = this.allCards.find(g => g.id === id);
     if (!this.user) {
       this.confirmationService.confirm({
         header: 'נדרשת התחברות',
@@ -219,5 +223,34 @@ export class Basket {
     });
     return total
   }
-
+  pay() {
+    this.confirmationService.confirm({
+      message: 'האם אתה בטוח שברצונך לשלם עבור המתנות שבחרת?',
+      header: 'אישור תשלום',
+      icon: 'pi pi-credit-card',
+      acceptLabel: "כן, אני רוצה לשלם",
+      rejectLabel: "לא, אני רוצה להמשיך להסתכל",
+      accept: () => {
+        this.packages.forEach((pack: any) => {
+          const purchase=pack.cards.map((card:any)=>{
+            return { giftId: card,userId: JSON.parse(this.user).id, packageId: pack.id}
+          })
+          if(purchase.length===0){
+            return;
+          }
+          this.purchasesService.addPurchase(purchase).subscribe({
+            next:()=> {
+              this.cookieService.delete(this.user ? JSON.parse(this.user).id : '');              
+              this.packages = [];
+              this.messageService.add({ severity: 'success', summary: 'הצלחה', detail: 'התשלום בוצע בהצלחה' });
+            },
+            error: (err) => console.error(`Error marking gift ${Card} as purchased:`, err)
+          });
+        })
+      },
+      reject: () => {
+        this.router.navigate(['/basket']);
+      }
+    });
+  }
 }

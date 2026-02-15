@@ -118,15 +118,15 @@
         </ng-template>
         <ng-template #body let-donation>
             <tr>
-                <td>{{ donation.Id }}</td>
-                <td>{{ donation.Name }}</td>
-                <td>{{ donation.Description }}</td>
-                <td>{{ donation.Details }}</td>
+                <td>{{ donation.id }}</td>
+                <td>{{ donation.name }}</td>
+                <td>{{ donation.description }}</td>
+                <td>{{ donation.details }}</td>
                 <td>
                     <img [src]="IMAGE_BASE_URL_GIFT + donation.Picture" style="width: 50px" class="shadow-2 rounded" />
                 </td>
                 <td>{{ donation.purchase_quentity }}</td>
-                <td>{{ donation.Value }}</td>
+                <td>{{ donation.value }}</td>
                 <td>
                     <p-button icon="pi pi-pencil" (onClick)="editGift(donation)" [rounded]="true" [outlined]="true" class="mr-2" />
                 </td>
