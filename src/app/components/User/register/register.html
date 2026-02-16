@@ -1,77 +1,106 @@
 <p-toast />
 
-<form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="card p-4">
-    <h2>Register</h2>
-
-    <div class="flex flex-col gap-1 m-2">
-        <p-floatlabel variant="in">
-            <input pInputText id="email" formControlName="Email" autocomplete="off" [invalid]="isInvalid('Email')" />
-            <label for="email">Email</label>
-        </p-floatlabel>
-        @if (isInvalid('Email')) {
-        <p-message severity="error" size="small" variant="simple">
-            @if (registerForm.get('Email')?.hasError('required')) { Email is required. }
-            @if (registerForm.get('Email')?.hasError('email')) { Please enter a valid email. }
-        </p-message>
-        }
+<div class="register-container flex align-items-center justify-content-center min-h-screen">
+    @if (isLoading) {
+    <div
+        class="register-loading-overlay fixed top-0 left-0 w-full h-full flex align-items-center justify-content-center">
+        <p-progressSpinner [style]="{ width: '50px', height: '50px' }" strokeWidth="4" fill="transparent"
+            animationDuration="1s"></p-progressSpinner>
     </div>
+    }
 
-    <div class="flex flex-col gap-1 m-2">
-        <p-floatlabel variant="in">
-            <input pInputText id="fname" formControlName="First_name" [invalid]="isInvalid('First_name')" />
-            <label for="fname">First Name</label>
-        </p-floatlabel>
-        @if (isInvalid('First_name')) {
-        <p-message severity="error" size="small" variant="simple">First Name is required.</p-message>
-        }
+    <div class="register-card">
+        <h2 class="register-title text-center">Register</h2>
+
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form flex flex-column gap-4"
+            [ngClass]="{ 'loading': isLoading }">
+
+            <div class="form-group flex flex-column">
+                <p-floatlabel variant="in">
+                    <input pInputText id="email" formControlName="Email" autocomplete="off"
+                        [invalid]="isInvalid('Email')" class="register-input w-full" />
+                    <label for="email" class="register-label">Email</label>
+                </p-floatlabel>
+                @if (isInvalid('Email')) {
+                <p-message severity="error" size="small" variant="simple" class="error-message">
+                    @if (registerForm.get('Email')?.hasError('required')) { Email is required. }
+                    @if (registerForm.get('Email')?.hasError('email')) { Please enter a valid email. }
+                </p-message>
+                }
+            </div>
+
+            <div class="form-row flex flex-column md:flex-row gap-3">
+                <div class="form-group flex-1">
+                    <p-floatlabel variant="in">
+                        <input pInputText id="fname" formControlName="First_name" [invalid]="isInvalid('First_name')"
+                            class="register-input w-full" />
+                        <label for="fname" class="register-label">First Name</label>
+                    </p-floatlabel>
+                    @if (isInvalid('First_name')) {
+                    <p-message severity="error" size="small" variant="simple" class="error-message">
+                        First Name is required.
+                    </p-message>
+                    }
+                </div>
+
+                <div class="form-group flex-1">
+                    <p-floatlabel variant="in">
+                        <input pInputText id="lname" formControlName="Last_name" [invalid]="isInvalid('Last_name')"
+                            class="register-input w-full" />
+                        <label for="lname" class="register-label">Last Name</label>
+                    </p-floatlabel>
+                    @if (isInvalid('Last_name')) {
+                    <p-message severity="error" size="small" variant="simple" class="error-message">
+                        Last Name is required.
+                    </p-message>
+                    }
+                </div>
+            </div>
+
+            <div class="form-row flex flex-column md:flex-row gap-3">
+                <div class="form-group flex-1">
+                    <p-floatlabel variant="in">
+                        <input pInputText type="password" id="pass" formControlName="Password"
+                            [invalid]="isInvalid('Password')" class="register-input w-full" />
+                        <label for="pass" class="register-label">Password</label>
+                    </p-floatlabel>
+                </div>
+
+                <div class="form-group flex-1">
+                    <p-floatlabel variant="in">
+                        <input pInputText type="password" id="confirmPass" formControlName="ConfirmPassword"
+                            [invalid]="isInvalid('ConfirmPassword') || (registerForm.get('ConfirmPassword')?.touched && registerForm.get('Password')?.value !== registerForm.get('ConfirmPassword')?.value)"
+                            class="register-input w-full" />
+                        <label for="confirmPass" class="register-label">Confirm Password</label>
+                    </p-floatlabel>
+                </div>
+            </div>
+
+            @if (isInvalid('Password') || (registerForm.get('ConfirmPassword')?.touched &&
+            registerForm.get('Password')?.value !== registerForm.get('ConfirmPassword')?.value)) {
+            <p-message severity="error" size="small" variant="simple" class="error-message">
+                @if (registerForm.get('Password')?.hasError('minlength')) { Min 8 characters. }
+                @if (registerForm.get('Password')?.value !== registerForm.get('ConfirmPassword')?.value) { Passwords do
+                not match. }
+            </p-message>
+            }
+
+            <div class="form-group flex flex-column">
+                <p-floatlabel variant="in">
+                    <input pInputText pInputMask id="phone" formControlName="Phone" mask="999-999-9999"
+                        slotChar=" " class="register-input w-full" />
+                    <label for="phone" class="register-label">Phone (Optional)</label>
+                </p-floatlabel>
+            </div>
+
+            <button pButton type="submit" [label]="isLoading ? 'Registering...' : 'Register'"
+                [disabled]="registerForm.invalid || isLoading" [loading]="isLoading"
+                class="register-button w-full p-3 font-bold"></button>
+        </form>
+
+        <div class="login-section text-center mt-4 pt-3 border-top-1 border-white-alpha-20">
+            <span class="login-text">Already have an account?</span>
+            <a href="/login" class="login-link ml-2">Login</a>
+        </div>
     </div>
-
-    <div class="flex flex-col gap-1 m-2">
-        <p-floatlabel variant="in">
-            <input pInputText id="lname" formControlName="Last_name" [invalid]="isInvalid('Last_name')" />
-            <label for="lname">Last Name</label>
-        </p-floatlabel>
-        @if (isInvalid('Last_name')) {
-        <p-message severity="error" size="small" variant="simple">Last Name is required.</p-message>
-        }
-    </div>
-
-    <div class="flex flex-col gap-1 m-2">
-        <p-floatlabel variant="in">
-            <input pInputText type="password" id="pass" formControlName="Password" [invalid]="isInvalid('Password')" />
-            <label for="pass">Password</label>
-        </p-floatlabel>
-        @if (isInvalid('Password')) {
-        <p-message severity="error" size="small" variant="simple">Password must be at least 8 characters.</p-message>
-        }
-    </div>
-    
-    <div class="flex flex-col gap-1 m-2">
-        <p-floatlabel variant="in">
-            <input pInputText type="password" id="confirmPass" formControlName="ConfirmPassword"
-                [invalid]="isInvalid('ConfirmPassword') || (registerForm.get('ConfirmPassword')?.touched && registerForm.get('Password')?.value !== registerForm.get('ConfirmPassword')?.value)" />
-            <label for="confirmPass">Confirm Password</label>
-        </p-floatlabel>
-
-        @if (registerForm.get('ConfirmPassword')?.touched || registerForm.dirty) {
-        @if (registerForm.get('ConfirmPassword')?.hasError('required')) {
-        <p-message severity="error" size="small" variant="simple">Confirmation is required.</p-message>
-        } @else if (registerForm.get('Password')?.value !== registerForm.get('ConfirmPassword')?.value) {
-        <p-message severity="error" size="small" variant="simple">Passwords do not match.</p-message>
-        }
-        }
-    </div>
-
-
-    <div class="flex flex-col gap-1 m-2">
-        <p-floatlabel variant="in">
-            <p-inputmask id="phone" formControlName="Phone" [invalid]="isInvalid('Phone')" mask="999-999-9999" />
-            <label for="phone">Phone (Optional)</label>
-        </p-floatlabel>
-        @if (isInvalid('Phone')) {
-        <p-message severity="error" size="small" variant="simple">Invalid phone number.</p-message>
-        }
-    </div>
-
-    <button pButton type="submit" label="Submit" [disabled]="registerForm.invalid"></button>
-</form>
+</div>

@@ -4,7 +4,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-image: url('/images/login.png');
+  background-image: url('/images/login.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -259,7 +259,7 @@
 // Remember Label
 .remember-label {
   font-size: 0.875rem;
-  color: #555;
+  color: #1f1b1b;
   font-weight: 500;
   cursor: pointer;
   user-select: none;
@@ -380,7 +380,7 @@
 }
 
 .register-text {
-  color: #555;
+  color: #151414;
 }
 
 .register-link {

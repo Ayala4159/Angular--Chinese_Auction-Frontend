@@ -31,7 +31,7 @@ export class Login {
   rememberMe = false;
   isLoading = false;
   userSignal = signal<any>(null);
-  
+
 
   ngOnInit() {
     this.loginForm = new FormGroup({
@@ -59,7 +59,13 @@ export class Login {
         },
         error: (err) => {
           this.isLoading = false;
-          const errorMessage = err.error?.detail || err.error?.title || (typeof err.error === 'string' ? err.error : 'Invalid login credentials');
+          let errorMessage = '';
+          if (err.status === 401) {
+            errorMessage = "שם המשתמש או הסיסמה אינם נכונים"
+          }
+          else {
+            errorMessage = err.error?.detail || err.error?.title || (typeof err.error === 'string' ? err.error : 'פרטי התחברות שגויים');
+          }
           this.messageService.add({ severity: 'error', summary: 'Error', detail: errorMessage, life: 3000 });
           console.error('Login error:', err.error);
         }

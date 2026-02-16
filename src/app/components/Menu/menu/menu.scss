@@ -1,4 +1,3 @@
-/* אנימציית פתיחה קומפקטית */
 @keyframes popIn {
     from { 
         opacity: 0; 
@@ -12,7 +11,6 @@
 
 .mega-menu-popup {
     animation: popIn 0.2s ease-out;
-    /* מונע מהתפריט לצאת מהמסך בצד ימין */
     transform-origin: top right;
     margin-top: 0.5rem;
 }
@@ -36,13 +34,12 @@
     transition: transform 0.4s ease;
 }
 
-/* סיבוב החץ */
 .nav-item:hover .arrow-icon {
     transform: rotate(180deg);
 }
 .arrow-icon {
     transition: transform 0.3s;
-}/* אנימציית פתיחה למגה מנו */
+}
 @keyframes megaSlideUp {
     from { 
         opacity: 0; 
@@ -54,7 +51,6 @@
     }
 }
 
-/* אנימציית כניסה לכרטיסים (אחד אחרי השני) */
 @keyframes cardPop {
     from { opacity: 0; transform: scale(0.8); }
     to { opacity: 1; transform: scale(1); }
@@ -64,7 +60,7 @@
     animation: megaSlideUp 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
     transform-origin: top right;
     margin-top: 0.5rem;
-    min-width: 450px; /* רוחב נורמלי לשלוש תמונות */
+    min-width: 450px;
 }
 
 .menu-card {
@@ -84,7 +80,6 @@
     transition: transform 0.5s ease;
 }
 
-/* אנימציה לחץ של ה"קטגוריות" */
 .has-mega:hover .arrow {
     transform: rotate(180deg);
     color: var(--primary-color);
@@ -94,4 +89,52 @@
     font-size: 0.8rem;
     display: inline-block;
     transition: transform 0.3s ease;
+}
+::ng-deep .lottery-dialog {
+    overflow: visible !important;
+    box-shadow: none !important;
+
+
+    .p-dialog-content {
+        overflow: visible !important;
+        border-radius: 1.5rem !important;
+        padding-top: 2rem;
+    }
+}
+
+.fixed-full-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 99999 !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(12px);
+}
+/* שילוב עם משתני הצבע של PrimeNG */
+.glass-nav {
+    background: rgba(255, 255, 255, 0.08) !important; /* שקיפות עדינה */
+    backdrop-filter: blur(12px); /* אפקט הטשטוש */
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: var(--card-shadow); /* שימוש בצל המובנה של PrimeNG */
+}
+
+/* התאמת ה-Mega Menu לעיצוב השקוף */
+:ng-deep .mega-menu {
+    background: rgba(30, 30, 30, 0.9) !important;
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--primary-color) !important;
+}
+
+/* שיפור שדה החיפוש עם PrimeNG */
+.search-input {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: white !important;
 }

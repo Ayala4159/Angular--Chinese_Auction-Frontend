@@ -1,4 +1,4 @@
-import { Component, computed, HostListener, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, computed, HostListener, inject, OnInit } from '@angular/core';
 import { CommonModule, SlicePipe } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -22,6 +22,9 @@ import { CookieService } from 'ngx-cookie-service';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { GiftService } from '../../../services/gift-service';
 import { PurchaseService } from '../../../services/purchase-service';
+import { MessageService } from 'primeng/api';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { DialogModule } from 'primeng/dialog';
 
 @Component({
   selector: 'app-menu',
@@ -29,9 +32,10 @@ import { PurchaseService } from '../../../services/purchase-service';
   imports: [
     CommonModule, FormsModule, RouterModule, SlicePipe,
     DrawerModule, ButtonModule, InputTextModule, FloatLabelModule,
-    AvatarModule, IconFieldModule, InputIconModule, BadgeModule, ConfirmDialogModule
+    AvatarModule, IconFieldModule, InputIconModule, BadgeModule, ConfirmDialogModule,
+    ProgressSpinnerModule, DialogModule
   ],
-  providers: [ConfirmationService],
+  providers: [ConfirmationService, MessageService],
   templateUrl: './menu.html',
   styleUrls: ['./menu.scss']
 })
@@ -41,6 +45,8 @@ export class Menu implements OnInit {
   cookieService = inject(CookieService);
   giftService = inject(GiftService);
   purchaseservice = inject(PurchaseService);
+  messageService = inject(MessageService);
+  private cdr = inject(ChangeDetectorRef);
 
   sidebarVisible: boolean = false;
   searchValue: string = '';
@@ -51,6 +57,18 @@ export class Menu implements OnInit {
     const currentUser = this.user();
     return currentUser ? currentUser.role : 1;
   });
+
+  // displayConfirmLottery = false;
+  displayLotteryResults = false;
+  isLoading = false;
+  lotteryResults: {
+    name: string,
+    status: string,
+    message: string,
+    severity: string,
+    winner?: string | null,
+    icon?: string
+  }[] = [];
 
   readonly IMAGE_BASE_URL = 'https://localhost:7282/images/categories/';
   categories: any[] = [];
@@ -72,7 +90,6 @@ export class Menu implements OnInit {
     this.showUserDropdown = false;
     this.authService.logout();
   }
-
   lottery() {
     this.confirmationService.confirm({
       message: 'העורך דין נמצא???? אנחנו נתחיל להגריל???? יואו איזה מתח!!!! והזוכיםםםם',
@@ -81,20 +98,58 @@ export class Menu implements OnInit {
       acceptLabel: "כן, אני רוצה להתחיל",
       rejectLabel: "אהמ... אתה יודע מה? בוא ניתן עוד שתי דקות של מתח.....",
       accept: () => {
-        const gifts = this.giftService.getGift().subscribe({
-          next: (data) => {
-            const giftIds = data.map((gift: any) => gift.id);
-            for (let i = 0; i < giftIds.length; i++) {
-              console.log(giftIds[i]);
-              this.purchaseservice.runLottery(giftIds[i]).subscribe({
-                next: () => {
-                  console.log(`Lottery run for gift ID: ${giftIds[i]}`);
+        this.isLoading = true;
+        this.lotteryResults = [];
+
+        this.giftService.getGift().subscribe({
+          next: (data: any[]) => {
+            let completedRequests = 0;
+
+            data.forEach((gift: any) => {
+              this.purchaseservice.runLottery(gift.id).subscribe({
+                next: (res: any) => {
+                  this.lotteryResults.push({
+                    name: gift.name,
+                    status: 'הושלם',
+                    winner: res?.first_name || res?.firstName || 'נבחר זוכה',
+                    message: 'הגרלה הושלמה',
+                    severity: 'text-green-500',
+                    icon: 'pi pi-check-circle'
+                  });
+                  this.isLoading = false;
+                  this.checkIfFinished(++completedRequests, data.length);
+                },
+                error: (err: any) => {
+                  this.lotteryResults.push({
+                    name: gift.name,
+                    status: 'נכשל',
+                    winner: null,
+                    message: err.error?.message || 'אין משתתפים',
+                    severity: 'text-red-500',
+                    icon: 'pi pi-times-circle'
+                  });
+                  this.isLoading = false;
+                  this.checkIfFinished(++completedRequests, data.length);
                 }
               });
-            }
+            });
+          },
+          error: () => {
+            this.isLoading = false;
           }
-        })
+        });
       }
     });
   }
+
+  private checkIfFinished(current: number, total: number) {
+    if (current === total) {
+      this.isLoading = false;
+      setTimeout(() => {
+        this.displayLotteryResults = true;
+        this.cdr.detectChanges();
+      }, 200);
+    }
+  }
+
 }

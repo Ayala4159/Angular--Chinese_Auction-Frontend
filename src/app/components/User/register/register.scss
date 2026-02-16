@@ -1,0 +1,404 @@
+// Register Container - Background Image
+.register-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: url('/images/register.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  padding: 1rem;
+  position: relative;
+}
+
+// Loading Overlay
+.register-loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeInOverlay 0.3s ease-out;
+  backdrop-filter: blur(2px);
+
+  p-progressspinner {
+    animation: spinnerPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+}
+
+@keyframes fadeInOverlay {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes spinnerPop {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+// Register Card - Glassmorphism Effect
+.register-card {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 16px;
+  padding: 3rem 2.5rem;
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  width: 100%;
+  max-width: 550px;
+  animation: slideInUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 
+    0 2px 10px rgba(0, 0, 0, 0.1),
+    0 8px 32px rgba(31, 38, 135, 0.3),
+    inset 0 0 20px rgba(255, 255, 255, 0.15);
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: 
+      0 4px 15px rgba(0, 0, 0, 0.15),
+      0 8px 32px rgba(31, 38, 135, 0.4),
+      inset 0 0 20px rgba(255, 255, 255, 0.2);
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Register Title
+.register-title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 2rem;
+  margin-top: 0;
+  letter-spacing: 0.5px;
+  animation: fadeInDown 0.6s ease-out 0.1s both;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Register Form
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  animation: fadeIn 0.6s ease-out 0.2s both;
+
+  &.loading {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+// Form Row - Side by Side Layout
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  animation: slideInLeft 0.5s ease-out;
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+// Form Group
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  animation: slideInLeft 0.5s ease-out;
+
+  p-floatlabel {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  p-inputmask {
+    width: 100%;
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+// Register Input Styling
+.register-input {
+  width: 100% !important;
+  padding: 0.75rem 1rem !important;
+  border: 1px solid rgba(224, 224, 224, 0.6) !important;
+  border-radius: 8px !important;
+  font-size: 1rem;
+  color: #333;
+  background-color: rgba(249, 249, 249, 0.9) !important;
+  backdrop-filter: blur(5px);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+  &:focus {
+    background-color: rgba(255, 255, 255, 1) !important;
+    border-color: #3498db !important;
+    box-shadow: 
+      0 4px 12px rgba(52, 152, 219, 0.2),
+      inset 0 0 4px rgba(52, 152, 219, 0.1) !important;
+    outline: none !important;
+    transform: translateY(-2px);
+  }
+
+  &::placeholder {
+    color: #999;
+  }
+
+  &:disabled {
+    background-color: rgba(240, 240, 240, 0.8) !important;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  &.ng-invalid.ng-touched {
+    border-color: #e74c3c !important;
+    background-color: rgba(255, 245, 245, 0.9) !important;
+  }
+}
+
+// Register Label
+.register-label {
+  font-size: 0.875rem;
+  color: #555;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+// Error Message
+.error-message {
+  font-size: 0.813rem;
+  padding-left: 0 !important;
+  animation: slideInLeft 0.3s ease-out;
+}
+
+// Register Button
+.register-button {
+  width: 100% !important;
+  padding: 0.875rem 1rem !important;
+  background-color: #2c3e50 !important;
+  color: #fff !important;
+  font-size: 1rem;
+  font-weight: 600;
+  border: 1px solid rgba(44, 62, 80, 0.3) !important;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  margin-top: 1rem;
+  position: relative;
+  overflow: hidden;
+  animation: slideInUp 0.5s ease-out 0.2s both;
+  box-shadow: 0 4px 15px rgba(44, 62, 80, 0.2);
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+  }
+
+  &:hover:not(:disabled) {
+    background-color: #34495e !important;
+    box-shadow: 
+      0 6px 20px rgba(44, 62, 80, 0.35),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+
+    &::before {
+      width: 300px;
+      height: 300px;
+    }
+  }
+
+  &:active:not(:disabled) {
+    background-color: #23303f !important;
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(44, 62, 80, 0.25);
+  }
+
+  &:disabled {
+    background-color: #bdc3c7 !important;
+    cursor: not-allowed;
+    opacity: 0.7;
+    box-shadow: none;
+  }
+
+  ::ng-deep {
+    .p-button-label {
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+  }
+}
+
+// Login Section
+.login-section {
+  text-align: center;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+  font-size: 0.875rem;
+  color: #666;
+  animation: fadeIn 0.6s ease-out 0.3s both;
+}
+
+.login-text {
+  color: #555;
+}
+
+.login-link {
+  margin-left: 0.25rem;
+  color: #3498db;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: #3498db;
+    transition: width 0.3s ease;
+  }
+
+  &:hover {
+    color: #2980b9;
+
+    &::after {
+      width: 100%;
+    }
+  }
+
+  &:active {
+    color: #1a5a7a;
+  }
+}
+
+// Responsive Design
+@media (max-width: 600px) {
+  .register-card {
+    padding: 2rem 1.5rem;
+    max-width: 100%;
+    margin: 0 1rem;
+    border-radius: 12px;
+  }
+
+  .register-title {
+    font-size: 1.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .form-group {
+    gap: 0.3rem;
+  }
+
+  .register-input {
+    padding: 0.65rem 0.875rem !important;
+    font-size: 16px;
+  }
+
+  .register-button {
+    padding: 0.75rem !important;
+  }
+
+  .login-section {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .register-container {
+    padding: 0.5rem;
+  }
+
+  .register-card {
+    padding: 1.5rem 1.25rem;
+    border-radius: 12px;
+    max-width: 100%;
+  }
+
+  .register-title {
+    font-size: 1.5rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .register-button {
+    margin-top: 0.75rem;
+  }
+
+  .form-row {
+    gap: 1rem;
+  }
+}
