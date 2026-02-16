@@ -1,76 +1,91 @@
 <p-toast />
-@if (role=='0') {
-<p-button label="הוספת חבילה" icon="pi pi-plus" (onClick)="showChild()"></p-button>
-}
-<div class="flex flex-wrap justify-content-center gap-5 p-5">
-  @for (package of (packages$ | async); track package.id; let i = $index) {
-    <div class="package-container animate-fadein" [style.animation-delay.ms]="i * 70">
-     
-      <div class="minimal-ticket" [class.selected]="(package.quantity || 0) > 0">
-        <div class="flex flex-column h-full p-4">
-         
-          <div class="flex justify-content-between align-items-start mb-3">
-            <div class="flex flex-column">
-              <h3 class="text-xl font-semibold m-0">{{ package.name }}</h3>
-              <div class="check-badge mt-1" [class.visible]="(package.quantity || 0) > 0">
-                <i class="pi pi-check-circle text-orange-500 text-sm"></i>
-                <span class="text-xs text-orange-500 mr-1 font-medium">נבחר</span>
-              </div>
+
+<div class="packages-wrapper">
+  <div class="packages-header">
+    <h2 class="section-title">Our Exclusive Packages ✨</h2>
+    <p class="section-subtitle">Bid on amazing items and support our cause</p>
+    @if (role=='0') {
+    <button pButton (click)="showChild()" label="Add Package" icon="pi pi-plus" class="add-btn mt-3"></button>
+    }
+  </div>
+
+  <div class="packages-grid">
+    @for (package of (packages$ | async); track package.id; let i = $index) {
+    <div class="package-card-wrapper animate-fadein" [style.animation-delay.ms]="i * 80">
+      <div class="package-card" [class.selected]="(package.quantity || 0) > 0">
+        <div class="card-header">
+          <div class="card-badge">🎁</div>
+          @if ((package.quantity || 0) > 0) {
+          <div class="selected-badge">
+            <i class="pi pi-check-circle"></i>
+            <span>Selected</span>
+          </div>
+          }
+        </div>
+
+        <div class="card-content">
+          <h3 class="package-name">{{ package.name }}</h3>
+
+          <div class="cards-info">
+            <div class="info-badge">
+              <i class="pi pi-ticket"></i>
+              <span>{{ package.numOfCards }} tickets</span>
             </div>
-            <span class="price-text font-bold text-xl transition-all">{{ package.price | currency:'ILS':'symbol':'1.0-0' }}</span>
           </div>
 
+          <p class="package-description">{{ package.description }}</p>
 
-          <p class="description-text text-sm line-height-3 mb-5">{{ package.description }}</p>
+          <div class="price-section">
+            <span class="price-label">Starting Price</span>
+            <span class="price-amount">{{ package.price | currency:'ILS':'symbol':'1.0-0' }}</span>
+          </div>
+        </div>
 
+        <div class="card-footer">
+          <div class="quantity-control">
+            <button pButton icon="pi pi-minus" class="p-button-rounded p-button-text qty-btn"
+              (click)="removePackage(package)" pRipple></button>
 
-          <div class="mt-auto">
-            <div class="flex align-items-center justify-content-between pt-3 border-top-1 border-alpha">
-              <span class="text-xs uppercase tracking-wider opacity-60">{{ package.numOfCards }} כרטיסים</span>
-             
-              <div class="stepper flex align-items-center gap-2">
-                <button pButton icon="pi pi-minus" class="p-button-rounded p-button-text p-button-sm qty-btn"
-                        (click)="removePackage(package)"></button>
-               
-                <span class="qty-display font-bold">{{ package.quantity || 0 }}</span>
-               
-                <button pButton icon="pi pi-plus" class="p-button-rounded p-button-text p-button-sm qty-btn"
-                        (click)="addPackage(package)"></button>
-              </div>
+            <div class="qty-display">
+              <span class="qty-value">{{ package.quantity || 0 }}</span>
             </div>
 
-
-            @if (role === '0') {
-              <div class="flex justify-content-end gap-2 mt-3 opacity-50 hover:opacity-100 transition-all">
-                <p-button icon="pi pi-pencil" [text]="true" severity="secondary" size="small" ></p-button>
-                <p-button icon="pi pi-trash" [text]="true" severity="danger" size="small"></p-button>
-              </div>
-            }
+            <button pButton icon="pi pi-plus" class="p-button-rounded p-button-text qty-btn"
+              (click)="addPackage(package)" pRipple></button>
           </div>
+
+          @if (role === '0') {
+          <div class="admin-actions">
+            <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm admin-btn" (click)="showChild()"
+              pRipple pTooltip="עריכה" tooltipPosition="top"></button>
+          </div>
+          }
         </div>
       </div>
     </div>
-  }
+    }
+  </div>
+
+  <div class="packages-cta">
+    <p-button label="Explore All Items" icon="pi pi-arrow-right" routerLink="/gifts" class="cta-button"></p-button>
+  </div>
 </div>
-
-
-<p-button class="bg-orange-500 hover:bg-orange-600" label="לבחירת כרטיסים" icon="pi pi-gift" routerLink="/gifts"></p-button>
 
 <p-toast />
 <p-confirmdialog #cd>
-    <ng-template pTemplate="headless" let-message let-onAccept="onAccept" let-onReject="onReject">
-        @if (message) {
-        <div class="flex flex-column align-items-center p-8 surface-overlay border-round shadow-2 text-center">
-            <div class="border-circle bg-primary text-white inline-flex justify-content-center align-items-center h-6rem w-6rem -mt-8 shadow-4">
-                <i class="pi pi-question text-5xl"></i>
-            </div>
-            <span class="font-bold text-2xl block mb-2 mt-6">{{ message.header }}</span>
-            <p class="mb-4 text-600 px-4">{{ message.message }}</p>
-            <div class="flex align-items-center justify-content-center gap-3 mt-4">
-                <p-button [label]="message.acceptLabel" (onClick)="onAccept()" styleClass="w-15rem"></p-button>
-                <p-button [label]="message.rejectLabel"  [outlined]="true" (onClick)="onReject()" styleClass="w-15rem"></p-button>
-            </div>
-        </div>
-        }
-    </ng-template>
+  <ng-template pTemplate="headless" let-message let-onAccept="onAccept" let-onReject="onReject">
+    @if (message) {
+    <div class="confirm-dialog">
+      <div class="dialog-icon">
+        <i class="pi pi-question"></i>
+      </div>
+      <span class="dialog-header">{{ message.header }}</span>
+      <p class="dialog-message">{{ message.message }}</p>
+      <div class="dialog-actions">
+        <p-button [label]="message.acceptLabel" (onClick)="onAccept()" [outlined]="true" class="w-10rem pt-2 pb-2"></p-button>
+        <p-button [label]="message.rejectLabel" [outlined]="true" (onClick)="onReject()" class="w-10rem"></p-button>
+      </div>
+    </div>
+    }
+  </ng-template>
 </p-confirmdialog>

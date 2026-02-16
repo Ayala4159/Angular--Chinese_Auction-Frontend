@@ -12,12 +12,15 @@ import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { TagModule } from 'primeng/tag';
+import { TooltipModule } from 'primeng/tooltip';
 import { CookieService } from 'ngx-cookie-service';
+import { DonorService } from '../../../services/donor-service';
+import { GiftDetailsDialog } from '../gift-details-dialog/gift-details-dialog';
 @Component({
   selector: 'app-get-all-gifts',
   standalone: true,
-  imports: [CommonModule, ButtonModule, RippleModule, DynamicDialogModule, ToastModule, ConfirmDialogModule, RouterLink, TagModule],
-  providers: [GiftService, DialogService, MessageService, ConfirmationService],
+  imports: [CommonModule, ButtonModule, RippleModule, DynamicDialogModule, ToastModule, ConfirmDialogModule, TagModule, TooltipModule],
+  providers: [GiftService, DialogService, MessageService, ConfirmationService, DonorService],
   templateUrl: './get-all-gifts.html',
   styleUrl: './get-all-gifts.scss',
 })
@@ -25,6 +28,7 @@ import { CookieService } from 'ngx-cookie-service';
 export class GetAllGifts implements OnInit {
 
   giftService = inject(GiftService);
+  donorService = inject(DonorService);
   cdr = inject(ChangeDetectorRef);
   router = inject(Router);
   route = inject(ActivatedRoute);
@@ -33,7 +37,7 @@ export class GetAllGifts implements OnInit {
   private cookieService = inject(CookieService);
   ref: DynamicDialogRef<any> | null = null;
   private confirmationService = inject(ConfirmationService);
-
+  readonly DONOR_BASE_URL = 'https://localhost:7282/images/companies/';
   products: any[] = [];
   gifts: GetGift[] = [];
 
@@ -61,6 +65,8 @@ export class GetAllGifts implements OnInit {
     this.giftService.getGift().subscribe(data => {
       this.gifts = data;
       this.cdr.detectChanges()
+      console.log(this.gifts);
+      
     });
   }
 
@@ -130,7 +136,17 @@ export class GetAllGifts implements OnInit {
     this.messageService.add({ severity: 'success', summary: 'הודעה', detail: 'המתנה נוספה לחבילה בהצלחה' });
   }
 
-  showDetails(product: any) {}
+  showDetails(product: GetGift) {
+    this.dialogService.open(GiftDetailsDialog, {
+      header: product.name,
+      width: '90vw',
+      height: 'auto',
+      contentStyle: { overflow: 'visible', padding: '0' },
+      data: { gift: product },
+      baseZIndex: 10000,
+    });
+  }
+
   addGift() {
     this.ref = this.dialogService.open(GiftsForm, {
       header: 'הוספת מתנה חדשה',

@@ -1,43 +1,780 @@
-/* עיצוב הכרטיס הכללי */
-.custom-card {
-    transition: transform 0.3s ease, shadow 0.3s ease;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+﻿// ============================================
+// PREMIUM DARK-MODE CHINESE AUCTION UI
+// Luxury Gaming & High-Tech Aesthetic
+// ============================================
+
+// Color Palette
+$dark-bg: #0f172a;
+$dark-card: #1e293b;
+$dark-surface: #334155;
+$neon-purple: #a855f7;
+$neon-gold: #fbbf24;
+$neon-cyan: #06b6d4;
+$accent-glow: #a855f7;
+$text-primary: #f1f5f9;
+$text-secondary: #cbd5e1;
+$text-muted: #94a3b8;
+
+// ============================================
+// 1. GALLERY HEADER
+// ============================================
+
+.gallery-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(6, 182, 212, 0.05) 100%);
+    padding: 2rem;
+    border-radius: 1.5rem;
+    border: 1px solid rgba(168, 85, 247, 0.2);
+    backdrop-filter: blur(10px);
+    margin-bottom: 2rem;
+
+    .gallery-title {
+        font-size: 2rem;
+        font-weight: 800;
+        margin: 0;
+        background: linear-gradient(135deg, #a855f7 0%, #06b6d4 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        letter-spacing: -0.5px;
+    }
 }
 
-.custom-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12) !important;
+// ============================================
+// 2. GIFTS GALLERY GRID
+// ============================================
+
+.gifts-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+    padding: 1rem;
+    margin: 0 auto;
+
+    @media (max-width: 1024px) {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1.25rem;
+    }
+
+    @media (max-width: 480px) {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
 }
 
-/* אפקט לתמונה */
-.product-image {
-    height: 250px;
-    object-fit: cover;
+// ============================================
+// 3. GIFT CARD WRAPPER & BASE
+// ============================================
+
+.gift-card-wrapper {
+    perspective: 1000px;
+    height: 100%;
 }
 
-.custom-card:hover .product-image {
-    transform: scale(1.05);
+.gift-card {
+    position: relative;
+    height: 100%;
+    background: $dark-card;
+    border: 1px solid rgba(168, 85, 247, 0.15);
+    border-radius: 1.5rem;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+
+    // TILT EFFECT ON HOVER
+    &:hover {
+        transform: translateY(-12px) rotateX(5deg) rotateY(-5deg);
+        box-shadow: 
+            0 40px 80px rgba(168, 85, 247, 0.25),
+            0 0 60px rgba(168, 85, 247, 0.15),
+            inset 0 0 20px rgba(168, 85, 247, 0.05);
+        border-color: rgba(168, 85, 247, 0.4);
+
+        .gift-image {
+            transform: scale(1.08);
+            filter: brightness(1.1);
+        }
+
+        .neon-accent-top,
+        .neon-accent-bottom {
+            opacity: 1;
+        }
+
+        .price-tag-wrapper {
+            .price-tag-glow {
+                opacity: 1;
+                animation: glow-pulse 1.5s ease-in-out infinite;
+            }
+        }
+    }
 }
 
-/* תגית המחיר - מראה יוקרתי */
-.price-tag {
-    background: rgba(15, 23, 42, 0.8); /* כמעט שחור עם שקיפות */
+// ============================================
+// 4. IMAGE CONTAINER & EFFECTS
+// ============================================
+
+.gift-image-container {
+    position: relative;
+    width: 100%;
+    height: 240px;
+    overflow: hidden;
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(6, 182, 212, 0.05) 100%);
+    flex-shrink: 0;
+
+    .gift-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: all 0.5s cubic-bezier(0.33, 1, 0.68, 1);
+    }
+}
+
+// Neon Border Accents
+.neon-accent-top,
+.neon-accent-bottom {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, $neon-purple, transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.neon-accent-top {
+    top: 0;
+}
+
+.neon-accent-bottom {
+    bottom: 0;
+}
+
+// Lottery Badge
+.lottery-badge {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(220, 38, 38, 0.5);
+    box-shadow: 0 0 20px rgba(220, 38, 38, 0.3);
+
+    i {
+        font-size: 0.875rem;
+        animation: bolt-pulse 1.5s ease-in-out infinite;
+    }
+}
+
+@keyframes bolt-pulse {
+    0%, 100% {
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    }
+    50% {
+        text-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+    }
+}
+
+// ============================================
+// 5. PRICE TAG WITH GLOW ANIMATION
+// ============================================
+
+.price-tag-wrapper {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 10;
+
+    .price-tag-glow {
+        position: absolute;
+        inset: -1rem;
+        background: radial-gradient(circle, rgba(168, 85, 247, 0.4) 0%, transparent 70%);
+        border-radius: 50%;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+    }
+
+    .price-tag {
+        position: relative;
+        display: inline-block;
+        background: linear-gradient(135deg, $neon-purple 0%, $neon-gold 100%);
+        color: $dark-bg;
+        padding: 0.75rem 1.5rem;
+        border-radius: 9999px;
+        font-weight: 800;
+        font-size: 1rem;
+        letter-spacing: 0.5px;
+        box-shadow: 0 10px 30px rgba(168, 85, 247, 0.4);
+        border: 1px solid rgba(251, 191, 36, 0.5);
+    }
+}
+
+@keyframes glow-pulse {
+    0%, 100% {
+        box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
+        transform: scale(1);
+    }
+    50% {
+        box-shadow: 0 0 40px rgba(168, 85, 247, 0.8);
+        transform: scale(1.05);
+    }
+}
+
+// ============================================
+// 6. CARD CONTENT SECTION
+// ============================================
+
+.card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 2rem;
+    flex: 1;
+    position: relative;
+    z-index: 2;
+
+    .gift-header {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+
+        .gift-title {
+            font-size: 1.375rem;
+            font-weight: 800;
+            margin: 0;
+            color: $text-primary;
+            letter-spacing: -0.5px;
+            line-height: 1.3;
+        }
+
+        .gift-tagline {
+            font-size: 0.95rem;
+            margin: 0;
+            color: $text-muted;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+    }
+}
+
+// ============================================
+// 7. DONOR SECTION
+// ============================================
+
+.donor-section {
+    padding: 1.25rem;
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.08) 0%, rgba(6, 182, 212, 0.04) 100%);
+    border: 1px solid rgba(168, 85, 247, 0.15);
+    border-radius: 1rem;
     backdrop-filter: blur(8px);
+}
+
+.donor-content {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+
+    .donor-logo-wrapper {
+        flex-shrink: 0;
+
+        .donor-logo {
+            width: 3.5rem;
+            height: 3.5rem;
+            object-fit: contain;
+            border-radius: 0.75rem;
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            padding: 0.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            box-shadow: 0 8px 24px rgba(168, 85, 247, 0.15);
+            transition: all 0.3s ease;
+
+            &:hover {
+                transform: scale(1.05);
+                box-shadow: 0 12px 32px rgba(168, 85, 247, 0.25);
+            }
+        }
+    }
+
+    .donor-info {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+
+        .donor-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: $neon-purple;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .donor-name {
+            font-size: 1rem;
+            font-weight: 700;
+            margin: 0;
+            color: $text-primary;
+        }
+
+        .donor-description {
+            font-size: 0.85rem;
+            margin: 0;
+            color: $text-muted;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+    }
+}
+
+.donor-anonymous {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: $text-muted;
     font-size: 0.9rem;
+    font-weight: 600;
+
+    i {
+        color: $neon-purple;
+        font-size: 1rem;
+    }
 }
 
-/* עיצוב כפתור ההוספה לסל */
-::ng-deep .cart-btn {
-    background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%) !important;
-    border: none !important;
-    transition: filter 0.2s;
+// ============================================
+// 8. ACTION BUTTONS
+// ============================================
+
+.action-buttons {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: auto;
+
+    .btn {
+        flex: 1;
+        padding: 0.75rem 1rem;
+        border: none;
+        border-radius: 0.875rem;
+        font-weight: 700;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        position: relative;
+        overflow: hidden;
+
+        i {
+            font-size: 1rem;
+        }
+
+        &::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+            pointer-events: none;
+        }
+
+        &:hover:not(.btn-disabled)::before {
+            width: 300px;
+            height: 300px;
+        }
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, $neon-purple 0%, #ec4899 100%);
+        color: white;
+        box-shadow: 0 10px 30px rgba(168, 85, 247, 0.3);
+        border: 1px solid rgba(236, 72, 153, 0.5);
+
+        &:hover:not(.btn-disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(168, 85, 247, 0.5);
+        }
+
+        &:active:not(.btn-disabled) {
+            transform: translateY(0);
+        }
+    }
+
+    .btn-secondary {
+        background: rgba(168, 85, 247, 0.1);
+        color: $neon-purple;
+        border: 1.5px solid $neon-purple;
+        backdrop-filter: blur(8px);
+
+        &:hover {
+            background: rgba(168, 85, 247, 0.2);
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+            transform: translateY(-2px);
+        }
+
+        &:active {
+            transform: translateY(0);
+        }
+    }
+
+    .btn-disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+        color: $text-muted;
+    }
 }
 
-::ng-deep .cart-btn:hover {
-    filter: brightness(1.1);
+// ============================================
+// 9. CARD BACKGROUND GLOW EFFECT
+// ============================================
+
+.card-glow {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(168, 85, 247, 0.1) 0%, transparent 70%);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    border-radius: 1.5rem;
 }
 
-/* כפתור פרטים עדין */
-::ng-deep .detail-btn {
-    background-color: var(--surface-100) !important;
+.gift-card:hover .card-glow {
+    opacity: 1;
+}
+
+// ============================================
+// 10. DIALOG STYLING
+// ============================================
+
+.premium-dialog {
+    background: linear-gradient(135deg, $dark-card 0%, rgba(51, 65, 85, 0.7) 100%);
+    border: 1px solid rgba(168, 85, 247, 0.2);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6);
+
+    .bg-gradient-neon {
+        background: linear-gradient(135deg, $neon-purple 0%, $neon-cyan 100%);
+        box-shadow: 0 0 40px rgba(168, 85, 247, 0.5);
+    }
+}
+
+// ============================================
+// 11. PRIMENG BUTTON CUSTOMIZATION
+// ============================================
+
+::ng-deep {
+    // Primary Button Style
+    .premium-btn-primary {
+        .p-button {
+            background: linear-gradient(135deg, $neon-purple 0%, $neon-gold 100%) !important;
+            border: none !important;
+            color: $dark-bg !important;
+            font-weight: 700 !important;
+            border-radius: 0.875rem !important;
+            padding: 0.75rem 1.75rem !important;
+            box-shadow: 0 10px 30px rgba(168, 85, 247, 0.4) !important;
+            transition: all 0.3s ease !important;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+
+            &:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 15px 40px rgba(168, 85, 247, 0.6) !important;
+                filter: brightness(1.08);
+            }
+
+            &:active {
+                transform: translateY(0);
+            }
+
+            &:disabled {
+                opacity: 0.6 !important;
+                cursor: not-allowed !important;
+            }
+        }
+    }
+
+    // Secondary Button Style
+    .premium-btn-secondary {
+        .p-button {
+            background: rgba(168, 85, 247, 0.1) !important;
+            border: 1.5px solid $neon-purple !important;
+            color: $neon-purple !important;
+            font-weight: 700 !important;
+            border-radius: 0.875rem !important;
+            padding: 0.75rem 1.75rem !important;
+            backdrop-filter: blur(8px);
+            transition: all 0.3s ease !important;
+
+            &:hover {
+                background: rgba(168, 85, 247, 0.2) !important;
+                box-shadow: 0 0 20px rgba(168, 85, 247, 0.4) !important;
+                transform: translateY(-2px);
+            }
+
+            &:active {
+                transform: translateY(0);
+            }
+        }
+    }
+
+    // Toast Notifications
+    .p-toast {
+        .p-toast-message {
+            background: linear-gradient(135deg, $dark-card 0%, rgba(51, 65, 85, 0.8) 100%);
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            border-radius: 1rem;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+    }
+
+    // Tooltip
+    .p-tooltip {
+        .p-tooltip-text {
+            background: linear-gradient(135deg, $dark-card 0%, rgba(51, 65, 85, 0.9) 100%);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 0.75rem;
+            backdrop-filter: blur(10px);
+            color: $text-primary;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+    }
+}
+
+// ============================================
+// 12. RESPONSIVE DESIGN
+// ============================================
+
+@media (max-width: 1024px) {
+    .gallery-header {
+        flex-direction: column;
+        gap: 1.5rem;
+        text-align: center;
+
+        .gallery-title {
+            font-size: 1.75rem;
+        }
+    }
+
+    .gift-image-container {
+        height: 220px;
+    }
+
+    .card-content {
+        padding: 1.5rem;
+        gap: 1.25rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .gift-image-container {
+        height: 200px;
+    }
+
+    .card-content {
+        padding: 1.25rem;
+        gap: 1rem;
+
+        .gift-header {
+            .gift-title {
+                font-size: 1.15rem;
+            }
+
+            .gift-tagline {
+                font-size: 0.85rem;
+            }
+        }
+    }
+
+    .donor-section {
+        padding: 1rem;
+    }
+
+    .action-buttons {
+        gap: 0.5rem;
+
+        .btn {
+            padding: 0.65rem 0.85rem;
+            font-size: 0.8rem;
+
+            i {
+                font-size: 0.9rem;
+            }
+        }
+    }
+}
+
+@media (max-width: 480px) {
+    .gallery-header {
+        padding: 1.5rem;
+
+        .gallery-title {
+            font-size: 1.5rem;
+        }
+    }
+
+    .gifts-gallery {
+        padding: 0.5rem;
+        gap: 0.75rem;
+    }
+
+    .gift-image-container {
+        height: 180px;
+    }
+
+    .card-content {
+        padding: 1rem;
+        gap: 0.75rem;
+
+        .gift-header {
+            gap: 0.5rem;
+
+            .gift-title {
+                font-size: 1rem;
+            }
+
+            .gift-tagline {
+                font-size: 0.75rem;
+            }
+        }
+    }
+
+    .price-tag-wrapper {
+        top: 0.75rem;
+        right: 0.75rem;
+
+        .price-tag {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+    }
+
+    .action-buttons {
+        width: 100%;
+
+        .btn {
+            padding: 0.6rem 0.75rem;
+            font-size: 0.7rem;
+        }
+    }
+}
+
+// ============================================
+// 13. DARK MODE GLOBAL COLOR SUPPORT
+// ============================================
+
+body, :root {
+    --primary-color: #{$neon-purple};
+    --primary-50: rgba(168, 85, 247, 0.1);
+    --primary-100: rgba(168, 85, 247, 0.2);
+    --surface-color: #{$dark-card};
+    --surface-ground: #{$dark-bg};
+    --text-color: #{$text-primary};
+    --text-color-secondary: #{$text-muted};
+}
+
+// Smooth scrollbar for Webkit browsers
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+::-webkit-scrollbar-thumb {
+    background: $neon-purple;
+    border-radius: 4px;
+
+    &:hover {
+        background: $neon-gold;
+    }
+}
+
+.text-700 {
+    color: #374151 !important;
+}
+
+.text-500 {
+    color: #6b7280 !important;
+}
+
+.w-12 {
+    width: 3rem !important;
+}
+
+.h-12 {
+    height: 3rem !important;
+}
+
+.object-cover {
+    object-fit: cover !important;
+}
+
+.border-round-lg {
+    border-radius: 12px !important;
+}
+
+.flex-shrink-0 {
+    flex-shrink: 0;
+}
+
+.align-items-start {
+    align-items: flex-start !important;
+}
+
+.gap-3 {
+    gap: 0.75rem !important;
+}
+
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Donor card hover effect */
+.custom-card {
+    .border-l-4 {
+        transition: border-left-color 0.3s ease;
+    }
+
+    &:hover .border-l-4 {
+        border-left-color: #a855f7 !important;
+    }
 }

@@ -13,11 +13,12 @@ import { RouterModule } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
 import { ConfirmDialog } from 'primeng/confirmdialog';
 import { CookieService } from 'ngx-cookie-service';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-get-all-packages',
   standalone: true,
-  imports: [ButtonModule, CardModule, AsyncPipe, DynamicDialogModule, ToastModule, CommonModule, RouterModule, ConfirmDialog],
+  imports: [ButtonModule, CardModule, AsyncPipe, DynamicDialogModule, ToastModule, CommonModule, RouterModule, ConfirmDialog, TooltipModule],
   providers: [DialogService, MessageService, ConfirmationService],
   templateUrl: './get-all-packages.html',
   styleUrl: './get-all-packages.scss',
@@ -28,24 +29,33 @@ export class GetAllPackages {
   dialogService = inject(DialogService);
   packageService = inject(PackageService);
   private cookieService = inject(CookieService);
-  user: string = '';
-  role: string = '';
-  userPackages: any[] = [];
+  user = this.cookieService.get('user') || '';
+  role = this.user ? JSON.parse(this.user).role : '';
   packages$: any = this.packageService.getPackages().pipe(
     map((packages: any[]) => {
       return packages.map(pkg => {
-        const count = this.userPackages.filter(up => up.id === pkg.id.toString()).length;
+        const count = this.userPackages.filter((up: any) => up.id === pkg.id.toString()).length;
         return { ...pkg, quantity: count };
       });
     })
   );
+  userPackages = JSON.parse(this.cookieService.get(JSON.parse(this.user).id) || '[]');
   ref: DynamicDialogRef<any> | null = null;
   isChildVisible: boolean = false;
 
   ngOnInit() {
-    this.user = this.cookieService.get('user') || '';
-    this.role = this.user ? JSON.parse(this.user).role : '';
-    this.userPackages = JSON.parse(this.cookieService.get(JSON.parse(this.user).id) || '[]');
+    if (this.user && this.user !== 'undefined') {
+      const parsedUser = JSON.parse(this.user);
+      const userId = parsedUser.id;
+      if (userId) {
+        this.userPackages = JSON.parse(this.cookieService.get(userId) || '[]');
+      }
+else { this.userPackages = []; }
+    }
+    else {
+      this.role = '1';
+      this.userPackages = [];
+    }
   }
 
   showChild() {
@@ -87,6 +97,11 @@ export class GetAllPackages {
     this.cookieService.set(u, JSON.stringify(this.userPackages));
   }
   removePackage(packageData: any) {
+    if(packageData.quantity===0){
+      return
+    }    
+    console.log(packageData);
+    
     let flage = false;
     this.confirmationService.confirm({
       message: 'מחיקת חבילה תגרוך למחיקה של כל המתנות שהוספת לחבילה זו. האם אתה בטוח שברצונך למחוק את החבילה?',
@@ -94,8 +109,7 @@ export class GetAllPackages {
       icon: 'pi pi-exclamation-triangle',
       acceptLabel: "כן, למחוק",
       rejectLabel: "אה לא! אני רוצה להשאיר את החבילה",
-      acceptButtonStyleClass: 'p-button-success',
-      rejectButtonStyleClass: 'p-button-text',
+
       accept: () => {
         this.userPackages = this.userPackages.reverse().filter((pkg: any) => {
           if (pkg.id === packageData.id.toString() && !flage) {

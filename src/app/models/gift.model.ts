@@ -1,3 +1,5 @@
+import { UserGetDonor } from "./donor.model";
+
 export class GetGift {
     id!: number;
     name!: string;
@@ -5,7 +7,7 @@ export class GetGift {
     details?: string;
     picture!: string;
     value!: number;
-    donorId!: number;
+    donor!: UserGetDonor;
     categoryId!: number;
     is_lottery!: boolean;
     is_approved: boolean = false;

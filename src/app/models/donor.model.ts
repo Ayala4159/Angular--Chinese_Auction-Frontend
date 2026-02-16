@@ -24,8 +24,9 @@ export class ManagerGetDonor {
 }
 
 export class UserGetDonor {
-    Company_name?: string;
-    Company_description?: string;
-    Company_picture?: string;
-    Is_publish!: boolean;
+    Id!:number;
+    company_name?: string;
+    company_description?: string;
+    company_picture?: string;
+    is_publish!: boolean;
 }

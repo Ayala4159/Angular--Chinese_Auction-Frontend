@@ -20,7 +20,7 @@ import { ImageModule } from 'primeng/image';
     ToastModule,
     ImageModule,
     ReactiveFormsModule,
-    InputNumberModule
+    InputNumberModule,
   ],
   providers: [MessageService],
   templateUrl: './package-form.html',
