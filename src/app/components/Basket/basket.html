@@ -1,104 +1,143 @@
-﻿<div class="grid mt-4">
+<div class="basket-glass-container">
     @if (allCards.length > 0) {
-    <div class="col-12 lg:col-3" dir="rtl">
-        <div class="surface-card p-4 shadow-4 border-round-2xl border-1 surface-border sticky"
-            style="top: 2rem; z-index: 10;">
-            <h2 class="text-900 font-bold text-xl mb-4 border-bottom-1 surface-border pb-3">סיכום הזמנה</h2>
-            <div class="flex flex-column gap-3">
-                <div *ngFor="let pack of uniquePackages"
-                    class="flex flex-column mb-2 border-bottom-1 surface-border pb-2">
-                    <span class="text-700 font-bold text-sm">{{ pack.name }}</span>
-                    <div class="flex justify-content-between mt-1">
-                        <span class="text-600 text-xs">כמות: {{ pack.package_count }}</span>
-                        <span class="text-900 font-bold text-sm">{{ (pack.price * pack.package_count) |
-                            currency:'ILS' }}</span>
-                    </div>
-                </div>
-                <div class="flex justify-content-between align-items-center mt-2">
-                    <span class="text-900 text-sm font-bold">סה"כ לתשלום:</span>
-                    <span class="text-primary text-xl font-black">{{ totalPrice() | currency: 'ILS' }}</span>
-                </div>
-
-
-                <p-button label="המשך" icon="pi pi-credit-card" (click)="pay()" [disabled]="numOfCards!==emptyCards"
-                    styleClass="w-full p-button-raised p-button-success mt-4 py-2 font-bold">
-                </p-button>
-            </div>
+    <!-- Premium Header -->
+    <div class="glass-header">
+        <div class="header-text-content">
+            <h1 class="header-title">{{ 'הסל שלי' | uppercase }}</h1>
+            <p class="header-subtitle">{{ allCards.length }} מתנות יוקרתיות בחזקתך</p>
         </div>
     </div>
-    <div class="card p-4 md:p-6 surface-ground min-h-screen col-12 lg:col-9">
-        <div class="flex justify-content-between align-items-center mb-6 px-4">
-            <p-tag [value]="allCards.length + ' פריטים בסל'" severity="info"
-                styleClass="border-round-pill px-3 shadow-1"></p-tag>
-            <h1 class="m-0 text-4xl font-black text-900">הסל שלי</h1>
+
+    <!-- Main Content Container -->
+    <div class="glass-main-content">
+        
+        <!-- Items List with Glass Effect -->
+        <div class="glass-items-list">
+            <p-dataView #dv [value]="allCards" [rows]="8" [paginator]="true" 
+                paginatorStyleClass="glass-paginator">
+                <ng-template #list let-items>
+                    <div class="items-container">
+                        <div *ngFor="let item of items; let i = index" 
+                            class="glass-item-row glass-fadeIn"
+                            [style.animation-delay]="i * 0.06 + 's'">
+                            
+                            <!-- Item Image -->
+                            <div class="item-image-column">
+                                <img [src]="BASE_URL + item.picture" 
+                                    [alt]="item.name"
+                                    class="item-image">
+                                <div class="quantity-badge-small">{{ item.quantity }}</div>
+                            </div>
+
+                            <!-- Item Details -->
+                            <div class="item-info-column">
+                                <h3 class="item-title">{{ item.name }}</h3>
+                                <p class="item-description">{{ item.description }}</p>
+                                <p class="item-details-text">{{ item.details }}</p>
+                            </div>
+
+                            <!-- Item Value -->
+                            <div class="item-value-column">
+                                <span class="value-label">שווי:</span>
+                                <span class="value-amount">{{ item.value | currency: 'ILS' }}</span>
+                            </div>
+
+                            <!-- Item Actions -->
+                            <div class="item-actions-column">
+                                <p-button 
+                                    (onClick)="removeFromBasket(item.id)" 
+                                    icon="pi pi-minus" 
+                                    [rounded]="true"
+                                    [text]="true" 
+                                    severity="secondary"
+                                    styleClass="item-action-btn">
+                                </p-button>
+                                <p-button 
+                                    (onClick)="addToBasket(item.id)" 
+                                    icon="pi pi-plus" 
+                                    [rounded]="true"
+                                    [text]="true" 
+                                    severity="secondary"
+                                    styleClass="item-action-btn">
+                                </p-button>
+                                <p-button 
+                                    (onClick)="toggleFavorite(item.id)"
+                                    [icon]="isFavorite(item.id) ? 'pi pi-heart-fill' : 'pi pi-heart'"
+                                    [severity]="isFavorite(item.id) ? 'danger' : 'secondary'" 
+                                    [rounded]="true"
+                                    [text]="true" 
+                                    styleClass="item-action-btn favorite-btn-line">
+                                </p-button>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+            </p-dataView>
         </div>
 
-        <p-dataView #dv [value]="allCards" [rows]="10" [paginator]="true">
-            <ng-template #list let-items>
-                <div class="flex flex-column gap-5 align-items-center">
-
-                    <div *ngFor="let item of items; let i = index"
-                        class="gift-card relative flex flex-column md:flex-row align-items-stretch surface-card border-round-2xl shadow-2 hover:shadow-6 transition-all transition-duration-400 w-full max-w-5xl overflow-hidden border-1 surface-border"
-                        [style.animation-delay]="i * 0.1 + 's'">
-
-                        <div class="image-container relative flex-shrink-0">
-                            <img [src]="BASE_URL + item.picture" [alt]="item.name"
-                                class="absolute w-full h-full object-cover">
-
-                            <div class="absolute top-0 right-0 m-3 bg-primary text-white border-circle flex flex-column align-items-center justify-content-center shadow-4 border-2 border-white"
-                                style="width: 55px; height: 55px; z-index: 10;">
-                                <span class="text-xl font-black line-height-1">{{ item.quantity }}</span>
-                                <span style="font-size: 0.6rem;" class="font-bold uppercase">כרטיסים</span>
-                            </div>
-                            <div>
-                                <p-button (onClick)="addToBasket(item.id)" [icon]="'pi pi-plus'" [rounded]="true"
-                                    [raised]="true" [text]="true" severity="secondary" [rounded]="true" [text]="true">
-                                </p-button>
-                                <p-button (onClick)="removeFromBasket(item.id)" [icon]="'pi pi-minus'" [rounded]="true"
-                                    [raised]="true" [text]="true" severity="secondary" [rounded]="true" [text]="true">
-                                </p-button>
-                            </div>
-                            <div class="absolute bottom-0 w-full p-3 bg-gradient-bottom text-white font-bold text-sm">
-                                שווי המתנה: {{ item.value | currency: 'ILS' }}
-                            </div>
-                        </div>
-
-                        <div class="flex-1 p-5 flex flex-column text-right">
-                            <div class="flex justify-content-between align-items-start mb-2">
-                                <p-button (onClick)="toggleFavorite(item.id)"
-                                    [icon]="isFavorite(item.id) ? 'pi pi-heart-fill' : 'pi pi-heart'"
-                                    [severity]="isFavorite(item.id) ? 'danger' : 'secondary'" [rounded]="true"
-                                    [text]="true" styleClass="fav-btn">
-                                </p-button>
-
-                                <div class="flex flex-column gap-1">
-                                    <h2 class="m-0 text-3xl font-black text-900 leading-tight">{{ item.name }}</h2>
-                                </div>
-                            </div>
-
-                            <p class="text-600 line-height-4 mt-2 mb-4 text-lg font-light">{{ item.description }}
-                            </p>
-                            <p class="text-500 line-height-3 m-0 text-sm italic">{{ item.details }}</p>
-
-                        </div>
-
+        <!-- Order Summary Glass Card -->
+        <div class="glass-summary-card">
+            <h2 class="summary-title">סיכום ההזמנה</h2>
+            
+            <div class="summary-items">
+                <div *ngFor="let pack of uniquePackages; let i = index" 
+                    class="summary-item glass-fadeIn"
+                    [style.animation-delay]="i * 0.08 + 's'">
+                    <span class="summary-item-name">{{ pack.name }}</span>
+                    <div class="summary-item-right">
+                        <span class="summary-item-qty">{{ pack.package_count }}x</span>
+                        <span class="summary-item-price">{{ (pack.price * pack.package_count) | currency:'ILS' }}</span>
                     </div>
                 </div>
-            </ng-template>
-        </p-dataView>
+            </div>
+
+            <div class="summary-divider"></div>
+
+            <div class="summary-total">
+                <span class="total-label">סה"כ לתשלום:</span>
+                <span class="total-amount">{{ totalPrice() | currency: 'ILS' }}</span>
+            </div>
+
+            <p-button 
+                label="אישור התשלום" 
+                icon="pi pi-check" 
+                (click)="pay()" 
+                [disabled]="numOfCards!==emptyCards"
+                styleClass="w-full mt-4 glass-btn"
+                size="large">
+            </p-button>
+
+            @if (numOfCards !== emptyCards) {
+            <p class="warning-text">
+                <i class="pi pi-info-circle"></i>
+                אנא בחר כרטיסים ריקים כדי להמשיך
+            </p>
+            }
+        </div>
     </div>
     }
     @else {
-    <div class="col-12">
-        <div class="flex flex-column align-items-center justify-content-center p-8 mt-8">
-            <i class="pi pi-shopping-cart text-6xl text-primary mb-4 opacity-50"></i>
-            <h2 class="text-2xl font-bold text-900 m-0">הסל שלך ריק...</h2>
-            <p class="text-600 mt-2 mb-4">הוסף מתנות לסל שלך כדי להשתתף בהגרלה!</p>
-            <p-button label="חזרה לכל המתנות" icon="pi pi-arrow-right" routerLink="/gifts"></p-button>
+    <!-- Empty State: Premium Design -->
+    <div class="empty-basket-premium">
+        <div class="empty-state-card">
+            <div class="empty-icon-wrapper">
+                <i class="pi pi-shopping-cart"></i>
+            </div>
+            <h2 class="empty-title">הסל שלך ריק כרגע</h2>
+            <p class="empty-message">
+                אתה עדיין לא בחרת מתנות. הצץ לאוסף היוקרה שלנו ובחר את המתנות המושלמות שלך!
+            </p>
+            <p-button 
+                label="גלה מתנות" 
+                icon="pi pi-arrow-right"
+                routerLink="/gifts"
+                styleClass="mt-4 premium-btn-large">
+            </p-button>
         </div>
     </div>
     }
 </div>
+<!-- </div> -->
 <p-toast />
 <p-confirmdialog #cd>
     <ng-template pTemplate="headless" let-message let-onAccept="onAccept" let-onReject="onReject">

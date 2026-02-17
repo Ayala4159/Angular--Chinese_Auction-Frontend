@@ -1,314 +1,117 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+﻿import { Component, inject, OnInit } from '@angular/core';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ButtonModule } from 'primeng/button';
-import { CurrencyPipe } from '@angular/common';
-import { CardModule } from 'primeng/card';
-import { DividerModule } from 'primeng/divider';
+import { RippleModule } from 'primeng/ripple';
+
 
 @Component({
   selector: 'app-gift-details-dialog',
   standalone: true,
-  imports: [CommonModule, ButtonModule, CurrencyPipe, CardModule, DividerModule],
+  imports: [CommonModule, ButtonModule, CurrencyPipe, RippleModule],
   template: `
-    <div class="gift-details-dialog w-10" dir="rtl">
-      <div class="content-wrapper">
-        <!-- Image Section -->
-        <div class="image-section">
-          <img [src]="'https://localhost:7282/images/gifts/' + gift.picture" 
-               [alt]="gift.name" 
-               class="details-image">
+    <div class="gift-details-main-container p-4 md:p-6"
+         dir="rtl"
+         style="background-color: #1a162e; color: white; border-radius: 28px;">
+     
+      <div class="grid grid-nogutter gap-5 justify-content-center">
+       
+        <div class="col-12 md:col-fixed flex justify-content-center" style="width: 350px;">
+          <div class="image-frame animate-fadein relative border-round-3xl overflow-hidden shadow-8 w-full">
+            <img [src]="'https://localhost:7282/images/gifts/' + gift.picture"
+                 [alt]="gift.name"
+                 class="w-full block object-cover"
+                 style="height: 400px; border-radius: 24px;">
+            <div class="image-glow absolute inset-0"></div>
+          </div>
         </div>
 
-        <!-- Info Section -->
-        <div class="info-section">
-          <!-- Header Section -->
-          <div class="header-section">
-            <h2 class="text-2xl font-bold text-white m-0">{{ gift.name }}</h2>
-            <p class="text-gray-400 text-sm mt-1 m-0">{{ gift.description }}</p>
+
+        <div class="col-12 md:col flex flex-column text-right px-2">
+          <div class="main-header mb-4">
+            <h1 class="gift-title-large m-0 mb-3 text-gradient-white">{{ gift.name }}</h1>
+            <p class="gift-subtitle-large font-semibold m-0">{{ gift.description }}</p>
           </div>
 
-          <!-- Details -->
-          <p class="text-gray-300 text-sm my-3">{{ gift.details }}</p>
 
-          <!-- Info Cards Section -->
-          <div class="info-cards grid gap-2">
-            <!-- Value Card -->
-            <div class="col-12 md:col-6">
-              <div class="info-card info-card-primary">
-                <span class="card-label">שווי המתנה</span>
-                <div class="card-value">{{ gift.value | currency: 'ILS' }}</div>
-              </div>
+          <div class="description-body flex-grow-1 text-xl line-height-4 opacity-80 mb-5">
+            <p>{{ gift.details || 'אין פירוט נוסף זמין עבור מתנה זו.' }}</p>
+          </div>
+
+
+          <div class="stats-container grid p-4 border-round-2xl mb-5"
+               style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);">
+            <div class="col-6 flex flex-column gap-2">
+              <span class="opacity-60 text-xs uppercase" style="letter-spacing: 1px;">שווי מוערך</span>
+              <span class="text-4xl font-bold">{{ gift.value | currency: 'ILS':'symbol':'1.0-0' }}</span>
             </div>
-
-            <!-- Lottery Status Card -->
-            <div class="col-12 md:col-6" *ngIf="gift.is_lottery">
-              <div class="info-card info-card-success">
-                <span class="card-label">זמינות</span>
-                <div class="card-value">
-                  <i class="pi pi-check text-sm"></i>
-                  זמין
-                </div>
-              </div>
-            </div>
-
-            <!-- Donor Card -->
-            <div class="col-12" *ngIf="donor">
-              <div class="info-card info-card-accent">
-                <span class="card-label">תורם</span>
-                <div class="card-value-donor">
-                  {{ donor.Company_name || 'תורם פרטי' }}
-                </div>
+           
+            <div class="col-6 flex flex-column gap-2">
+              <span class="opacity-60 text-xs uppercase" style="letter-spacing: 1px;">נתרם ע"י</span>
+              <div class="flex align-items-center gap-2 text-2xl font-bold" style="color: #f472b6;">
+                <i class="pi pi-heart-fill"></i>
+                <span>{{ (donor && donor.companyName) ? donor.companyName : 'תורם פרטי' }}</span>
               </div>
             </div>
           </div>
 
-          <!-- Action Buttons -->
-          <div class="action-buttons mt-4">
-            <p-button label="סגור" 
-                      icon="pi pi-times" 
-                      class="w-full close-btn"
-                      severity="secondary"
-                      (onClick)="closeDialog()">
-            </p-button>
+
+          <div class="mt-auto">
+            <button pButton
+                    label="חזרה לרשימת המתנות"
+                    icon="pi pi-arrow-left"
+                    class="p-button-outlined return-btn w-full"
+                    (click)="closeDialog()"
+                    pRipple>
+            </button>
           </div>
         </div>
       </div>
     </div>
   `,
   styles: [`
-    :host {
-      display: block;
+    .gift-title-large {
+      font-size: 3.5rem !important;
+      font-weight: 800;
+      /* האפקט מגיע מה-Global אבל מוגדר כאן לגיבוי */
+      background: linear-gradient(to bottom, #ffffff, #a5b4fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
-    .gift-details-dialog {
-      direction: rtl;
-      background: #1e2139;
-      padding: 1.5rem;
-      border-radius: 1rem;
-      max-width: 1400px;
-      margin: 0 auto;
+
+    .gift-subtitle-large {
+      font-size: 1.5rem;
+      color: #fb923c;
     }
 
-    .content-wrapper {
-      display: grid;
-      grid-template-columns: 250px 1fr;
-      gap: 2rem;
-    }
 
-    .image-section {
-      flex-shrink: 0;
-    }
+    /* עיצוב הכפתור ללא מסגרת ירוקה */
+    ::ng-deep .return-btn.p-button-outlined {
+      height: 3.8rem;
+      font-size: 1.15rem !important;
+      border-radius: 18px !important;
+      border: 1px solid rgba(255, 255, 255, 0.3) !important;
+      color: #ffffff !important;
+      background: rgba(255, 255, 255, 0.05) !important;
 
-    .details-image {
-      width: 250px;
-      height: 250px;
-      object-fit: cover;
-      border-radius: 0.75rem;
-      display: block;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    }
 
-    .info-section {
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      text-align: right;
-    }
-
-    .header-section h2 {
-      color: #ffffff;
-      margin-bottom: 0.5rem;
-      font-size: 1.75rem;
-    }
-
-    .header-section p {
-      margin: 0;
-    }
-
-    /* Info Cards */
-    .info-cards {
-      margin-top: 1rem;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-    }
-
-    .info-card {
-      padding: 1rem;
-      border-radius: 0.75rem;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      background: rgba(255, 255, 255, 0.05);
-      transition: all 0.2s ease;
-      text-align: right;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .info-card:hover {
-      border-color: rgba(255, 255, 255, 0.15);
-      background: rgba(255, 255, 255, 0.08);
-    }
-
-    .card-label {
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      color: #9ca3af;
-      margin-bottom: 0.5rem;
-      display: block;
-    }
-
-    .card-value {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: #e5e7eb;
-    }
-
-    .card-value-donor {
-      font-size: 1rem;
-      font-weight: 600;
-      color: #e5e7eb;
-    }
-
-    /* Primary Card - Blue/Indigo */
-    .info-card-primary {
-      border-left: 3px solid #6366f1;
-    }
-
-    .info-card-primary .card-label {
-      color: #a5b4fc;
-    }
-
-    .info-card-primary .card-value {
-      color: #c7d2fe;
-    }
-
-    /* Success Card - Green/Teal */
-    .info-card-success {
-      border-left: 3px solid #10b981;
-    }
-
-    .info-card-success .card-label {
-      color: #6ee7b7;
-    }
-
-    .info-card-success .card-value {
-      color: #a7f3d0;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      justify-content: flex-end;
-    }
-
-    /* Accent Card - Purple */
-    .info-card-accent {
-      border-left: 3px solid #a855f7;
-      grid-column: 1 / -1;
-    }
-
-    .info-card-accent .card-label {
-      color: #d8b4fe;
-    }
-
-    .info-card-accent .card-value-donor {
-      color: #e9d5ff;
-    }
-
-    /* Close Button */
-    ::ng-deep .close-btn .p-button {
-      background: #6366f1 !important;
-      border: none !important;
-      padding: 0.65rem 1.25rem !important;
-      font-weight: 600 !important;
-      transition: all 0.2s ease !important;
-    }
-
-    ::ng-deep .close-btn .p-button:hover {
-      background: #4f46e5 !important;
-      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3) !important;
-    }
-
-    /* Responsive Design */
-    @media (max-width: 1024px) {
-      .content-wrapper {
-        grid-template-columns: 1fr;
-      }
-
-      .details-image {
-        width: 100%;
-        height: 300px;
-      }
-
-      .header-section h2 {
-        font-size: 1.5rem;
+      &:hover {
+        background: rgba(255, 255, 255, 0.1) !important;
+        border-color: #ffffff !important;
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
       }
     }
 
-    @media (max-width: 768px) {
-      .gift-details-dialog {
-        padding: 1rem;
-      }
 
-      .content-wrapper {
-        gap: 1.5rem;
-      }
-
-      .details-image {
-        height: 250px;
-      }
-
-      .header-section h2 {
-        font-size: 1.25rem;
-      }
-
-      .info-cards {
-        grid-template-columns: 1fr;
-      }
-
-      .info-card-accent {
-        grid-column: 1;
-      }
+    .image-glow {
+      box-shadow: inset 0 0 40px rgba(0,0,0,0.5);
     }
 
-    @media (max-width: 576px) {
-      .gift-details-dialog {
-        padding: 0.75rem;
-      }
 
-      .content-wrapper {
-        gap: 1rem;
-      }
-
-      .details-image {
-        height: 200px;
-        border-radius: 0.5rem;
-      }
-
-      .header-section h2 {
-        font-size: 1.1rem;
-      }
-
-      .header-section p {
-        font-size: 0.75rem;
-      }
-
-      .info-card {
-        padding: 0.75rem;
-      }
-
-      .card-label {
-        font-size: 0.65rem;
-      }
-
-      .card-value {
-        font-size: 1rem;
-      }
-
-      .card-value-donor {
-        font-size: 0.9rem;
-      }
+    @media (max-width: 991px) {
+      .gift-title-large { font-size: 2.2rem !important; }
+      .col-fixed { width: 100% !important; }
     }
   `]
 })
@@ -316,8 +119,10 @@ export class GiftDetailsDialog implements OnInit {
   dynamicDialogConfig = inject(DynamicDialogConfig);
   ref = inject(DynamicDialogRef);
 
+
   gift: any;
   donor: any;
+
 
   ngOnInit() {
     if (this.dynamicDialogConfig.data) {
@@ -326,7 +131,11 @@ export class GiftDetailsDialog implements OnInit {
     }
   }
 
+
   closeDialog() {
     this.ref.close();
   }
 }
+
+
+

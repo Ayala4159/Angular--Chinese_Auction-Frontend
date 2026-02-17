@@ -1,0 +1,148 @@
+:host {
+  --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --secondary-gradient: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+  --text-main: #ffffff;
+  display: block;
+  width: 100%;
+}
+
+.card {
+  background: linear-gradient(135deg, rgba(10, 10, 20, 0.98) 0%, rgba(15, 15, 35, 0.95) 100%) !important;
+  backdrop-filter: blur(30px);
+  border-radius: 24px !important;
+  animation: cardSlideIn 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  
+  // אפקט האור המסתובב ברקע
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%; right: -50%; width: 200%; height: 200%;
+    background: radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.1), transparent 50%);
+    animation: rotatingGradient 15s linear infinite;
+    pointer-events: none;
+  }
+}
+
+h3 {
+  font-size: 1.95rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, #667eea, #f59e0b, #667eea);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -10px; left: 50%; transform: translateX(-50%);
+    width: 80px; height: 3px;
+    background: var(--secondary-gradient);
+    border-radius: 2px;
+  }
+}
+
+::ng-deep {
+  // עיצוב אחיד לכל האינפוטים (PrimeNG)
+  .p-inputtext, .p-select, .p-inputnumber input {
+    background: rgba(102, 126, 234, 0.05) !important;
+    border: 2px solid rgba(102, 126, 234, 0.2) !important;
+    color: white !important;
+    border-radius: 16px !important;
+    transition: all 0.3s ease !important;
+    outline: none !important;
+
+    &:focus {
+      border-color: #667eea !important;
+      box-shadow: 0 0 20px rgba(102, 126, 234, 0.3) !important;
+      transform: translateY(-2px);
+    }
+  }
+
+  // תיקון ה-Dropdown (p-select)
+  .p-select {
+    padding: 0.2rem 0 !important;
+    .p-select-label { align-items: center; gap: 12px; }
+  }
+
+  .p-select-overlay {
+    background: #0f0f23 !important;
+    border: 1px solid rgba(102, 126, 234, 0.3) !important;
+    backdrop-filter: blur(20px);
+    .p-select-item {
+        color: white !important;
+        &.p-highlight { background: var(--primary-gradient) !important; }
+        &:hover { background: rgba(102, 126, 234, 0.2) !important; }
+    }
+  }
+
+  // סטייל לכפתור שמירה (Primary)
+  p-button:not([severity="secondary"]) .p-button {
+    background: var(--secondary-gradient) !important;
+    border: none !important;
+    box-shadow: 0 10px 30px rgba(249, 115, 22, 0.4) !important;
+    border-radius: 18px !important;
+    &:hover { transform: translateY(-4px); box-shadow: 0 15px 40px rgba(249, 115, 22, 0.6) !important; }
+  }
+}
+
+.select-item-img {
+  width: 32px; height: 32px; border-radius: 8px; object-fit: cover;
+}
+
+// אנימציות
+@keyframes cardSlideIn {
+  0% { opacity: 0; transform: scale(0.9) translateY(-20px); filter: blur(10px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
+}
+@keyframes rotatingGradient {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}/* שומר על ה-CSS המקורי שלך כאן (אם היה לך) */
+
+:host {
+    display: block;
+    width: 100%;
+}
+
+::ng-deep {
+    /* הסרת ה-Padding של הדיאלוג שגורם למראה של "כרטיס בתוך כרטיס" */
+    .p-dialog-content {
+        padding: 0 !important; 
+        overflow-x: hidden !important; /* מבטל את הגלילה הצידית באופן סופי */
+    }
+
+    /* הסרת מסגרת/צל מיותר אם הדיאלוג כבר כולל אותם */
+    .p-dialog {
+        box-shadow: none !important;
+        border: none !important;
+    }
+}
+
+/* מוודא שהתמונות בתוך ה-select לא יחרגו */
+.select-item-img {
+    width: 24px;
+    height: 24px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+  .p-inputtext, .p-select, .p-inputnumber-input, textarea {
+    background: rgba(102, 126, 234, 0.1) !important;
+    border: 2px solid rgba(102, 126, 234, 0.25) !important;
+    color: white !important;
+    border-radius: 18px !important;
+    padding: 1rem 1.4rem !important;
+    width: 100% !important;
+
+
+    &:focus {
+      background: rgba(102, 126, 234, 0.2) !important;
+      border-color: rgba(102, 126, 234, 0.6) !important;
+      box-shadow: 0 0 20px rgba(102, 126, 234, 0.4) !important;
+      outline: none;
+    }
+
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.4) !important;
+    }
+  }

@@ -16,6 +16,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { CookieService } from 'ngx-cookie-service';
 import { DonorService } from '../../../services/donor-service';
 import { GiftDetailsDialog } from '../gift-details-dialog/gift-details-dialog';
+
 @Component({
   selector: 'app-get-all-gifts',
   standalone: true,
@@ -26,7 +27,6 @@ import { GiftDetailsDialog } from '../gift-details-dialog/gift-details-dialog';
 })
 
 export class GetAllGifts implements OnInit {
-
   giftService = inject(GiftService);
   donorService = inject(DonorService);
   cdr = inject(ChangeDetectorRef);
@@ -40,10 +40,11 @@ export class GetAllGifts implements OnInit {
   readonly DONOR_BASE_URL = 'https://localhost:7282/images/companies/';
   products: any[] = [];
   gifts: GetGift[] = [];
-
   readonly IMAGE_BASE_URL = 'https://localhost:7282/images/gifts/';
-
+  user:any= JSON.parse(this.cookieService.get('user') || '{}');
   ngOnInit() {
+    console.log(this.user);
+    
     this.route.params.subscribe(params => {
       const categoryId = params['categoryId'];
       if (categoryId) {
@@ -66,13 +67,13 @@ export class GetAllGifts implements OnInit {
       this.gifts = data;
       this.cdr.detectChanges()
       console.log(this.gifts);
-      
+
     });
   }
 
   addToCart(product: GetGift) {
-    const user = this.cookieService.get('user');
-    if (!user) {
+    this.user = this.cookieService.get('user');
+    if (!this.user) {
       this.confirmationService.confirm({
         message: '?אופס, נראה שאתה לא מחובר. רוצה להתחבר עכשיו',
         header: 'לא מחובר',
@@ -89,7 +90,7 @@ export class GetAllGifts implements OnInit {
       });
       return;
     }
-    let packages = JSON.parse(this.cookieService.get(JSON.parse(user).id) || '[]');
+    let packages = JSON.parse(this.cookieService.get(JSON.parse(this.user).id) || '[]');
     if (packages.length === 0) {
       this.confirmationService.confirm({
         message: '?אופס, לא בחרת עדיין חבילה. רוצה להוסיף חבילה חדשה',
@@ -132,13 +133,13 @@ export class GetAllGifts implements OnInit {
       });
       return;
     }
-    this.cookieService.set(JSON.parse(user).id, JSON.stringify(packages));
+    this.cookieService.set(JSON.parse(this.user).id, JSON.stringify(packages));
     this.messageService.add({ severity: 'success', summary: 'הודעה', detail: 'המתנה נוספה לחבילה בהצלחה' });
   }
 
   showDetails(product: GetGift) {
     this.dialogService.open(GiftDetailsDialog, {
-      header: product.name,
+      showHeader: false,
       width: '90vw',
       height: 'auto',
       contentStyle: { overflow: 'visible', padding: '0' },
@@ -149,7 +150,7 @@ export class GetAllGifts implements OnInit {
 
   addGift() {
     this.ref = this.dialogService.open(GiftsForm, {
-      header: 'הוספת מתנה חדשה',
+      showHeader: false,
       width: '40%',
       contentStyle: { overflow: 'auto' },
       baseZIndex: 10000,

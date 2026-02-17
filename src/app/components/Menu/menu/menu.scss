@@ -1,45 +1,3 @@
-@keyframes popIn {
-    from { 
-        opacity: 0; 
-        transform: translateY(10px) scale(0.98); 
-    }
-    to { 
-        opacity: 1; 
-        transform: translateY(0) scale(1); 
-    }
-}
-
-.mega-menu-popup {
-    animation: popIn 0.2s ease-out;
-    transform-origin: top right;
-    margin-top: 0.5rem;
-}
-
-.category-card {
-    background: rgba(255, 255, 255, 0.03);
-    
-    &:hover {
-        background: rgba(var(--primary-rgb), 0.1);
-        transform: scale(1.03);
-        
-        .cat-img { transform: scale(1.1); }
-    }
-}
-
-.image-container {
-    background: var(--surface-800);
-}
-
-.cat-img {
-    transition: transform 0.4s ease;
-}
-
-.nav-item:hover .arrow-icon {
-    transform: rotate(180deg);
-}
-.arrow-icon {
-    transition: transform 0.3s;
-}
 @keyframes megaSlideUp {
     from { 
         opacity: 0; 
@@ -56,10 +14,33 @@
     to { opacity: 1; transform: scale(1); }
 }
 
+.my-app-dark {
+    margin: 0;
+    padding: 0;
+    background-color: #0a0a0a;
+    min-height: 100vh;
+}
+
+.glass-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: rgba(20, 20, 20, 0.6) !important;
+    backdrop-filter: blur(15px) saturate(180%);
+    -webkit-backdrop-filter: blur(15px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+}
+
+.content-wrapper {
+    padding-top: 6rem;
+}
+
 .mega-menu {
     animation: megaSlideUp 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
     transform-origin: top right;
-    margin-top: 0.5rem;
     min-width: 450px;
 }
 
@@ -67,10 +48,10 @@
     animation: cardPop 0.4s ease forwards;
     opacity: 0;
     transition: transform 0.3s ease;
+    cursor: pointer;
 
     &:hover {
         transform: translateY(-5px);
-        
         .cat-img { transform: scale(1.15); }
         h3 { color: var(--primary-color); }
     }
@@ -90,15 +71,40 @@
     display: inline-block;
     transition: transform 0.3s ease;
 }
-::ng-deep .lottery-dialog {
-    overflow: visible !important;
-    box-shadow: none !important;
 
+.search-input {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: white !important;
+    transition: all 0.3s ease;
 
-    .p-dialog-content {
+    &:focus {
+        background: rgba(255, 255, 255, 0.1) !important;
+        border-color: var(--primary-color) !important;
+    }
+}
+
+::ng-deep {
+    .mega-menu {
+        background: rgba(15, 15, 15, 0.9) !important;
+        backdrop-filter: blur(25px);
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border-radius: 1.5rem;
+        margin-top: 1rem !important;
+    }
+
+    .lottery-dialog {
         overflow: visible !important;
-        border-radius: 1.5rem !important;
-        padding-top: 2rem;
+        box-shadow: none !important;
+        .p-dialog-content {
+            overflow: visible !important;
+            border-radius: 1.5rem !important;
+            padding-top: 2rem;
+        }
+    }
+
+    .p-dialog-mask {
+        backdrop-filter: blur(8px);
     }
 }
 
@@ -115,26 +121,4 @@
     justify-content: center;
     background-color: rgba(0, 0, 0, 0.75);
     backdrop-filter: blur(12px);
-}
-/* שילוב עם משתני הצבע של PrimeNG */
-.glass-nav {
-    background: rgba(255, 255, 255, 0.08) !important; /* שקיפות עדינה */
-    backdrop-filter: blur(12px); /* אפקט הטשטוש */
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: var(--card-shadow); /* שימוש בצל המובנה של PrimeNG */
-}
-
-/* התאמת ה-Mega Menu לעיצוב השקוף */
-:ng-deep .mega-menu {
-    background: rgba(30, 30, 30, 0.9) !important;
-    backdrop-filter: blur(20px);
-    border: 1px solid var(--primary-color) !important;
-}
-
-/* שיפור שדה החיפוש עם PrimeNG */
-.search-input {
-    background: rgba(255, 255, 255, 0.1) !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    color: white !important;
 }

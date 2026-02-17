@@ -1,14 +1,11 @@
-<p-toast />
-
 <div class="packages-wrapper">
   <div class="packages-header">
     <h2 class="section-title">Our Exclusive Packages ✨</h2>
     <p class="section-subtitle">Bid on amazing items and support our cause</p>
-    @if (role=='0') {
+    @if (role==='0') {
     <button pButton (click)="showChild()" label="Add Package" icon="pi pi-plus" class="add-btn mt-3"></button>
     }
   </div>
-
   <div class="packages-grid">
     @for (package of (packages$ | async); track package.id; let i = $index) {
     <div class="package-card-wrapper animate-fadein" [style.animation-delay.ms]="i * 80">
@@ -22,55 +19,39 @@
           </div>
           }
         </div>
-
         <div class="card-content">
           <h3 class="package-name">{{ package.name }}</h3>
-
           <div class="cards-info">
             <div class="info-badge">
               <i class="pi pi-ticket"></i>
               <span>{{ package.numOfCards }} tickets</span>
             </div>
           </div>
-
           <p class="package-description">{{ package.description }}</p>
-
           <div class="price-section">
             <span class="price-label">Starting Price</span>
             <span class="price-amount">{{ package.price | currency:'ILS':'symbol':'1.0-0' }}</span>
           </div>
         </div>
-
         <div class="card-footer">
           <div class="quantity-control">
             <button pButton icon="pi pi-minus" class="p-button-rounded p-button-text qty-btn"
               (click)="removePackage(package)" pRipple></button>
-
             <div class="qty-display">
               <span class="qty-value">{{ package.quantity || 0 }}</span>
             </div>
-
             <button pButton icon="pi pi-plus" class="p-button-rounded p-button-text qty-btn"
               (click)="addPackage(package)" pRipple></button>
           </div>
-
-          @if (role === '0') {
-          <div class="admin-actions">
-            <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm admin-btn" (click)="showChild()"
-              pRipple pTooltip="עריכה" tooltipPosition="top"></button>
-          </div>
-          }
         </div>
       </div>
     </div>
     }
   </div>
-
   <div class="packages-cta">
     <p-button label="Explore All Items" icon="pi pi-arrow-right" routerLink="/gifts" class="cta-button"></p-button>
   </div>
 </div>
-
 <p-toast />
 <p-confirmdialog #cd>
   <ng-template pTemplate="headless" let-message let-onAccept="onAccept" let-onReject="onReject">
@@ -82,7 +63,8 @@
       <span class="dialog-header">{{ message.header }}</span>
       <p class="dialog-message">{{ message.message }}</p>
       <div class="dialog-actions">
-        <p-button [label]="message.acceptLabel" (onClick)="onAccept()" [outlined]="true" class="w-10rem pt-2 pb-2"></p-button>
+        <p-button [label]="message.acceptLabel" (onClick)="onAccept()" [outlined]="true"
+          class="w-10rem pt-2 pb-2"></p-button>
         <p-button [label]="message.rejectLabel" [outlined]="true" (onClick)="onReject()" class="w-10rem"></p-button>
       </div>
     </div>

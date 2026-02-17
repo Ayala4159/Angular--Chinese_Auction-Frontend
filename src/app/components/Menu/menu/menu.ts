@@ -89,6 +89,7 @@ export class Menu implements OnInit {
   onLogout(event?: MouseEvent) {
     this.showUserDropdown = false;
     this.authService.logout();
+    window.location.reload(); 
   }
   lottery() {
     this.confirmationService.confirm({

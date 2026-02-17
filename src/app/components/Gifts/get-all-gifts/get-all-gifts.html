@@ -1,122 +1,84 @@
-﻿<p-toast />
-<p-confirmdialog #cd>
-    <ng-template #headless let-message let-onAccept="onAccept" let-onReject="onReject">
-        @if (message) {
-        <div class="premium-dialog p-6 bg-surface-0 dark:bg-surface-900 rounded-2xl">
-            <div class="border-circle p-5 bg-gradient-neon text-white inline-flex justify-center items-center h-24 w-24 -mt-20">
-                <i class="pi pi-question !text-5xl"></i>
-            </div>
-            <span class="font-bold text-2xl block mb-2 mt-6">{{ message.header }}</span>
-            <p class="mb-0 text-muted">{{ message.message }}</p>
-            <div class="flex items-center gap-2 mt-6">
-                <p-button [label]="message.acceptLabel" (onClick)="onAccept()" routerLink="/"
-                    styleClass="w-15rem premium-btn-primary"></p-button>
-                <p-button [label]="message.rejectLabel" [outlined]="true" (onClick)="onReject()"
-                    styleClass="w-15rem premium-btn-secondary"></p-button>
-            </div>
-        </div>
-        }
-    </ng-template>
-</p-confirmdialog>
-
-<!-- Header with Add Gift Button -->
-<div class="gallery-header mb-8">
-    <h1 class="gallery-title">סדרת מתנות בחדשנות</h1>
-    <p-button 
-        label="הוספת מתנה חדשה" 
-        icon="pi pi-star" 
-        class="premium-btn-primary text-sm" 
-        (onClick)="addGift()" />
-</div>
-
-<!-- Gifts Gallery Grid -->
-<div class="gifts-gallery">
-    <div *ngFor="let gift of gifts" class="gift-card-wrapper">
-        <div class="gift-card">
-            <!-- Image Container with Overlay -->
-            <div class="gift-image-container">
-                <img 
-                    [src]="IMAGE_BASE_URL + gift.picture" 
-                    [alt]="gift.name"
-                    class="gift-image">
-                
-                <!-- Lottery Badge -->
-                <div *ngIf="gift.is_lottery" class="lottery-badge">
-                    <i class="pi pi-bolt"></i>
-                    <span>הגרלה בלבד</span>
-                </div>
-
-                <!-- Neon Border Accent -->
-                <div class="neon-accent-top"></div>
-                <div class="neon-accent-bottom"></div>
-            </div>
-
-            <!-- Price Tag with Glow -->
-            <div class="price-tag-wrapper">
-                <div class="price-tag-glow"></div>
-                <div class="price-tag">
-                    {{ gift.value | currency: 'ILS' }}
-                </div>
-            </div>
-
-            <!-- Card Content -->
-            <div class="card-content">
-                <!-- Gift Title & Description -->
-                <div class="gift-header">
-                    <h2 class="gift-title">{{ gift.name }}</h2>
-                    <p class="gift-tagline">{{ gift.description }}</p>
-                </div>
-
-                <!-- Donor Section -->
-                <div *ngIf="gift.donor" class="donor-section">
-                    @if (gift.donor.is_publish) {
-                        <div class="donor-content">
-                            <!-- Company Logo -->
-                            <div *ngIf="gift.donor.company_picture" class="donor-logo-wrapper">
-                                <img 
-                                    [src]="DONOR_BASE_URL + gift.donor.company_picture" 
-                                    [alt]="gift.donor.company_name"
-                                    class="donor-logo">
-                            </div>
-                            
-                            <div class="donor-info">
-                                <span class="donor-label">Sponsored by</span>
-                                <h3 class="donor-name">{{ gift.donor.company_name || 'Premium Sponsor' }}</h3>
-                                <p *ngIf="gift.donor.company_description" class="donor-description">
-                                    {{ gift.donor.company_description }}
-                                </p>
-                            </div>
-                        </div>
-                    } @else {
-                        <div class="donor-anonymous">
-                            <i class="pi pi-lock"></i>
-                            <span>תורם פרטי</span>
-                        </div>
-                    }
-                </div>
-
-                <!-- Action Buttons -->
-                <div class="action-buttons">
-                    <button 
-                        class="btn btn-primary" 
-                        [disabled]="gift.is_lottery"
-                        [class.btn-disabled]="gift.is_lottery"
-                        (click)="addToCart(gift)">
-                        <i class="pi pi-shopping-cart"></i>
-                        <span>הוסף לחבילה</span>
-                    </button>
-                    <button 
-                        class="btn btn-secondary" 
-                        (click)="showDetails(gift)"
-                        pTooltip="צפה בפרטים המלאים"
-                        tooltipPosition="top">
-                        <i class="pi pi-info-circle"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Card Glow Effect -->
-            <div class="card-glow"></div>
-        </div>
+﻿<div class="luxury-wrapper " dir="rtl">
+  <header class="gallery-header">
+    <div class="container">
+      <h1 class="title-main">אוסף המתנות</h1>
+      @if(user && user.role === 0) {
+      <button pButton (click)="addGift()" label="Add New Gift" icon="pi pi-plus"
+        class="add-gift-btn p-button-rounded font-semibold"></button>
+      }
     </div>
+  </header>
+  <div class="bg-texture" style="background-image: url('assets/gifts.jpg');"></div>
+
+  <div class="gallery-container">
+    <div class="grid">
+      @for (gift of gifts; track gift.id; let i = $index) {
+      <div class="col-12 sm:col-6 lg:col-3 gift-card" [style.--delay]="i">
+        <div class="card-glass">
+
+          <div class="card-img-holder">
+            <img [src]="IMAGE_BASE_URL + gift.picture" [alt]="gift.name" class="gift-img">
+            <div class="price-overlay">{{ gift.value | currency: 'ILS' }}</div>
+          </div>
+
+          <div class="card-info">
+            <h2 class="gift-name">{{ gift.name }}</h2>
+            <p class="gift-tagline">{{ gift.description }}</p>
+
+            <div class="donor-premium-box" *ngIf="gift.donor">
+              <div class="donor-content" [class.anonymous]="!gift.donor.is_publish">
+                <div class="logo-wrapper">
+                  <img *ngIf="gift.donor.is_publish && gift.donor.company_picture"
+                    [src]="DONOR_BASE_URL + gift.donor.company_picture" class="donor-logo">
+
+                  <div *ngIf="!gift.donor.is_publish || !gift.donor.company_picture" class="donor-placeholder-icon">
+                    <i [class]="gift.donor.is_publish ? 'pi pi-building' : 'pi pi-user-fade'"></i>
+                  </div>
+                </div>
+
+                <div class="donor-details">
+                  <span class="sponsored-label">מוקדש על ידי</span>
+
+                  <span class="donor-name-text"
+                    [pTooltip]="gift.donor.is_publish ? gift.donor.company_description : 'תרומה זו ניתנה בעילום שם'"
+                    [class.italic-text]="!gift.donor.is_publish">
+                    {{ gift.donor.is_publish ? gift.donor.company_name : 'החפץ בעילום שמו' }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-footer flex justify-content-center">
+              <p-button [label]="gift.is_lottery ? 'הגרלה סגורה' : 'הוספה לסל'" [disabled]="gift.is_lottery"
+                class="w-full" styleClass="btn-main" (click)="addToCart(gift)">
+              </p-button>
+
+              <p-button icon="pi pi-info-circle" styleClass="btn-sub" (click)="showDetails(gift)">
+              </p-button>
+            </div>
+          </div>
+        </div>
+      </div>
+      }
+    </div>
+  </div>
 </div>
+<p-toast />
+<p-confirmdialog #cd>
+  <ng-template pTemplate="headless" let-message let-onAccept="onAccept" let-onReject="onReject">
+    @if (message) {
+    <div class="confirm-dialog">
+      <div class="dialog-icon">
+        <i class="pi pi-question"></i>
+      </div>
+      <span class="dialog-header">{{ message.header }}</span>
+      <p class="dialog-message">{{ message.message }}</p>
+      <div class="dialog-actions">
+        <p-button [label]="message.acceptLabel" (onClick)="onAccept()" [outlined]="true"
+          class="w-10rem pt-2 pb-2"></p-button>
+        <p-button [label]="message.rejectLabel" [outlined]="true" (onClick)="onReject()" class="w-10rem"></p-button>
+      </div>
+    </div>
+    }
+  </ng-template>
+</p-confirmdialog>
