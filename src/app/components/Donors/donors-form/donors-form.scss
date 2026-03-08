@@ -1,0 +1,87 @@
+:host {
+    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --secondary-gradient: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+    display: block;
+    width: 100%;
+}
+
+.card {
+    background: linear-gradient(135deg, rgba(10, 10, 20, 0.98) 0%, rgba(15, 15, 35, 0.95) 100%) !important;
+    backdrop-filter: blur(30px);
+    border-radius: 24px !important;
+    border: 1px solid rgba(102, 126, 234, 0.1);
+}
+
+::ng-deep {
+    // עיצוב שדות הטקסט והטקסט-אריאה
+    .p-inputtext, textarea {
+        background: rgba(102, 126, 234, 0.1) !important;
+        border: 2px solid rgba(102, 126, 234, 0.25) !important;
+        color: white !important;
+        border-radius: 18px !important;
+        padding: 0.75rem 1.2rem !important;
+        transition: all 0.3s ease;
+
+        &:focus {
+            background: rgba(102, 126, 234, 0.15) !important;
+            border-color: rgba(102, 126, 234, 0.5) !important;
+            box-shadow: 0 0 15px rgba(102, 126, 234, 0.3) !important;
+        }
+    }
+
+    // כפתור שמירה (כתום)
+    p-button:not([severity="secondary"]) .p-button {
+        background: var(--secondary-gradient) !important;
+        border: none !important;
+        border-radius: 16px !important;
+        padding: 0.6rem 1.5rem !important;
+        box-shadow: 0 8px 20px rgba(249, 115, 22, 0.3) !important;
+        
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(249, 115, 22, 0.5) !important;
+        }
+    }
+}
+
+h3 {
+    font-weight: 800;
+    background: linear-gradient(135deg, #667eea, #f59e0b);
+    -webkit-text-fill-color: transparent;
+}
+::ng-deep {
+    /* הסרת הרקע והמסגרת של הדיאלוג עצמו */
+    .p-dialog {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+    }
+
+    /* הסרת ה-Padding והצבע השחור מהתוכן של הדיאלוג */
+    .p-dialog-content {
+        background: transparent !important;
+        padding: 0 !important; /* זה יבטל את הרווח השחור מסביב לכרטיס שלך */
+        overflow: visible !important; /* מונע חיתוך של צלליות */
+    }
+
+    /* הסרת ה-Header של הדיאלוג (אם יש כזה והוא שחור) */
+    .p-dialog-header {
+        display: none !important;
+    }
+}
+
+/* ביטול שוליים חיצוניים של הכרטיס כדי שייצמד לקצוות הדיאלוג */
+.card {
+    margin: 0 !important;
+    border: 1px solid rgba(102, 126, 234, 0.2) !important;
+}
+h3 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    background: linear-gradient(135deg, #667eea, #f59e0b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    /* גיבוי למקרה שהגרדיאנט לא נתמך */
+    color: #f59e0b; 
+}

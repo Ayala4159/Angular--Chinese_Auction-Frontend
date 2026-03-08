@@ -1,5 +1,5 @@
 ﻿<nav class="navbar fixed top-0 z-5 m-2 border-round-3xl px-3 md:px-6 h-5rem flex align-items-center glass-nav"
-     style="direction: rtl;">
+    style="direction: rtl;">
     <div class="nav-container w-full max-w-custom mx-auto flex align-items-center justify-content-between">
 
         <p-button icon="pi pi-bars" [text]="true" [rounded]="true" class="md:hidden ml-2"
@@ -14,12 +14,12 @@
                 (mouseenter)="showMenu = true" (mouseleave)="showMenu = false">
                 קטגוריות <span routerLink="categories" class="arrow transition-transform inline-block mr-1">▾</span>
 
-                <div class="mega-menu absolute top-90 right-0 z-5 surface-card shadow-8 border-round-2xl p-4 w-30rem"
+                <div class="glass-navi mega-menu absolute top-90 right-0 z-5 surface-card shadow-8 border-round-2xl p-4 w-30rem"
                     *ngIf="showMenu">
 
                     <div class="grid flex-row-reverse hover:border-1 border- p-2">
                         <div class="col-4 p-2" *ngFor="let item of categories | slice:0:3; let i = index">
-                            <div (click)="navigateToGifts(item.Id)"
+                            <div (click)="navigateToGifts(item.id)"
                                 class="menu-card flex flex-column align-items-center gap-2 border-1 border-gray-500 hover:border-orange-500 p-3 border-round-lg transition-all"
                                 [style.animation-delay]="i * 0.1 + 's'">
 
@@ -50,8 +50,10 @@
         <a routerLink="donors"
             class="text-white no-underline font-bold text-md hover:underline hover:text-primary flex align-items-center mx-4">לתרומות</a>
         }
+        @if(user()){
         <a routerLink="basket"
             class="text-white no-underline font-bold text-md hover:underline hover:text-primary flex align-items-center mx-4">סל</a>
+        }
         @if(role() === 0) {
         <p-button label="הגרלה" (click)="lottery()" [rounded]="true" size="small" />
         }
@@ -122,45 +124,45 @@
 
 
 @if (isLoading) {
-    <div class="fixed-full-screen">
-        <p-progressSpinner strokeWidth="4" />
-        <h2 class="text-white mt-4 font-bold text-3xl">מבצע הגרלות...</h2>
-    </div>
+<div class="fixed-full-screen">
+    <p-progressSpinner strokeWidth="4" />
+    <h2 class="text-white mt-4 font-bold text-3xl">מבצע הגרלות...</h2>
+</div>
 }
 
-<p-dialog [(visible)]="displayLotteryResults" [modal]="true" [closable]="true" [showHeader]="false" appendTo="body" styleClass="lottery-dialog">
+<p-dialog [(visible)]="displayLotteryResults" [modal]="true" [closable]="true" [showHeader]="false" appendTo="body"
+    styleClass="lottery-dialog">
     <div class="flex flex-column align-items-center p-5 text-center" style="min-width: 480px; max-height: 85vh;">
-        <div class="border-circle bg-green-500 text-white inline-flex justify-content-center align-items-center h-5rem w-5rem -mt-8 shadow-4">
+        <div
+            class="border-circle bg-green-500 text-white inline-flex justify-content-center align-items-center h-5rem w-5rem -mt-8 shadow-4">
             <i class="pi pi-trophy text-4xl"></i>
         </div>
         <span class="font-bold text-2xl block mb-2 mt-4 text-900">תוצאות ההגרלה</span>
-       
-        <div class="w-full overflow-y-auto my-4 border-1 border-200 border-round-xl p-1 bg-gray-50" style="max-height: 350px;">
+
+        <div class="w-full overflow-y-auto my-4 border-1 border-200 border-round-xl p-1 bg-gray-50"
+            style="max-height: 350px;">
             <ul class="list-none p-0 m-0 text-right" style="direction: rtl;">
                 @for (item of lotteryResults; track item.name) {
-                    <li class="flex justify-content-between align-items-center p-3 border-bottom-1 border-100">
-                        <div class="flex align-items-center gap-3">
-                            <i [class]="item.icon + ' ' + item.severity + ' text-xl'"></i>
-                            <div class="flex flex-column text-right">
-                                <span class="font-bold text-sm text-900">{{ item.name }}</span>
-                                @if (item.winner) {
-                                    <span class="text-xs font-semibold text-primary"> הזוכה: {{ item.winner }}</span>
-                                } @else {
-                                    <span class="text-xs text-500">{{ item.message }}</span>
-                                }
-                            </div>
+                <li class="flex justify-content-between align-items-center p-3 border-bottom-1 border-100">
+                    <div class="flex align-items-center gap-3">
+                        <i [class]="item.icon + ' ' + item.severity + ' text-xl'"></i>
+                        <div class="flex flex-column text-right">
+                            <span class="font-bold text-sm text-900">{{ item.name }}</span>
+                            @if (item.winner) {
+                            <span class="text-xs font-semibold text-primary"> הזוכה: {{ item.winner }}</span>
+                            } @else {
+                            <span class="text-xs text-500">{{ item.message }}</span>
+                            }
                         </div>
-                        <span [class]="'px-2 py-1 border-round text-xs font-bold ' + item.severity"
-                              [style.background-color]="item.status === 'הושלם' ? '#e6fffa' : '#fff5f5'">
-                            {{ item.status }}
-                        </span>
-                    </li>
+                    </div>
+                    <span [class]="'px-2 py-1 border-round text-xs font-bold ' + item.severity"
+                        [style.background-color]="item.status === 'הושלם' ? '#e6fffa' : '#fff5f5'">
+                        {{ item.status }}
+                    </span>
+                </li>
                 }
             </ul>
         </div>
         <p-button label="סגור תוצאות" (onClick)="displayLotteryResults = false" styleClass="w-full"></p-button>
     </div>
 </p-dialog>
-
-
-

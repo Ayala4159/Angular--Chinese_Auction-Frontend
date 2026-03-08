@@ -1,161 +1,105 @@
-<div class="basket-glass-container">
-    @if (allCards.length > 0) {
-    <!-- Premium Header -->
-    <div class="glass-header">
-        <div class="header-text-content">
-            <h1 class="header-title">{{ 'הסל שלי' | uppercase }}</h1>
-            <p class="header-subtitle">{{ allCards.length }} מתנות יוקרתיות בחזקתך</p>
-        </div>
+<div class="basket-glass-container min-h-screen p-3 md:p-5">
+  @if (allCards.length > 0) {
+    <div class="glass-header text-right mb-5">
+      <h1 class="header-title m-0 font-black text-white line-height-1">הסל שלי</h1>
+      <p class="header-subtitle mt-2 text-xl font-medium text-white-alpha-80">{{ allCards.length }} פריטים מחכים לך</p>
     </div>
 
-    <!-- Main Content Container -->
-    <div class="glass-main-content">
-        
-        <!-- Items List with Glass Effect -->
-        <div class="glass-items-list">
-            <p-dataView #dv [value]="allCards" [rows]="8" [paginator]="true" 
-                paginatorStyleClass="glass-paginator">
-                <ng-template #list let-items>
-                    <div class="items-container">
-                        <div *ngFor="let item of items; let i = index" 
-                            class="glass-item-row glass-fadeIn"
-                            [style.animation-delay]="i * 0.06 + 's'">
-                            
-                            <!-- Item Image -->
-                            <div class="item-image-column">
-                                <img [src]="BASE_URL + item.picture" 
-                                    [alt]="item.name"
-                                    class="item-image">
-                                <div class="quantity-badge-small">{{ item.quantity }}</div>
-                            </div>
-
-                            <!-- Item Details -->
-                            <div class="item-info-column">
-                                <h3 class="item-title">{{ item.name }}</h3>
-                                <p class="item-description">{{ item.description }}</p>
-                                <p class="item-details-text">{{ item.details }}</p>
-                            </div>
-
-                            <!-- Item Value -->
-                            <div class="item-value-column">
-                                <span class="value-label">שווי:</span>
-                                <span class="value-amount">{{ item.value | currency: 'ILS' }}</span>
-                            </div>
-
-                            <!-- Item Actions -->
-                            <div class="item-actions-column">
-                                <p-button 
-                                    (onClick)="removeFromBasket(item.id)" 
-                                    icon="pi pi-minus" 
-                                    [rounded]="true"
-                                    [text]="true" 
-                                    severity="secondary"
-                                    styleClass="item-action-btn">
-                                </p-button>
-                                <p-button 
-                                    (onClick)="addToBasket(item.id)" 
-                                    icon="pi pi-plus" 
-                                    [rounded]="true"
-                                    [text]="true" 
-                                    severity="secondary"
-                                    styleClass="item-action-btn">
-                                </p-button>
-                                <p-button 
-                                    (onClick)="toggleFavorite(item.id)"
-                                    [icon]="isFavorite(item.id) ? 'pi pi-heart-fill' : 'pi pi-heart'"
-                                    [severity]="isFavorite(item.id) ? 'danger' : 'secondary'" 
-                                    [rounded]="true"
-                                    [text]="true" 
-                                    styleClass="item-action-btn favorite-btn-line">
-                                </p-button>
-                            </div>
-                        </div>
-                    </div>
-                </ng-template>
-            </p-dataView>
-        </div>
-
-        <!-- Order Summary Glass Card -->
-        <div class="glass-summary-card">
-            <h2 class="summary-title">סיכום ההזמנה</h2>
-            
-            <div class="summary-items">
-                <div *ngFor="let pack of uniquePackages; let i = index" 
-                    class="summary-item glass-fadeIn"
-                    [style.animation-delay]="i * 0.08 + 's'">
-                    <span class="summary-item-name">{{ pack.name }}</span>
-                    <div class="summary-item-right">
-                        <span class="summary-item-qty">{{ pack.package_count }}x</span>
-                        <span class="summary-item-price">{{ (pack.price * pack.package_count) | currency:'ILS' }}</span>
-                    </div>
+    <div class="glass-main-content flex flex-column-reverse lg:flex-row gap-4" [style]="{'background-color': 'transparent'}">
+      <div class="glass-items-list flex-1" [style]="{'background-color': 'transparent'}">
+        <p-dataView [value]="allCards" [rows]="8" [paginator]="true" paginatorStyleClass="glass-paginator" [style]="{'background-color': 'transparent'}">
+          <ng-template #list let-items [style]="{'background-color': 'transparent'}">
+            <div class="flex flex-column gap-3" [style]="{'background-color': 'transparent'}">
+              <div *ngFor="let item of items; let i = index" [style]="{'background-color': 'transparent'}"
+                   class="glass-item-row flex flex-column md:flex-row align-items-center gap-4 p-4" 
+                   [style.animation-delay]="i * 0.05 + 's'">
+                
+                <div class="item-image-column relative flex-shrink-0 w-full md:w-8rem h-10rem md:h-8rem border-round-xl overflow-hidden shadow-4 border-2 border-white-alpha-30 ">
+                  <img [src]="BASE_URL + item.picture" [alt]="item.name" class="item-image w-full h-full object-cover">
                 </div>
+                <div class="quantity-badge-small">{{ item.quantity }}</div>
+
+                <div class="item-info-column flex-1 text-right w-full">
+                  <h3 class="item-title m-0 text-2xl font-black text-white">{{ item.name }}</h3>
+                  <p class="item-description my-2 text-white-alpha-90 line-height-3">{{ item.description }}</p>
+                </div>
+
+                <div class="item-value-column flex flex-row md:flex-column align-items-center md:align-items-end justify-content-between md:justify-content-center w-full md:w-auto gap-2">
+                  <span class="value-amount text-3xl font-black">{{ item.value | currency: 'ILS' }}</span>
+                </div>
+
+                <div class="item-actions-column flex gap-2 w-full md:w-auto justify-content-end">
+                  <p-button (onClick)="removeFromBasket(item.id)" icon="pi pi-minus" [rounded]="true" [text]="true" styleClass="item-action-btn"></p-button>
+                  <p-button (onClick)="addToBasket(item.id)" icon="pi pi-plus" [rounded]="true" [text]="true" styleClass="item-action-btn"></p-button>
+                  <p-button (onClick)="toggleFavorite(item.id)" 
+                            [icon]="isFavorite(item.id) ? 'pi pi-heart-fill' : 'pi pi-heart'" 
+                            [severity]="isFavorite(item.id) ? 'danger' : 'secondary'" 
+                            [rounded]="true" [text]="true" styleClass="item-action-btn"></p-button>
+                </div>
+              </div>
             </div>
+          </ng-template>
+        </p-dataView>
+      </div>
 
-            <div class="summary-divider"></div>
-
-            <div class="summary-total">
-                <span class="total-label">סה"כ לתשלום:</span>
-                <span class="total-amount">{{ totalPrice() | currency: 'ILS' }}</span>
+      <div class="glass-summary-card w-full lg:w-25rem p-4 border-round-3xl shadow-8 sticky top-0 h-fit">
+        <h2 class="text-2xl font-black text-white mb-4 text-right">סיכום הזמנה</h2>
+        <div class="summary-items overflow-y-auto max-h-20rem pr-2">
+           <div *ngFor="let pack of uniquePackages" class="flex justify-content-between align-items-center p-3 mb-2 border-round-xl bg-white-alpha-10 border-1 border-white-alpha-10 hover:bg-white-alpha-20 transition-all duration-300">
+            <div class="flex flex-column text-right flex-1">
+               <span class="text-white font-bold">{{ pack.name }}</span>
+               <span class="text-sm text-white-alpha-60">כמות: {{ pack.package_count }}</span>
             </div>
-
-            <p-button 
-                label="אישור התשלום" 
-                icon="pi pi-check" 
-                (click)="pay()" 
-                [disabled]="numOfCards!==emptyCards"
-                styleClass="w-full mt-4 glass-btn"
-                size="large">
-            </p-button>
-
-            @if (numOfCards !== emptyCards) {
-            <p class="warning-text">
-                <i class="pi pi-info-circle"></i>
-                אנא בחר כרטיסים ריקים כדי להמשיך
-            </p>
-            }
+            <span class="text-yellow-400 font-bold">{{ (pack.price * pack.package_count) | currency:'ILS' }}</span>
+          </div>
         </div>
-    </div>
-    }
-    @else {
-    <!-- Empty State: Premium Design -->
-    <div class="empty-basket-premium">
-        <div class="empty-state-card">
-            <div class="empty-icon-wrapper">
-                <i class="pi pi-shopping-cart"></i>
-            </div>
-            <h2 class="empty-title">הסל שלך ריק כרגע</h2>
-            <p class="empty-message">
-                אתה עדיין לא בחרת מתנות. הצץ לאוסף היוקרה שלנו ובחר את המתנות המושלמות שלך!
-            </p>
-            <p-button 
-                label="גלה מתנות" 
-                icon="pi pi-arrow-right"
-                routerLink="/gifts"
-                styleClass="mt-4 premium-btn-large">
-            </p-button>
+        
+        <div class="summary-divider my-4"></div>
+        
+        <div class="summary-total flex justify-content-between align-items-baseline p-4 border-round-xl mb-4 border-1 border-white-alpha-30">
+          <span class="text-white font-bold text-xl">סה"כ:</span>
+          <span class="total-amount text-4xl font-black text-yellow-400">{{ totalPrice() | currency: 'ILS' }}</span>
         </div>
+        
+        <p-button label="אישור תשלום" icon="pi pi-check" (click)="pay()" 
+                  [disabled]="numOfCards !== emptyCards" 
+                  styleClass="w-full glass-btn py-3 text-lg" size="large"></p-button>
+        
+        <p class="warning-text mt-3 flex align-items-center justify-content-center gap-2 text-white-alpha-70 text-sm">
+           <i class="pi pi-info-circle"></i>
+           רכישה מאובטחת SSL
+        </p>
+      </div>
     </div>
-    }
+  } @else {
+    <div class="flex flex-column align-items-center justify-content-center min-h-screen text-white">
+      <div class="empty-state-card p-6 border-round-3xl text-center shadow-8">
+        <div class="empty-icon-wrapper mb-4">
+          <i class="pi pi-shopping-cart text-6xl"></i>
+        </div>
+        <h2 class="text-4xl font-black mb-3">הסל שלך ריק</h2>
+        <p class="text-white-alpha-80 mb-5">נראה שעדיין לא הוספת מוצרים לסל הקניות שלך</p>
+        <p-button label="חזרה לחנות" icon="pi pi-arrow-right" routerLink="/gifts" styleClass="glass-btn px-5 py-3"></p-button>
+      </div>
+    </div>
+  }
 </div>
-<!-- </div> -->
-<p-toast />
+<p-toast/>
 <p-confirmdialog #cd>
-    <ng-template pTemplate="headless" let-message let-onAccept="onAccept" let-onReject="onReject">
-        @if (message) {
-        <div class="flex flex-column align-items-center p-8 surface-overlay border-round shadow-2 text-center">
-            <div
-                class="border-circle bg-primary text-white inline-flex justify-content-center align-items-center h-6rem w-6rem -mt-8 shadow-4">
-                <i class="pi pi-question text-5xl"></i>
-            </div>
-            <span class="font-bold text-2xl block mb-2 mt-6">{{ message.header }}</span>
-            <p class="mb-4 text-600 px-4">{{ message.message }}</p>
-            <div class="flex align-items-center justify-content-center gap-3 mt-4">
-                <p-button [label]="message.acceptLabel" (onClick)="onAccept()"
-                    styleClass="w-15rem"></p-button>
-                <p-button [label]="message.rejectLabel" [outlined]="true" (onClick)="onReject()"
-                    styleClass="w-15rem"></p-button>
-            </div>
-        </div>
-        }
-    </ng-template>
+  <ng-template pTemplate="headless" let-message let-onAccept="onAccept" let-onReject="onReject">
+    @if (message) {
+    <div class="confirm-dialog">
+      <div class="dialog-icon">
+        <i class="pi pi-question"></i>
+      </div>
+      <span class="dialog-header">{{ message.header }}</span>
+      <p class="dialog-message">{{ message.message }}</p>
+      <div class="dialog-actions">
+        <p-button [label]="message.acceptLabel" (onClick)="onAccept()" [outlined]="true"
+          class="w-10rem pt-2 pb-2"></p-button>
+        <p-button [label]="message.rejectLabel" [outlined]="true" (onClick)="onReject()" class="w-10rem"></p-button>
+      </div>
+    </div>
+    }
+  </ng-template>
 </p-confirmdialog>

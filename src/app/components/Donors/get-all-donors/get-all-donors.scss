@@ -1,0 +1,1119 @@
+// ========== CSS Custom Properties ==========
+:host {
+  --blue-purple-grad: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --blue-purple-accent: #667eea;
+  --blue-purple-dark: #764ba2;
+  --gold-accent: #ffd700;
+  --orange-grad: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --orange-accent: #764ba2;
+  --login-blue: #2c3e50;
+  --login-blue-hover: #34495e;
+  --card-bg: #1a162e;
+  --text-main: #f5f5f5;
+  --text-dim: rgba(255, 255, 255, 0.65);
+  --text-dimmer: rgba(255, 255, 255, 0.5);
+  --border-light: rgba(255, 255, 255, 0.08);
+  --glass-hover: rgba(255, 255, 255, 0.08);
+}
+
+// ========== Main Wrapper ==========
+.donors-wrapper {
+  width: 100%;
+  min-height: 100vh;
+  background: url('/images/login.jpg') no-repeat center center fixed;
+  background-size: cover;
+  position: relative;
+  padding: 2rem 1rem;
+  padding-top: 12vh;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(5, 5, 10, 0.85) 0%, rgba(15, 15, 30, 0.82) 100%);
+    z-index: 0;
+  }
+
+  > * {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+// ========== Header Section ==========
+.donors-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  animation: slideInDown 0.6s ease-out;
+
+  .section-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--text-main);
+    margin: 0 0 0.5rem 0;
+    letter-spacing: 1.2px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+  }
+
+  .section-subtitle {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0 0 1.5rem 0;
+    font-weight: 300;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  .add-donor-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    border: none !important;
+    padding: 0.6rem 1.5rem !important;
+    font-size: 0.9rem !important;
+    font-weight: 600;
+    color: #ffffff !important;
+    border-radius: 30px;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    transition: all 0.3s ease;
+    cursor: pointer;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6), 0 0 20px rgba(255, 215, 0, 0.3);
+    }
+  }
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ========== Content Layout ==========
+.donors-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: stretch;
+  margin: 0 auto;
+  max-width: 1400px;
+  width: 100%;
+
+  @media (max-width: 1024px) {
+    gap: 1.5rem;
+  }
+}
+
+.donors-main {
+  flex: 1;
+  min-width: 0;
+}
+
+// ========== Donor List Container ==========
+.donor-list-container {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: none;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: none;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+  animation: fadeInUp 0.5s ease-out;
+}
+
+// ========== Filter Panel Container Top ==========
+.filter-panel-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.filter-top {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid rgba(102, 126, 234, 0.2);
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.1);
+}
+
+.filter-toggle-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0.875rem 1.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.35);
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 215, 0, 0.2);
+    transform: translate(-50%, -50%);
+    transition: width 0.4s, height 0.4s;
+  }
+
+  &:hover {
+    background: linear-gradient(135deg, #5568d3 0%, #6b3d8f 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.45), 0 0 15px rgba(255, 215, 0, 0.25);
+
+    &::before {
+      width: 300px;
+      height: 300px;
+    }
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.filter-sidebar {
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: none;
+  border: 1px solid rgba(102, 126, 234, 0.2);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+  transition: all 0.3s ease;
+  animation: slideInDown 0.5s ease-out;
+}
+
+.filter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--border-light);
+}
+
+.filter-title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--text-main);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.filter-options {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.filter-option-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.filter-radio-item {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: transparent;
+
+  &:hover {
+    background: rgba(249, 115, 22, 0.1);
+  }
+
+  p-radioButton {
+    ::ng-deep {
+      .p-radiobutton-label {
+        color: var(--text-dim);
+        font-weight: 500;
+        font-size: 0.95rem;
+      }
+    }
+  }
+}
+
+.filter-input-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-light);
+}
+
+.filter-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-dimmer);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.filter-input-field {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+  color: var(--text-main);
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+
+  &:focus {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--blue-purple-accent);
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12);
+    outline: none;
+  }
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.35);
+  }
+}
+
+::ng-deep .filter-panel-container {
+  // Override PrimeNG radiobutton styles
+  .p-radiobutton .p-radiobutton-box {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid var(--border-light) !important;
+    transition: all 0.2s ease;
+
+    &.p-highlight {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+      border-color: #667eea !important;
+    }
+  }
+
+  .p-radiobutton-label {
+    color: var(--text-dim);
+    font-weight: 500;
+    font-size: 0.9rem;
+  }
+
+  // Override checkbox styles if present
+  .p-checkbox .p-checkbox-box {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid var(--border-light) !important;
+    transition: all 0.2s ease;
+
+    &.p-highlight {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+      border-color: #667eea !important;
+    }
+  }
+
+  .p-checkbox-label {
+    color: var(--text-dim);
+    font-weight: 500;
+    font-size: 0.9rem;
+  }
+
+  // Override input fields
+  input[type='text'],
+  input[type='email'],
+  input[type='number'] {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid var(--border-light) !important;
+    color: var(--text-main) !important;
+    border-radius: 6px !important;
+    transition: all 0.3s ease !important;
+
+    &:focus {
+      background: rgba(255, 255, 255, 0.08) !important;
+      border-color: #667eea !important;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15), 0 0 10px rgba(255, 215, 0, 0.15) !important;
+    }
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.35) !important;
+    }
+  }
+}
+
+.filter-action-btn {
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.35);
+
+  &:hover {
+    background: linear-gradient(135deg, #5568d3 0%, #6b3d8f 100%);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.45), 0 0 15px rgba(255, 215, 0, 0.25);
+    transform: translateY(-1px);
+  }
+}
+
+.filter-input {
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+  color: var(--text-main);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-light);
+  transition: all 0.3s ease;
+  font-weight: 500;
+
+  &:focus {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15), 0 0 10px rgba(255, 215, 0, 0.15);
+    outline: none;
+  }
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.35);
+  }
+}
+
+.filter-actions {
+  display: flex;
+  gap: 0.75rem;
+
+  p-button {
+    flex: 1;
+  }
+}
+
+.filter-info-text {
+  font-size: 0.9rem;
+  color: var(--text-dimmer);
+  text-align: center;
+  margin: 0;
+  font-style: italic;
+  padding: 1rem;
+  background: rgba(124, 58, 237, 0.08);
+  border-radius: 6px;
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ========== Donor Table Styling ==========
+::ng-deep {
+  .donor-list-container {
+    .p-datatable {
+      background: transparent;
+      border: none;
+      
+      .p-datatable-thead > tr > th {
+        background: transparent;
+        border: none;
+        border-bottom: 1px solid var(--border-light);
+        color: var(--text-dim);
+        font-weight: 600;
+        padding: 1.25rem 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        font-size: 0.8rem;
+      }
+
+      .p-datatable-tbody > tr {
+        background: rgba(255, 255, 255, 0.02);
+        border: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+        &:hover {
+          background: var(--glass-hover);
+          backdrop-filter: blur(12px);
+          box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12), 0 4px 16px rgba(0, 0, 0, 0.25);
+          border-bottom-color: rgba(255, 255, 255, 0.1);
+          transform: scale(1.01);
+        }
+
+        td {
+          padding: 1.1rem 0.875rem;
+          color: var(--text-dim);
+          border: none;
+          font-size: 0.95rem;
+          font-weight: 500;
+
+          img {
+            border-radius: 8px;
+            border: 1px solid var(--border-light);
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+
+            &:hover {
+              transform: scale(1.08);
+              box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+            }
+          }
+
+          // Action buttons styling
+          .flex {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+
+            p-button {
+              ::ng-deep {
+                .p-button {
+                  background: transparent;
+                  border: 2px solid #667eea;
+                  color: #ffd700;
+                  transition: all 0.2s ease;
+
+                  &:hover {
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    border-color: #764ba2;
+                    color: #ffd700;
+                    transform: translateY(-1px);
+                    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3), 0 0 15px rgba(255, 215, 0, 0.2);
+                  }
+
+                  &.p-button-danger {
+                    border-color: #e74c3c;
+                    color: #e74c3c;
+
+                    &:hover {
+                      background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+                      border-color: var(--orange-accent);
+                      color: white;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .p-paginator {
+        background: transparent;
+        border: none;
+        color: var(--text-dim);
+        padding: 0;
+        margin-top: 1.5rem;
+        border-top: 1px solid var(--border-light);
+        padding-top: 1rem;
+
+        .p-paginator-first,
+        .p-paginator-prev,
+        .p-paginator-next,
+        .p-paginator-last,
+        .p-paginator-page {
+          color: var(--text-dim);
+          transition: all 0.2s ease;
+          border: none;
+          background: transparent;
+
+          &:hover:not(.p-disabled) {
+            color: #ffd700;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+          }
+        }
+
+        .p-paginator-current {
+          color: var(--text-dim);
+        }
+      }
+
+      .p-rowgroupheader-label {
+        color: var(--text-main);
+      }
+    }
+  }
+}
+
+// ========== Expanded Row Container ==========
+.gifts-expanded-container {
+  background: transparent;
+  backdrop-filter: none;
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  padding: 2rem;
+  animation: fadeInUp 0.5s ease-out;
+
+  .gifts-section-title {
+    color: var(--text-main);
+    font-weight: 600;
+    font-size: 1rem;
+    margin: 0 0 1.5rem 0;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+
+  .add-gift-expanded-btn {
+    margin-bottom: 1.5rem !important;
+
+    ::ng-deep {
+      &.p-button-success {
+        background: var(--orange-grad) !important;
+        border: none !important;
+        color: white !important;
+
+        &:hover {
+          background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%) !important;
+        }
+      }
+
+      .p-button {
+        background: var(--orange-grad) !important;
+        border: none !important;
+        color: white !important;
+        font-weight: 600 !important;
+        border-radius: 30px !important;
+        padding: 0.6rem 1.5rem !important;
+        box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3) !important;
+        transition: all 0.3s ease;
+
+        &:hover {
+          background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%) !important;
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(249, 115, 22, 0.5) !important;
+        }
+
+        .p-button-label {
+          color: white !important;
+        }
+
+        .p-button-icon {
+          color: white !important;
+        }
+      }
+    }
+  }
+}
+
+.gifts-table-wrapper {
+  background: transparent;
+  border-radius: 8px;
+  animation: slideUpFade 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  .p-datatable.gifts-table {
+    background: transparent;
+    border: none;
+
+    .p-datatable-thead > tr > th {
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid var(--blue-purple-accent);
+      color: var(--text-dim);
+      font-weight: 600;
+      padding: 1rem 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      font-size: 0.8rem;
+    }
+
+    .p-datatable-tbody > tr.gifts-row {
+      background: rgba(255, 255, 255, 0.02);
+      border: 2px solid rgba(249, 115, 22, 0.25);
+      border-radius: 8px;
+      margin-bottom: 0.875rem;
+      transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      animation: slideInUp 0.4s ease-out;
+
+      &:hover {
+        background: var(--glass-hover);
+        backdrop-filter: blur(12px);
+        border-color: rgba(249, 115, 22, 0.4);
+        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12), 0 4px 12px rgba(0, 0, 0, 0.15);
+        transform: scale(1.01);
+
+        td {
+          color: var(--text-main);
+        }
+      }
+
+      td {
+        padding: 1rem 0.875rem;
+        color: var(--text-dim);
+        border: none;
+        font-size: 0.9rem;
+        transition: color 0.2s ease;
+
+        img {
+          border-radius: 6px;
+          border: 1px solid var(--border-light);
+          transition: all 0.3s ease;
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+
+          &:hover {
+            transform: scale(1.08);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+          }
+        }
+      }
+    }
+
+    .p-datatable-emptymessage > tr {
+      background: transparent;
+      border: 1px dashed var(--border-light);
+      border-radius: 6px;
+
+      td {
+        padding: 2.5rem;
+        text-align: center;
+        color: var(--text-dimmer);
+        font-style: italic;
+        font-size: 0.95rem;
+      }
+    }
+  }
+}
+
+// ========== Button Styling in Tables ==========
+::ng-deep {
+  .donor-list-container,
+  .gifts-expanded-container {
+    p-button {
+      &.p-button-success {
+        button {
+          background: var(--blue-purple-grad) !important;
+          border: none !important;
+          color: white;
+          font-weight: 600 !important;
+          border-radius: 6px;
+          transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+          box-shadow: 0 2px 6px rgba(124, 58, 237, 0.25) !important;
+          overflow: hidden;
+          position: relative;
+
+          &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.15);
+            transition: left 0.3s ease;
+          }
+
+          &:hover {
+            background: linear-gradient(135deg, #4c1d95 0%, #6d28d9 100%) !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.35) !important;
+
+            &::before {
+              left: 100%;
+            }
+          }
+        }
+      }
+
+      &[icon="pi pi-pencil"],
+      &[icon="pi pi-trash"],
+      &[icon="pi pi-search"] {
+        button {
+          background: rgba(255, 255, 255, 0.06) !important;
+          border: 1px solid var(--border-light) !important;
+          color: var(--text-dim);
+          border-radius: 6px;
+          transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+          &:hover {
+            background: rgba(255, 255, 255, 0.1) !important;
+            border-color: rgba(255, 255, 255, 0.15) !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            transform: translateY(-1px);
+            color: var(--text-main);
+          }
+        }
+      }
+
+      &[icon="pi pi-chevron-right"],
+      &[icon="pi pi-chevron-down"] {
+        button {
+          color: var(--text-dim) !important;
+          transition: color 0.2s ease;
+
+          &:hover {
+            color: var(--blue-purple-accent) !important;
+          }
+        }
+      }
+    }
+  }
+}
+
+// ========== PrimeNG Tags Styling ==========
+::ng-deep {
+  .donor-list-container,
+  .gifts-expanded-container {
+    p-tag {
+      .p-tag {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid var(--border-light);
+        color: var(--text-dim);
+        font-weight: 500;
+        border-radius: 4px;
+        backdrop-filter: none;
+        transition: all 0.2s ease;
+
+        &.p-tag-success {
+          background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(34, 197, 94, 0.05) 100%);
+          border-color: rgba(34, 197, 94, 0.2);
+          color: #86efac;
+        }
+
+        &.p-tag-warning,
+        &.p-tag-secondary {
+          background: linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.05) 100%);
+          border-color: rgba(102, 126, 234, 0.25);
+          color: #ffd700;
+        }
+
+        &:hover {
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+          transform: translateY(-1px);
+        }
+      }
+    }
+  }
+}
+
+// ========== Animations ==========
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUpFade {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+// ========== Responsive Design ==========
+@media (max-width: 1024px) {
+  ::ng-deep {
+    .donor-list-container,
+    .gifts-expanded-container {
+      padding: 1.5rem;
+
+      .p-datatable {
+        font-size: 0.9rem;
+
+        .p-datatable-thead > tr > th {
+          padding: 0.875rem 0.75rem;
+          font-size: 0.8rem;
+        }
+
+        .p-datatable-tbody > tr td {
+          padding: 0.875rem 0.75rem;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  ::ng-deep {
+    .donor-list-container,
+    .gifts-expanded-container {
+      padding: 1rem;
+
+      .p-datatable {
+        font-size: 0.85rem;
+
+        .p-datatable-thead > tr > th {
+          padding: 0.75rem 0.5rem;
+          font-size: 0.75rem;
+        }
+
+        .p-datatable-tbody > tr td {
+          padding: 0.75rem 0.5rem;
+        }
+      }
+    }
+
+    .gifts-expanded-container {
+      .gifts-section-title {
+        font-size: 1rem;
+      }
+    }
+  }
+
+  .filter-panel-container {
+    width: 100%;
+  }
+}
+
+// ========== Expanded Row Gifts Table Styling ===
+::ng-deep {
+  .donor-list-container {
+    .p-datatable {
+      .p-datatable-tbody > tr {
+        &.p-datatable-row-expansion {
+          background: transparent;
+          box-shadow: none;
+
+          td {
+            padding: 2rem 0.75rem;
+            background: transparent;
+          }
+        }
+      }
+
+      .p-datatable-row-expansion td {
+        background: transparent;
+        border: none;
+        padding: 2rem !important;
+
+        > div.gifts-expanded-container {
+          background: transparent;
+          backdrop-filter: none;
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 12px;
+          padding: 2rem !important;
+        }
+      }
+    }
+  }
+}
+
+// ========== Animations ==========
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUpFade {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+// ========== Responsive Design ==========
+@media (max-width: 768px) {
+  ::ng-deep {
+    .donor-list-container,
+    .gifts-expanded-container {
+      padding: 1rem !important;
+
+      .p-datatable {
+        font-size: 0.85rem;
+
+        .p-datatable-thead > tr > th {
+          padding: 0.75rem 0.5rem;
+          font-size: 0.75rem;
+        }
+
+        .p-datatable-tbody > tr td {
+          padding: 0.75rem 0.5rem;
+        }
+      }
+    }
+
+    .gifts-expanded-container {
+      .gifts-section-title {
+        font-size: 1.1rem;
+      }
+    }
+  }
+
+  .filter-sidebar {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+}
+
+/* ============================================================
+   הוספת התיקונים המבוקשים (להוסיף בסוף ה-CSS המקורי שלך)
+   ============================================================ */
+
+// 1. אפקט הגדלה ב-Hover - גדל טיפה לצדדים עם צל
+.row-scaling-effect {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    &:hover {
+        // transform: scaleX(1.02) !important; 
+        background: rgba(255, 255, 255, 0.08) !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+        position: relative;
+        z-index: 10;
+        backdrop-filter: blur(8px);
+    }
+}
+
+// 2. סידור כפתורים אופקי וצבע כתום
+.horizontal-actions {
+    display: flex;
+    flex-direction: row !important;
+    gap: 0.5rem;
+}
+
+::ng-deep .orange-btn-fix .p-button {
+    border: 1px solid var(--orange-accent) !important;
+    color: var(--orange-accent) !important;
+    background: transparent !important;
+    &:hover {
+        background: var(--orange-grad) !important;
+        color: white !important;
+    }
+}
+
+// 3. כפתור הוספת מתנה - כתום ואחיד לחלוטין
+::ng-deep .add-gift-btn-final .p-button {
+    background: var(--orange-grad) !important;
+    border: none !important;
+    color: white !important;
+    border-radius: 30px !important;
+    padding: 0.6rem 1.5rem !important;
+    font-weight: 600 !important;
+    &:hover {
+        transform: translateY(-2px) !important;
+        box-shadow: 0 6px 15px rgba(249, 115, 22, 0.4) !important;
+    }
+}
+
+// 4. טבלה פנימית - מסגרת כתומה וכותרות כחול-סגול
+.custom-gifts-border {
+    border: 1.5px solid var(--orange-accent) !important;
+    background: rgba(0, 0, 0, 0.2) !important;
+}
+
+.gifts-table ::ng-deep {
+    .p-datatable-thead > tr > th {
+        background: rgba(124, 58, 237, 0.15) !important; 
+        color: white !important;
+        border-bottom: 2px solid var(--blue-purple-accent) !important;
+    }
+}
+
+// 5. עיצוב פנימי עמוק לסינון (Deep Styling)
+.filter-box-item {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 12px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: 0.3s;
+    
+    &:hover { background: rgba(255, 255, 255, 0.07); }
+    &.active {
+        border-color: var(--blue-purple-accent);
+        background: rgba(124, 58, 237, 0.1);
+    }
+    label { color: var(--text-dim); cursor: pointer; font-size: 0.9rem; }
+}
+
+.filter-input-styled {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.2) !important;
+    border: 1px solid var(--border-light) !important;
+    color: white !important;
+    padding: 12px !important;
+    border-radius: 8px !important;
+    margin: 15px 0;
+    &:focus { border-color: var(--blue-purple-accent) !important; outline: none; }
+}
+
+.filter-actions-final {
+    display: flex;
+    gap: 10px;
+    button {
+        flex: 1; padding: 10px; border-radius: 6px; border: none; font-weight: 600; cursor: pointer;
+    }
+    .apply-filter-btn { background: var(--blue-purple-grad); color: white; }
+    .clear-filter-btn { background: rgba(255, 255, 255, 0.1); color: white; }
+}
+

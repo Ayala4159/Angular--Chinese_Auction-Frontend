@@ -5,10 +5,12 @@ export class CreatePurchase {
 }
 
 export class GetPurchase {
-    Id!: number;
-    GiftId!: number;
-    PackageId!: number;
-    UniquePackageId!: string;
+    id!: number;
+    giftId!: number;
+    packageId!: number;
+    userId!: number;
+    uniquePackageId!: string;
+    is_won!:boolean;
 }
 
 export class UpdatePurchase {

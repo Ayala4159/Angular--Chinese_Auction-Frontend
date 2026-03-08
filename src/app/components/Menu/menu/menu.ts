@@ -84,7 +84,8 @@ export class Menu implements OnInit {
       next: (data) => this.categories = data,
       error: (err) => console.error('Error:', err)
     });
-  }
+    
+      }
 
   onLogout(event?: MouseEvent) {
     this.showUserDropdown = false;

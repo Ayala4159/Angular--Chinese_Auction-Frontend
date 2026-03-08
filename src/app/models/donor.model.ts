@@ -1,30 +1,33 @@
+import { GetGift } from "./gift.model";
+
 export class CreateDonor {
-    Email!: string;
-    Password!: string;
-    First_name!: string;
-    Last_name!: string;
-    Phone?: string;
-    Company_name?: string;
-    Company_description?: string;
-    Company_picture?: string;
-    Is_publish: boolean = false;
+    email!: string;
+    password!: string;
+    first_name!: string;
+    last_name!: string;
+    phone?: string;
+    company_name?: string;
+    company_description?: string;
+    company_picture?: string;
+    is_publish: boolean = false;
 }
 
 export class ManagerGetDonor {
-    Id!: number;
-    Email!: string;
-    Password!: string;
-    First_name!: string;
-    Last_name!: string;
-    Phone?: string;
-    Company_name?: string;
-    Company_description?: string;
-    Company_picture?: string;
-    Is_publish: boolean = false;
+    id!: number;
+    email!: string;
+    password!: string;
+    first_name!: string;
+    last_name!: string;
+    phone?: string;
+    company_name?: string;
+    company_description?: string;
+    company_picture?: string;
+    is_publish: boolean = false;
+    donations:GetGift[]=[]
 }
 
 export class UserGetDonor {
-    Id!:number;
+    id!:number;
     company_name?: string;
     company_description?: string;
     company_picture?: string;

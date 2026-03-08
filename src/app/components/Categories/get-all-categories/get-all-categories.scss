@@ -1,16 +1,120 @@
-.category-item {
-    transition: transform 0.2s ease-in-out;
-    
+$deep-void: #0a0b14;
+$glass-bg: rgba(15, 20, 30, 0.4);
+$glass-border: rgba(255, 255, 255, 0.08);
+$accent-lavender: #b4a5f8;
+$text-bright: #ffffff;
+$text-silver: #d1d5db;
+
+:host {
+  --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: block;
+  width: 100%;
+}
+
+.luxury-wrapper {
+  position: relative;
+  min-height: 100vh;
+  padding-bottom: 5rem;
+  background-image: url('/images/register.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  padding-top: 12vh;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.5));
+    z-index: 0;
+  }
+}
+
+.gallery-container {
+  position: relative;
+  z-index: 1;
+  width: 98%; 
+  max-width: 1900px; 
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -1rem;
+  margin-left: -1rem;
+}
+
+.gift-card {
+  padding: 1rem;
+  opacity: 0;
+  transform: translateY(30px);
+  animation: premiumReveal 0.8s forwards;
+  animation-delay: calc(var(--delay) * 0.1s);
+
+  // כאן השליטה על הרוחב - 25% כדי שיהיו 4 בשורה, אבל בתוך קונטיינר רחב
+  flex: 0 0 25%;
+  max-width: 25%;
+
+  @media (max-width: 1200px) { flex: 0 0 50%; max-width: 50%; }
+  @media (max-width: 600px) { flex: 0 0 100%; max-width: 100%; }
+
+  .card-glass {
+    background: $glass-bg;
+    backdrop-filter: blur(20px);
+    border: 1px solid $glass-border;
+    border-radius: 24px;
+    height: 100%;
+    transition: 0.5s;
+    overflow: hidden;
+
     &:hover {
-        transform: translateY(-5px); /* קפיצה קלה למעלה בריחוף */
+      transform: translateY(-10px);
+      background: rgba(255, 255, 255, 0.08);
+      .gift-img { transform: scale(1.1); }
     }
+  }
 }
 
-.animate-fadein {
-    animation: fadeIn 0.6s ease-out;
+.card-img-holder {
+  height: 220px;
+  overflow: hidden;
+  .gift-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: 1s ease;
+  }
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.95); }
-    to { opacity: 1; transform: scale(1); }
+.card-info {
+  padding: 1.5rem;
+  text-align: center;
+  .gift-name { color: $text-bright; font-size: 1.5rem; margin-bottom: 0.5rem; }
+  .gift-tagline { color: $text-silver; opacity: 0.6; margin-bottom: 1.5rem; }
 }
+
+.card-footer {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  
+  ::ng-deep {
+    .p-button { border-radius: 12px !important; }
+    .btn-main.p-button {
+      background: transparent !important;
+      border: 1px solid $accent-lavender !important;
+      color: $accent-lavender !important;
+      padding: 0.5rem 1.5rem !important;
+      &:hover { background: $accent-lavender !important; color: $deep-void !important; }
+    }
+    .btn-sub.p-button {
+      background: rgba(255, 255, 255, 0.05) !important;
+      border: 1px solid $glass-border !important;
+      color: white !important;
+    }
+  }
+}
+
+@keyframes premiumReveal { to { opacity: 1; transform: translateY(0); } }
