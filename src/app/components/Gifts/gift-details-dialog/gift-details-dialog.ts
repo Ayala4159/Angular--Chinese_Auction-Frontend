@@ -50,7 +50,7 @@ import { RippleModule } from 'primeng/ripple';
               <span class="opacity-60 text-xs uppercase" style="letter-spacing: 1px;">נתרם ע"י</span>
               <div class="flex align-items-center gap-2 text-2xl font-bold" style="color: #f472b6;">
                 <i class="pi pi-heart-fill"></i>
-                <span>{{ (donor && donor.companyName) ? donor.companyName : 'תורם פרטי' }}</span>
+                <span>{{ (gift.donor && gift.donor.company_name) ? gift.donor.company_name : 'תורם פרטי' }}</span>
               </div>
             </div>
           </div>

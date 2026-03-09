@@ -190,8 +190,8 @@ export class GetAllDonors implements OnInit {
           first_name: result.first_name,
           last_name: result.last_name,
           phone: result.phone,
-          company_name: result.companyName,
-          company_description: result.companyDescription,
+          company_name: result.company_name,
+          company_description: result.company_description,
           is_publish: result.is_publish
         };
         this.donorService.addDonor(createDonorDto, result.company_picture).subscribe({

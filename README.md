@@ -1,59 +1,106 @@
-# ClientChineseAuction
+<div dir="rtl" align="right">
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.0.
+# 🎁 מערכת ניהול מכירה סינית - צד לקוח (Angular)
 
-## Development server
+### 📝 תיאור ומטרת הפרויקט
+בס"ד.
 
-To start a local development server, run:
+ פרויקט Web API - מכירה סינית. צד השרת – Web API, צד לקוח – Angular. 
+ 
+ מטרת הפרויקט: ניהול מכירה סינית, הן כניסה מצד לקוחות והן כניסה מצד ההנהלה.
 
-```bash
-ng serve
-```
+---
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+### 👑 משתמש הנהלה (Manager Role)
+עמוד כניסה עם שם משתמש וסיסמה. משתמשי הנהלה קיימים מראש ב-DB. אבטחת מידע ע"י תגית `[Authorize(Roles = "manager")]` ושימוש ב-JWT תקין.
 
-## Code scaffolding
+**ניהול תורמים:**
+* צפייה ברשימת התורמים.
+* הוספה/מחיקה/עדכון של תורם.
+* כל תורם מכיל פרטים אישיים ואת רשימת התרומות שלו.
+* אפשרות סינון של תורם לפי (שם/ מייל/ מתנה).
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+**ניהול מתנות:**
+* צפייה ברשימת המתנות (כל מתנה מכילה גם שדה של קטגוריה).
+* הוספה/ מחיקה/ עדכון של מתנה.
+* כל מתנה – מי התורם שלה.
+* חיפוש מתנה לפי שם מתנה, שם תורם, מס' רוכשים.
+* מחיר כרטיס הגרלה ואופציה להוסיף תמונה.
 
-```bash
-ng generate component component-name
-```
+**ניהול רכישות:**
+* צפייה ברכישות כרטיסים עבור כל מתנה.
+* אפשרות בחירת מיון: לפי המתנה היקרה ביותר או הנרכשת ביותר.
+* צפייה בפרטי הרוכשים.
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+**ההגרלה בפועל:**
+* המנהל עובר מתנה-מתנה ומבצע עליה הגרלה מתוך רשימת הרוכשים.
+* יצירת דוח שאומר כל מתנה מי הזוכה.
+* יצירת דוח של סך ההכנסות למכירה.
+* **אתגר:** שליחת מייל לזוכה בהגרלה.
 
-```bash
-ng generate --help
-```
+---
 
-## Building
+### 👤 משתמש לקוח (Customer Interface)
+* **מסך כניסה/רישום:** מילוי פרטים (שם, טלפון, מייל) עם בדיקות וולידציה גם בשרת.
+* **רשימת מתנות:** צפייה ומיון לפי מחיר או קטגוריה.
+* **סל קניות:** בחירת מתנה (אפשרי מספר פעמים). נשמר ב-DB כטיוטה עד לאישור הקנייה.
+* **מגבלות:** לא ניתן למחוק מתנה לאחר רכישה (בזמן טיוטה ניתן).
+* **לאחר הגרלה:** המשתמש רואה את הזוכים ואינו יכול לבצע רכישה.
 
-To build the project run:
+---
 
-```bash
-ng build
-```
+### 📸 תצוגת המערכת (כל צילומי המסך)
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+**כניסה והרשמה:**
+| ![Login](./screenshotes/userLogin.png) | ![Registration](./screenshotes/userRegisteration.png) |
+| :---: | :---: |
 
-## Running unit tests
+**ממשק ניהול (מנהל):**
+* רשימת תורמים: ![Donors List](./screenshotes/managerGetDonors.1.png)
+* הוספת תורם: 
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+![Add Donor](./screenshotes/managerAddDonor.png)
+* תרומות לפי תורם: ![Donor Donations](./screenshotes/managerGetDonorsDonation.png)
+* קטלוג ומתנות: ![Manager Gifts](./screenshotes/managerGetAllCategories.png)
+* הוספת מתנה:
 
-```bash
-ng test
-```
+ ![Add Gift](./screenshotes/managerAddGift.png)
+* ניהול חבילות: 
 
-## Running end-to-end tests
+![Add Package](./screenshotes/managerAddPackage.png)
 
-For end-to-end (e2e) testing, run:
+**תהליך ההגרלה:**
+| שלב 1 | שלב 2 | שלב 3 |
+| :---: | :---: | :---: |
+| ![Lottery 1](./screenshotes/managerLottory.png) | ![Lottery 2](./screenshotes/managerLottory.2.png) | ![Lottery 3](./screenshotes/managerLottory.3.png) |
 
-```bash
-ng e2e
-```
+**ממשק לקוח:**
+* גלריית מתנות: ![Gifts Gallery](./screenshotes/userGetAllGifts.png)
+* סינון קטגוריות: ![User Categories](./screenshotes/userGetAllCategories.png)
+* בחירת חבילות: ![Select Packages](./screenshotes/userSelectPackages.png)
+* סל קניות: ![User Cart](./screenshotes/userCart.png)
+* סל ריק: ![Empty Cart](./screenshotes/userCartEmpty.png)
+* אפשרויות משתמש: 
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+![User Options](./screenshotes/userOptions.png)
+* תוצאות (אחרי הגרלה): ![After Lottery](./screenshotes/userGetAllGiftsAfterLottory.png)
 
-## Additional Resources
+**פיצ'רים נוספים:**
+* שליחת מייל לזוכה: 
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+![Mail Winner](./screenshotes/mailToTheWinner.png)
+* ניווט מנהל: ![Manager Nav](./screenshotes/managerNavBar.png)
+* ניווט לקוח: ![User Nav](./screenshotes/navBar.png)
+
+---
+### 🚀 הוראות הרצה
+1. בצע Clone לפרויקט למחשב המקומי.
+2. הרץ `npm install` בתיקיית הלקוח (Angular) להתקנת הספריות.
+3. וודא שצד השרת (Web API) פועל ומחובר ל-DB (Code First).
+4. הרץ `ng serve` להפעלת ממשק הלקוח.
+5. המערכת תהיה זמינה בכתובת: `http://localhost:4200`.
+
+---
+**פותח כפרויקט גמר המשלב Web API & Angular. בהצלחה!**
+
+</div>
